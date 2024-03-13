@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- стили главного экрана -->
+        <!-- стиль кнопок главного экрана -->
+        <style name="main_btn_style">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">0dp</item>
+            <item name="android:layout_marginTop">@dimen/button_marginTop_main_scr</item>
+            <item name="android:layout_weight">1</item>
+            <item name="android:fontFamily">@font/ys_display_medium</item>
+            <item name="android:textAllCaps">false</item>
+            <item name="android:textColor">@color/text_light_primary</item>
+            <item name="android:textSize">@dimen/h1</item>
+            <item name="android:backgroundTint">@color/light_primary</item>
+            <item name="cornerRadius">@dimen/btn_corner_radius</item>
+            <item name="iconGravity">textStart</item>
+            <item name="iconPadding">@dimen/btn_icon_padding</item>
+            <item name="iconTint">@color/text_light_primary</item>
+            <item name="android:foreground">?attr/selectableItemBackground</item>
+            <item name="android:insetTop">0dp</item>
+            <item name="android:insetBottom">0dp</item>
+            <item name="android:insetLeft">0dp</item>
+            <item name="android:insetRight">0dp</item>
+            <item name="android:stateListAnimator">@null</item>
+        </style>
+
+    <!-- стили экрана настроек -->
+
+         <!-- стиль горизонтальных блоков меню настроек -->
+        <style name="settings_options_style">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">@dimen/setup_options_height</item>
+            <item name="android:orientation">horizontal</item>
+            <item name="android:paddingLeft">@dimen/screen_padding</item>
+        </style>
+
+        <!-- стиль текста пунктов меню -->
+        <style name="settings_option_text_style">
+            <item name="android:layout_width">0dp</item>
+            <item name="android:layout_height">match_parent</item>
+            <item name="android:layout_weight">10</item>
+            <item name="android:fontFamily">@font/ys_display_regular</item>
+            <item name="android:gravity">center_vertical</item>
+            <item name="android:textColor">@color/text_light_primary</item>
+            <item name="android:textSize">@dimen/h2</item>
+
+        </style>
+
+        <!-- стиль кнопок меню -->
+        <style name="settings_option_image_style">
+            <item name="android:layout_width">@dimen/minButtonHeight</item>
+            <item name="android:layout_height">match_parent</item>
+            <item name="android:layout_gravity">center_vertical</item>
+            <item name="android:paddingLeft">@dimen/screen_padding_small</item>
+            <item name="android:paddingRight">@dimen/screen_padding_small</item>
+            <item name="android:paddingTop">7dp</item>
+            <item name="android:paddingBottom">6dp</item>
+            <item name="android:clickable">true</item>
+        </style>
+
+    </resources>
