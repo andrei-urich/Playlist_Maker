@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-         <item name="android:textColorPrimary">@color/text_dark_primary</item>
-        <item name="colorPrimary">@color/dark_primary</item>
+         <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="colorPrimary">@color/primary</item>
     </style>
 </resources>

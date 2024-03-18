@@ -13,10 +13,10 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         val backButton = findViewById<ImageView>(R.id.iv_Back)
-        val themeChangeButton = findViewById<Switch>(R.id.swtch_theme)
-        val shareButton = findViewById<ImageView>(R.id.iv_share)
-        val callSupportButton = findViewById<ImageView>(R.id.iv_support)
-        val readAgreementButton = findViewById<ImageView>(R.id.iv_agreement)
+        val themeChangeButton = findViewById<Switch>(R.id.swtch)
+        val shareButton = findViewById<ImageView>(R.id.iv_option2)
+        val callSupportButton = findViewById<ImageView>(R.id.iv_option3)
+        val readAgreementButton = findViewById<ImageView>(R.id.iv_option4)
 
 
         backButton.setOnClickListener {

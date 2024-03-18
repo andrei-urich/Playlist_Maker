@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="primary">#FF000000</color>
+    <color name="main_screen">#1A1B22</color>
+    <color name="main_button">#FFFFFFFF</color>
+    <color name="image_button">#FFFFFFFF</color>
+    <color name="back_arrow">#FFFFFFFF</color>
+    <color name="head_primary">#FFFFFFFF</color>
+    <color name="main_button_text">#FF000000</color>
+
+</resources>
