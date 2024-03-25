@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="h1">22sp</dimen>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="screen_top_padding">14dp</dimen>
+    <dimen name="btn_corner_radius">16dp</dimen>
+    <dimen name="btn_icon_padding">8dp</dimen>
+    <dimen name="button_marginTop_main_scr">16dp</dimen>
+    <dimen name="setup_options_height">61dp</dimen>
+    <dimen name="h2">16sp</dimen>
+    <dimen name="icon_width">24dp</dimen>
+    <dimen name="screen_padding_small">12dp</dimen>
+    <dimen name="settings_head_margin">4dp</dimen>
+    <dimen name="minButtonHeight">48dp</dimen>
+    <dimen name="minIconDim">24dp</dimen>
+    <dimen name="setting_option_margin_start">16dp</dimen>
+    <dimen name="settings_header_margin_bottom">24dp</dimen>
+    <dimen name="main_header_bottom_margin">24dp</dimen>
+    <dimen name="settings_switch_right_margin">6dp</dimen>
+</resources>
