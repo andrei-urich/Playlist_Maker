@@ -6,21 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Хедер экрана -->
+    <!-- Тулбар -->
 
-    <ImageView
-        android:id="@+id/iv_Back"
-        style="@style/header_image_style"
-        android:src="@drawable/ic_arrow_back"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/primary"
+        app:title="@string/search_head"
+        app:navigationIcon="@drawable/ic_arrow_back"
 
-    <TextView
-        android:id="@+id/tv_head"
-        style="@style/header_style"
-        android:text="@string/search_head"
-        app:layout_constraintStart_toEndOf="@+id/iv_Back"
-        app:layout_constraintTop_toTopOf="parent" />
+        >
+
+    </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -28,8 +29,7 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal"
         android:layout_marginVertical="@dimen/search_view_margin_top"
         android:background="@drawable/edittext_bg"
-        app:layout_constraintTop_toBottomOf="@+id/tv_head"
-
+        app:layout_constraintTop_toBottomOf="@+id/tbSearch"
         >
 
 

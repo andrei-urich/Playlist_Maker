@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 
 class SearchActivity : AppCompatActivity() {
@@ -21,7 +22,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val backButton = findViewById<ImageView>(R.id.iv_Back)
+        val toolbar = findViewById<Toolbar>(R.id.tbSearch)
         val searchBar = findViewById<EditText>(R.id.search_bar)
         val clearButton = findViewById<ImageView>(R.id.iv_clearButton)
         val searchScreen = findViewById<View>(R.id.search_main)
@@ -31,7 +32,7 @@ class SearchActivity : AppCompatActivity() {
         val inputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
 
-        backButton.setOnClickListener {
+        toolbar.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
