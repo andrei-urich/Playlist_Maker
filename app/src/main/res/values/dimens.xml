@@ -17,4 +17,14 @@
     <dimen name="settings_header_margin_bottom">24dp</dimen>
     <dimen name="main_header_bottom_margin">24dp</dimen>
     <dimen name="settings_switch_right_margin">6dp</dimen>
+    <dimen name="settings_switch_width">56dp</dimen>
+    <dimen name="search_view_height">36dp</dimen>
+    <dimen name="margin_horizontal">16dp</dimen>
+    <dimen name="search_view_margin_top">8dp</dimen>
+    <dimen name="search_view_padding_horizontal">12dp</dimen>
+    <dimen name="search_view_padding_vertical">10dp</dimen>
+    <dimen name="search_edittext_right_margin">50dp</dimen>
+    <dimen name="search_clear_button_width">40dp</dimen>
+    <dimen name="search_clear_button_pudding_horizontal">8dp</dimen>
+    <dimen name="search_clear_button_pudding_vertical">4dp</dimen>
 </resources>

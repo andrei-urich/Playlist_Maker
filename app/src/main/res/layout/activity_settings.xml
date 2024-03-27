@@ -5,31 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!-- Хедер экрана -->
+    <!-- Хедер экрана -->
 
     <ImageView
         android:id="@+id/iv_Back"
-        android:layout_width="@dimen/minButtonHeight"
-        android:layout_height="@dimen/minButtonHeight"
-        android:layout_margin="@dimen/settings_head_margin"
-        android:clickable="true"
-        android:padding="@dimen/screen_padding_small"
+        style="@style/header_image_style"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/back_arrow" />
+        />
 
     <TextView
         android:id="@+id/tv_head"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/minButtonHeight"
-        android:layout_marginVertical="@dimen/settings_head_margin"
-        android:fontFamily="@font/ys_display_medium"
-        android:gravity="center_vertical"
-        android:paddingStart="@dimen/screen_padding_small"
+        style="@style/header_style"
         android:text="@string/setup_head"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/h1"
         app:layout_constraintStart_toEndOf="@+id/iv_Back"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,17 +46,15 @@
 
         app:layout_constraintLeft_toRightOf="@id/tv_option1"
         app:layout_constraintRight_toLeftOf="@id/swtch"
-        app:layout_constraintTop_toBottomOf="@+id/tv_head"
-        >
-    </Space>
+        app:layout_constraintTop_toBottomOf="@+id/tv_head" />
 
     <Switch
         android:id="@+id/swtch"
-        android:layout_width="56dp"
+        android:layout_width="@dimen/settings_switch_width"
         android:layout_height="@dimen/setup_options_height"
         android:layout_gravity="center_vertical"
-        android:checked="false"
         android:layout_marginRight="@dimen/settings_switch_right_margin"
+        android:checked="false"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_option1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/space_settings1"
@@ -86,6 +73,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_option1"
 
         />
+
     <Space
         android:id="@+id/space_settings2"
         android:layout_width="0dp"
@@ -93,9 +81,7 @@
 
         app:layout_constraintLeft_toRightOf="@id/tv_option2"
         app:layout_constraintRight_toLeftOf="@id/iv_option2"
-        app:layout_constraintTop_toBottomOf="@+id/tv_option1"
-        >
-    </Space>
+        app:layout_constraintTop_toBottomOf="@+id/tv_option1" />
 
     <ImageView
         android:id="@+id/iv_option2"
@@ -128,15 +114,12 @@
 
         app:layout_constraintLeft_toRightOf="@id/tv_option3"
         app:layout_constraintRight_toLeftOf="@id/iv_option3"
-        app:layout_constraintTop_toBottomOf="@+id/tv_option2"
-        >
-    </Space>
+        app:layout_constraintTop_toBottomOf="@+id/tv_option2" />
 
     <ImageView
         android:id="@+id/iv_option3"
         style="@style/settings_option_image_style"
         android:src="@drawable/ic_support"
-
 
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -164,9 +147,7 @@
 
         app:layout_constraintLeft_toRightOf="@id/tv_option4"
         app:layout_constraintRight_toLeftOf="@id/iv_option4"
-        app:layout_constraintTop_toBottomOf="@+id/tv_option3"
-        >
-    </Space>
+        app:layout_constraintTop_toBottomOf="@+id/tv_option3" />
 
     <ImageView
         android:id="@+id/iv_option4"

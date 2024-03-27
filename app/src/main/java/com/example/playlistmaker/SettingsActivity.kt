@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Switch
@@ -23,10 +24,32 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+        shareButton.setOnClickListener {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.app_link))
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.app_share_header)))
+        }
+
+        callSupportButton.setOnClickListener {
+            val emailIntent = Intent(Intent.ACTION_SENDTO)
+            emailIntent.data = Uri.parse("mailto:")
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("andrei.urich@yandex.ru"))
+            emailIntent.putExtra(
+                Intent.EXTRA_SUBJECT,
+                getString(R.string.callSupportDefaultSubject)
+            )
+            emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.callSupportDefaultMessage))
+            startActivity(emailIntent)
+        }
+
+        readAgreementButton.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW)
+            browserIntent.data = Uri.parse(getString(R.string.agreement_link))
+            startActivity(browserIntent)
+        }
 
         themeChangeButton.setOnClickListener {}
-        shareButton.setOnClickListener {}
-        callSupportButton.setOnClickListener {}
-        readAgreementButton.setOnClickListener {}
+
     }
 }
