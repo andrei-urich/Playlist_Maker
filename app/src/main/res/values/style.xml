@@ -62,31 +62,21 @@
 
     </style>
 
-    <!-- стили заголовков экранов -->
-
-    <!-- стиль кнопки -->
-    <style name="header_image_style">
-        <item name="android:layout_width">@dimen/minButtonHeight</item>
-        <item name="android:layout_height">@dimen/minButtonHeight</item>
-        <item name="android:layout_margin">@dimen/settings_head_margin</item>
-        <item name="android:clickable">true</item>
-        <item name="android:padding">@dimen/screen_padding_small</item>
-        <item name="tint">@color/back_arrow</item>
-
-
-    </style>
-
-    <!-- стиль Заголовка экрана -->
-    <style name="header_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">@dimen/minButtonHeight</item>
-        <item name="android:layout_marginVertical">@dimen/settings_head_margin</item>
+    <!-- стиль Тулбара -->
+    <style name="my_toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="android:background">@color/primary</item>
+        <item name="navigationIcon">@drawable/ic_arrow_back</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingStart">@dimen/screen_padding_small</item>
-        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">@dimen/h1</item>
-
-
     </style>
+
+
+
+
+
 </resources>

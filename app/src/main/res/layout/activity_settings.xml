@@ -3,24 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/primary">
 
-    <!-- Хедер экрана -->
+    <!-- Тулбар -->
 
-    <ImageView
-        android:id="@+id/iv_Back"
-        style="@style/header_image_style"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbSettings"
+        style="@style/my_toolbar"
+        app:title="@string/setup_head"
+        tools:ignore="MissingConstraints"
+        app:titleTextAppearance="@style/my_toolbar"
         />
-
-    <TextView
-        android:id="@+id/tv_head"
-        style="@style/header_style"
-        android:text="@string/setup_head"
-        app:layout_constraintStart_toEndOf="@+id/iv_Back"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- первый пункт меню  -->
 
@@ -35,7 +29,7 @@
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintRight_toLeftOf="@id/space_settings1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_head" />
+        app:layout_constraintTop_toBottomOf="@+id/tbSettings" />
 
     <Space
         android:id="@+id/space_settings1"
@@ -46,7 +40,7 @@
 
         app:layout_constraintLeft_toRightOf="@id/tv_option1"
         app:layout_constraintRight_toLeftOf="@id/swtch"
-        app:layout_constraintTop_toBottomOf="@+id/tv_head" />
+        app:layout_constraintTop_toBottomOf="@+id/tbSettings" />
 
     <Switch
         android:id="@+id/swtch"

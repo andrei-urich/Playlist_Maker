@@ -4,22 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/search_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    >
 
     <!-- Тулбар -->
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/primary"
+        style="@style/my_toolbar"
+        app:titleTextAppearance="@style/my_toolbar"
         app:title="@string/search_head"
-        app:navigationIcon="@drawable/ic_arrow_back"
-
-        >
+        tools:ignore="MissingConstraints">
 
     </androidx.appcompat.widget.Toolbar>
 

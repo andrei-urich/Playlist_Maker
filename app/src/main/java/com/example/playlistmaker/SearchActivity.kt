@@ -16,13 +16,13 @@ import androidx.appcompat.widget.Toolbar
 
 class SearchActivity : AppCompatActivity() {
 
-    private var searchText: String? = null
+    private var searchText = SEARCH_TEXT_BLANK
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val toolbar = findViewById<Toolbar>(R.id.tbSearch)
+        val searchToolbar = findViewById<Toolbar>(R.id.tbSearch)
         val searchBar = findViewById<EditText>(R.id.search_bar)
         val clearButton = findViewById<ImageView>(R.id.iv_clearButton)
         val searchScreen = findViewById<View>(R.id.search_main)
@@ -32,7 +32,7 @@ class SearchActivity : AppCompatActivity() {
         val inputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
 
-        toolbar.setOnClickListener {
+        searchToolbar.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
@@ -78,11 +78,12 @@ class SearchActivity : AppCompatActivity() {
         persistentState: PersistableBundle?
     ) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
-        searchText = savedInstanceState?.getString(SEARCH_TEXT)
+        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: SEARCH_TEXT_BLANK
     }
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val SEARCH_TEXT_BLANK=""
     }
 
 }
