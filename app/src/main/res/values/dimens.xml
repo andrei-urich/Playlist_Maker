@@ -27,4 +27,6 @@
     <dimen name="search_clear_button_width">40dp</dimen>
     <dimen name="search_clear_button_pudding_horizontal">8dp</dimen>
     <dimen name="search_clear_button_pudding_vertical">4dp</dimen>
+    <dimen name="search_result_top_margin">16dp</dimen>
+    <dimen name="h3">11sp</dimen>
 </resources>
