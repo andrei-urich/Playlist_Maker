@@ -10,6 +10,7 @@
     <color name="main_button_text">#FF000000</color>
     <color name="search_view_bg">#FFFFFF</color>
     <color name="search_view_hint">#1A1B22</color>
+    <color name="track_information">#FFFFFF</color>
 
 
 </resources>

@@ -12,6 +12,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 
 class SearchActivity : AppCompatActivity() {
@@ -21,6 +23,9 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+
+        // код для тулбара и строки поиска
 
         val searchToolbar = findViewById<Toolbar>(R.id.tbSearch)
         val searchBar = findViewById<EditText>(R.id.search_bar)
@@ -58,8 +63,19 @@ class SearchActivity : AppCompatActivity() {
         }
         searchBar.addTextChangedListener(searchTextWatcher)
 
+
+        // код для recyclerView
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_search)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val searchAdapter = SearchAdapter(getTracks())
+        recyclerView.adapter = searchAdapter
+
+
     }
 
+
+    // метод очистки поисковой строки
 
     fun clearButtonVisibility(s: CharSequence?): Int {
         if (s.isNullOrBlank()) {
@@ -67,6 +83,8 @@ class SearchActivity : AppCompatActivity() {
         }
         return View.VISIBLE
     }
+
+    // методы для сохранения введеного значения в поисковой строке
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
@@ -83,7 +101,7 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val SEARCH_TEXT_BLANK=""
+        const val SEARCH_TEXT_BLANK = ""
     }
 
 }
