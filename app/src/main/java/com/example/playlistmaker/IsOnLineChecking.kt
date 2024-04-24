@@ -9,6 +9,5 @@ fun isOnline(context: Context): Boolean {
     val capabilities =
         connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
     if (capabilities != null) return true
-    else
-        return false
+    else return false
 }

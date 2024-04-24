@@ -15,7 +15,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-
 class SearchActivity : AppCompatActivity() {
 
     private var searchText = SEARCH_TEXT_BLANK
@@ -70,8 +69,6 @@ class SearchActivity : AppCompatActivity() {
 
         val searchAdapter = SearchAdapter(getTracks())
         recyclerView.adapter = searchAdapter
-
-
     }
 
 

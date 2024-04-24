@@ -1,9 +1,7 @@
 package com.example.playlistmaker
 
 import android.view.ViewGroup
-
 import androidx.recyclerview.widget.RecyclerView
-
 
 class SearchAdapter(private val tracks: List<Track>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

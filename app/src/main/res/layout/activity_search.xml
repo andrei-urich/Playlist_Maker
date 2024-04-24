@@ -42,7 +42,8 @@
             android:drawablePadding="@dimen/btn_icon_padding"
             android:fontFamily="@font/ys_display_regular"
             android:hint="@string/search_view_hint"
-            android:imeOptions="actionSearch"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             android:inputType="text"
 
             android:lines="1"
@@ -72,6 +73,8 @@
 
     </FrameLayout>
 
+    <!-- Выдача списка результатов -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_search"
         android:layout_width="match_parent"
@@ -79,6 +82,82 @@
         android:layout_marginTop="@dimen/search_result_top_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/flSearch" />
+
+
+    <!-- Плейсхолдер под нулевой результат -->
+
+    <LinearLayout
+        android:id="@+id/placeholderSearchError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_search">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="110dp"
+            android:src="@drawable/placeholder_search_error" />
+
+        <TextView
+            style="@style/search_screen_placeholder_text_style"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/search_result_top_margin"
+            android:text="Ничего не нашлось"
+            />
+    </LinearLayout>
+
+
+    <!-- Плейсхолдер под ошибку сервера -->
+
+    <LinearLayout
+        android:id="@+id/placeholderServerErrors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:visibility="gone"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_search">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="110dp"
+            android:src="@drawable/placeholder_server_error" />
+
+        <TextView
+            style="@style/search_screen_placeholder_text_style"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/search_result_top_margin"
+            android:text="Проблема со связью.
+
+Загрузка не удалась. Проверьте подключение к интернету" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/text_primary"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="Обновить"
+            android:textAllCaps="false"
+            android:textColor="@color/primary"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
