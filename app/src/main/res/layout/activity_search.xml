@@ -81,8 +81,8 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/search_result_top_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flSearch" />
-
+        app:layout_constraintTop_toBottomOf="@id/flSearch"
+        />
 
     <!-- Плейсхолдер под нулевой результат -->
 
@@ -92,11 +92,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
 
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView_search">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -127,7 +127,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView_search">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -145,6 +145,7 @@
 Загрузка не удалась. Проверьте подключение к интернету" />
 
         <Button
+            android:id="@+id/btnRefresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
