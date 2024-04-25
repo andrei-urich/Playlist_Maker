@@ -23,5 +23,8 @@
     <string name="supportEmail">andrei.urich@yandex.ru</string>
 
     <string name="agreement_link">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="search_error_message">Ничего не нашлось</string>
+    <string name="server_error_message">Проблема со связью.\n \nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="refresh_button_text">Обновить</string>
 
 </resources>

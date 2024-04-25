@@ -16,7 +16,8 @@
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/placeholder" />
+        tools:src="@drawable/placeholder"
+        />
 
     <TextView
         android:id="@+id/trackName"
@@ -64,10 +65,10 @@
         android:id="@+id/iv_divider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/track_info_divider_vertical_correction"
         android:src="@drawable/track_info_divider"
         app:layout_constraintStart_toEndOf="@id/artistName"
         app:layout_constraintTop_toBottomOf="@id/trackName"
-
 
         />
 

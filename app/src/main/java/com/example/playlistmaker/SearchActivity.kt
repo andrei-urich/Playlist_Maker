@@ -60,7 +60,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-
         searchToolbar = findViewById(R.id.tbSearch)
         searchBar = findViewById(R.id.search_bar)
         clearButton = findViewById(R.id.iv_clearButton)
@@ -70,13 +69,10 @@ class SearchActivity : AppCompatActivity() {
         placeholderServerErrors = findViewById(R.id.placeholderServerErrors)
         refreshButton = findViewById(R.id.btnRefresh)
 
-
         searchBar.setText(searchText)
-
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = searchAdapter
-
 
         //обработчик нажатия на кнопку Done в всплывающей клавиатуре
 
@@ -90,8 +86,10 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             searchBar.setText("")
-            placeholderSearchError.visibility = View.GONE
+            clearPlaceholders()
             inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
+            tracks.clear()
+            searchAdapter.notifyDataSetChanged()
         }
 
         val searchTextWatcher = object : TextWatcher {
@@ -118,15 +116,10 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-
-
-
         refreshButton.setOnClickListener {
-            placeholderServerErrors.visibility = View.GONE
+            clearPlaceholders()
             request()
         }
-
-
     }
 
     // метод вывода плейсхолдеров при ошибках поиска
@@ -146,6 +139,7 @@ class SearchActivity : AppCompatActivity() {
 
     // метод отправки вызова "поиска" на сервер
     fun request() {
+        clearPlaceholders()
         iTunesService.search(searchText).enqueue(object : Callback<TracksResponse> {
             override fun onResponse(
                 call: Call<TracksResponse>,
@@ -156,7 +150,6 @@ class SearchActivity : AppCompatActivity() {
                     if (response.body()?.results?.isNotEmpty() == true) {
                         tracks.addAll(response.body()?.results!!)
                         searchAdapter.notifyDataSetChanged()
-
 
                     } else {
                         showSearchError(1)
@@ -178,7 +171,7 @@ class SearchActivity : AppCompatActivity() {
         if (s.isNullOrBlank()) {
             return View.GONE
         }
-        placeholderSearchError.visibility = View.GONE
+        clearPlaceholders()
         return View.VISIBLE
     }
 
@@ -201,5 +194,12 @@ class SearchActivity : AppCompatActivity() {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val SEARCH_TEXT_BLANK = ""
     }
+
+    // очистка экрана от плейсхолдеров
+    fun clearPlaceholders() {
+        placeholderSearchError.visibility = View.GONE
+        placeholderServerErrors.visibility = View.GONE
+    }
+
 
 }

@@ -1,8 +1,6 @@
 package com.example.playlistmaker
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -21,14 +19,19 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(track: Track) {
         trackName.setText(track.trackName)
         artistName.setText(track.artistName)
-        trackTime.setText(SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis))
+        trackTime.setText(
+            SimpleDateFormat(
+                "mm:ss",
+                Locale.getDefault()
+            ).format(track.trackTimeMillis)
+        )
 
-        if (track.artworkUrl100.isNotBlank()) {
-            Glide.with(trackImage)
-                .load(track.artworkUrl100)
-                .fitCenter()
-                .transform(RoundedCorners(2))
-                .into(trackImage)
-        } else trackImage.setImageResource(R.drawable.placeholder)
+        Glide.with(trackImage)
+            .load(track.artworkUrl100)
+            .placeholder(R.drawable.placeholder)
+            .fitCenter()
+            .transform(RoundedCorners(2))
+            .dontAnimate()
+            .into(trackImage)
     }
 }
