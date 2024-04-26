@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="track_info_divider" />
-                            <entry key="sourceFile" value="C:\My\track_info_divider.svg" />
+                            <entry key="outputName" value="placeholder_server_error" />
+                            <entry key="sourceFile" value="C:\Study_android\PlayMaker\placeholder_server_error.svg" />
                           </map>
                         </option>
                       </PersistentState>

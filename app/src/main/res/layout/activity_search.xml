@@ -42,12 +42,13 @@
             android:drawablePadding="@dimen/btn_icon_padding"
             android:fontFamily="@font/ys_display_regular"
             android:hint="@string/search_view_hint"
-            android:imeOptions="actionSearch"
+            android:imeOptions="actionDone"
             android:inputType="text"
-
             android:lines="1"
+
             android:paddingHorizontal="@dimen/search_view_padding_horizontal"
             android:paddingVertical="@dimen/search_view_padding_vertical"
+            android:singleLine="true"
 
             android:textColor="@color/search_view_text"
             android:textColorHint="@color/search_view_hint"
@@ -72,6 +73,8 @@
 
     </FrameLayout>
 
+    <!-- Выдача списка результатов -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_search"
         android:layout_width="match_parent"
@@ -79,6 +82,68 @@
         android:layout_marginTop="@dimen/search_result_top_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/flSearch" />
+
+    <!-- Плейсхолдер под нулевой результат -->
+
+    <LinearLayout
+        android:id="@+id/placeholderSearchError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:visibility="gone"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/flSearch">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/placeholder_image_margin_top"
+            android:src="@drawable/placeholder_search_error" />
+
+        <TextView
+            style="@style/search_screen_placeholder_text_style"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/search_result_top_margin"
+            android:text="@string/search_error_message" />
+    </LinearLayout>
+
+
+    <!-- Плейсхолдер под ошибку сервера -->
+
+    <LinearLayout
+        android:id="@+id/placeholderServerErrors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/flSearch">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/placeholder_image_margin_top"
+            android:src="@drawable/placeholder_server_error" />
+
+        <TextView
+            style="@style/search_screen_placeholder_text_style"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/search_result_top_margin"
+            android:text="@string/server_error_message" />
+
+        <Button
+            android:id="@+id/btnRefresh"
+            style="@style/refresh_btn_style"
+            android:layout_marginTop="@dimen/refresh_button_margin_top"
+            android:text="@string/refresh_button_text" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

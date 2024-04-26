@@ -13,5 +13,6 @@
     <color name="search_view_text">#FF000000</color>
     <color name="search_cursor_color">#3772E7</color>
     <color name="track_information">#AEAFB4</color>
+    <color name="placeholder_search_error_note">#1A1B22</color>
 
 </resources>
