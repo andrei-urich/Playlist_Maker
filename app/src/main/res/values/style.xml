@@ -106,7 +106,16 @@
         <item name="android:stateListAnimator">@null</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:layout_gravity">center</item>
+    </style>
 
+    <!-- стиль переключателя темы в Настройках -->
+    <style name="Widget.App.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
+        <item name="android:checked">false</item>
+    </style>
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorOnSurface">@color/thumbTint</item>
+        <item name="colorSecondary">@color/thumbTint</item>
     </style>
 
 </resources>
