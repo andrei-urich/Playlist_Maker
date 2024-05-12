@@ -4,10 +4,9 @@ import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.material.switchmaterial.SwitchMaterial
 
 class MyApp : Application() {
-    var nightMode = false
+    private var nightMode = false
 
     override fun onCreate() {
         super.onCreate()
@@ -20,16 +19,17 @@ class MyApp : Application() {
                         Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
             }
         )
-        sharedPrefs.edit().putBoolean(NIGHT_MODE, nightMode).apply()
+        switchTheme(nightMode)
     }
-        fun switchTheme(nightModeEnabled: Boolean) {
-            nightMode = nightModeEnabled
-            AppCompatDelegate.setDefaultNightMode(
-                if (nightModeEnabled) {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                } else {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                }
-            )
-        }
+
+    fun switchTheme(nightModeEnabled: Boolean) {
+        nightMode = nightModeEnabled
+        AppCompatDelegate.setDefaultNightMode(
+            if (nightModeEnabled) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
     }
+}

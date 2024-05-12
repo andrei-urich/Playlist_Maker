@@ -27,8 +27,7 @@ class SettingsActivity : AppCompatActivity() {
         val readAgreementButton = findViewById<ImageView>(R.id.iv_option4)
 
         settingsToolbar.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            finish()
         }
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
