@@ -36,7 +36,7 @@
     <dimen name="search_result_track_image_margin_vertical">8dp</dimen>
     <dimen name="search_result_track_name_margin_left">8dp</dimen>
     <dimen name="search_result_track_name_margin_top">14dp</dimen>
-    <dimen name="search_result_artist_name_max_width">250dp</dimen>
+    <dimen name="search_result_artist_name_max_width">190dp</dimen>
     <dimen name="track_info_divider_vertical_correction">2dp</dimen>
     <dimen name="refresh_button_radius">54dp</dimen>
     <dimen name="refresh_button_text">14sp</dimen>

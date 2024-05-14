@@ -5,9 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class SearchAdapter(val tracks: List<Track>) :
+
+class SearchHistoryAdapter(val searchHistoryTracks: List<Track>) :
     RecyclerView.Adapter<TrackViewHolder>() {
-    var onItemClick: ((Track) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val itemView: View =
@@ -16,15 +16,12 @@ class SearchAdapter(val tracks: List<Track>) :
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
+        holder.bind(searchHistoryTracks[position])
         holder.itemView.setOnClickListener {
-            onItemClick?.invoke(tracks[position])
         }
     }
 
     override fun getItemCount(): Int {
-        return tracks.size
+        return searchHistoryTracks.size
     }
-
-
 }
