@@ -34,10 +34,16 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
         sharedPrefs.edit().clear().apply()
     }
 
-    fun checkDuplicates(track: Track, list: MutableList<Track>): MutableList<Track> {
-        for (t in list) {
-            if (track.trackId == t.trackId) list.remove(t)
+    private fun checkDuplicates(track: Track, list: MutableList<Track>): MutableList<Track> {
+        var index = -1
+        val trackIDs = list.map { it.trackId }
+        for (i in 1..trackIDs.size) {
+            if (track.trackId == trackIDs[i - 1]) index = i - 1
+        }
+        if (index >= 0) {
+            list.removeAt(index)
         }
         return list
     }
+
 }

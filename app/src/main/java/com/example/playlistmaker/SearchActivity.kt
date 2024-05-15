@@ -143,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
             request()
         }
 
-        //добавление в историю результатов поиска
+        //сохранение в историю результатов поиска
         searchAdapter.onItemClick = {
             searchHistory.saveTrackToHistory(it)
         }
