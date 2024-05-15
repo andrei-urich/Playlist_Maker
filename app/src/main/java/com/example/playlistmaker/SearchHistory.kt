@@ -9,22 +9,22 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
     lateinit var searchHistoryTracks: MutableList<Track>
 
     init {
-        searchHistoryTracks=getTrackFromHistory()
+        searchHistoryTracks = getTrackFromHistory()
     }
 
     fun saveTrackToHistory(track: Track) {
         var currentHistoryList = getTrackFromHistory()
-//       checkDuplicates(track, currentHistoryList)
+//      currentHistoryList=checkDuplicates(track, currentHistoryList)
         currentHistoryList.add(0, track)
         if (currentHistoryList.size > 10) currentHistoryList.removeLast()
         historyList = Gson().toJson(currentHistoryList)
-        sharedPrefs.edit().putString(SEARCH_HISTORY, historyList).apply()
+        sharedPrefs.edit().clear().apply()
     }
 
     fun getTrackFromHistory(): MutableList<Track> {
         val typeToken = object : TypeToken<MutableList<Track>>() {}.type
         if (!historyList.isNullOrBlank()) {
-          return Gson().fromJson <MutableList<Track>>(historyList, typeToken).toMutableList()
+            return Gson().fromJson<MutableList<Track>>(historyList, typeToken).toMutableList()
         }
         return emptyList<Track>().toMutableList()
     }
@@ -34,7 +34,7 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
         sharedPrefs.edit().putString(SEARCH_HISTORY, null).apply()
     }
 
-    fun checkDuplicates(track: Track,list: MutableList<Track> ): MutableList<Track> {
+    fun checkDuplicates(track: Track, list: MutableList<Track>): MutableList<Track> {
         for (t in list) {
             if (track.trackId == t.trackId) list.remove(t)
         }

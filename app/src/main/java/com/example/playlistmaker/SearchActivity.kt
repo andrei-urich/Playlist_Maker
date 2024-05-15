@@ -41,7 +41,7 @@ class SearchActivity : AppCompatActivity() {
     var tracks = mutableListOf<Track>()
     var historyTracks = mutableListOf<Track>()
     val searchAdapter = SearchAdapter(tracks)
-    lateinit var searchHistoryAdapter: SearchHistoryAdapter
+    val searchHistoryAdapter = SearchHistoryAdapter(historyTracks)
     private lateinit var searchToolbar: Toolbar
     private lateinit var searchBar: EditText
     private lateinit var clearButton: ImageView
@@ -72,10 +72,8 @@ class SearchActivity : AppCompatActivity() {
 
         searchBar.setText(searchText)
 
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(SEARCH_HISTORY_PREFERENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPrefs)
-
-        //вывод результатов истории
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         //обработчик нажатия на кнопку Done в всплывающей клавиатуре
@@ -99,10 +97,8 @@ class SearchActivity : AppCompatActivity() {
         //очистка истории при нажатии на кнопку "удалить историю"
         historyClearButton.setOnClickListener {
             searchHistory.clearHistory()
-            var s = historyTracks.size
             historyTracks.clear()
-            searchHistoryAdapter.notifyItemRangeRemoved(0, s)
-            historyVisibility(true)
+            historyVisibility(false)
         }
 
         //текствотчер для поисковой строки
@@ -149,6 +145,7 @@ class SearchActivity : AppCompatActivity() {
         //добавление в историю результатов поиска
         searchAdapter.onItemClick = {
             searchHistory.saveTrackToHistory(it)
+            Toast.makeText(this, it.trackName, Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -199,20 +196,6 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_TEXT, searchText)
     }
 
-    override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?,
-        persistentState: PersistableBundle?
-    ) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: SEARCH_TEXT_BLANK
-    }
-
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val SEARCH_TEXT_BLANK = ""
-    }
-
-
     // метод вывода плейсхолдеров при ошибках поиска
     private fun showSearchError(codeError: Int) {
         if (codeError == 1) {
@@ -228,6 +211,19 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?
+    ) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: SEARCH_TEXT_BLANK
+    }
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val SEARCH_TEXT_BLANK = ""
+    }
+
     // очистка экрана от плейсхолдеров
     fun clearPlaceholders() {
         placeholderSearchError.visibility = View.GONE
@@ -237,11 +233,12 @@ class SearchActivity : AppCompatActivity() {
 
     fun historyVisibility(flag: Boolean) {
         if (flag) {
-            historyTracks = searchHistory.getTrackFromHistory()
-            searchHistoryAdapter = SearchHistoryAdapter(historyTracks)
+            historyTracks.clear()
+            historyTracks.addAll(searchHistory.getTrackFromHistory())
             recyclerView.adapter = searchHistoryAdapter
+            searchHistoryAdapter.notifyDataSetChanged()
 
-            if (historyTracks.isNotEmpty()) {
+            if (!historyTracks.isNullOrEmpty()) {
                 historyClearButton.visibility = View.VISIBLE
                 historyHeader.visibility = View.VISIBLE
                 recyclerView.visibility = View.VISIBLE
