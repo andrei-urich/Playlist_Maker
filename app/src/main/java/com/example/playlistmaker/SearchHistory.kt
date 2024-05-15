@@ -31,7 +31,6 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
     }
 
     fun clearHistory() {
-        searchHistoryTracks.clear()
         sharedPrefs.edit().clear().apply()
     }
 

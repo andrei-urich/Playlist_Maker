@@ -198,6 +198,7 @@ class SearchActivity : AppCompatActivity() {
 
     // метод вывода плейсхолдеров при ошибках поиска
     private fun showSearchError(codeError: Int) {
+        historyVisibility(false)
         if (codeError == 1) {
             placeholderSearchError.visibility = View.VISIBLE
             tracks.clear()
