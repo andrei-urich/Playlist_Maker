@@ -98,6 +98,7 @@ class SearchActivity : AppCompatActivity() {
         historyClearButton.setOnClickListener {
             searchHistory.clearHistory()
             historyTracks.clear()
+            searchAdapter.notifyDataSetChanged()
             historyVisibility(false)
         }
 
@@ -145,7 +146,6 @@ class SearchActivity : AppCompatActivity() {
         //добавление в историю результатов поиска
         searchAdapter.onItemClick = {
             searchHistory.saveTrackToHistory(it)
-            Toast.makeText(this, it.trackName, Toast.LENGTH_SHORT).show()
         }
 
     }

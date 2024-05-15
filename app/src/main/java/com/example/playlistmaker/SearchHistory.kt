@@ -18,7 +18,7 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
         currentHistoryList.add(0, track)
         if (currentHistoryList.size > 10) currentHistoryList.removeLast()
         historyList = Gson().toJson(currentHistoryList)
-        sharedPrefs.edit().clear().apply()
+        sharedPrefs.edit().putString(SEARCH_HISTORY, historyList).apply()
     }
 
     fun getTrackFromHistory(): MutableList<Track> {

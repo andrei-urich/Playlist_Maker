@@ -77,7 +77,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/search_result_top_margin"
+        android:layout_marginTop="@dimen/head_history_margin_top"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/flSearch"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,10 +88,9 @@
             style="@style/search_history_header_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:text="@string/search_history_header"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/history_header_margin_bottom"
             />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -106,6 +105,7 @@
             android:id="@+id/historyClearButton"
             style="@style/refresh_btn_style"
             android:text="@string/clear_history_btn_text"
+            android:layout_marginTop="@dimen/clear_history_button_margin_top"
             android:visibility="gone" />
 
 
@@ -136,7 +136,9 @@
             style="@style/search_screen_placeholder_text_style"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/search_result_top_margin"
-            android:text="@string/search_error_message" />
+            android:text="@string/search_error_message"
+            android:gravity="center_vertical"
+            />
     </LinearLayout>
 
 
