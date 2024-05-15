@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken
 
 class SearchHistory(val sharedPrefs: SharedPreferences) {
     var historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
-    lateinit var searchHistoryTracks: MutableList<Track>
+    var searchHistoryTracks: MutableList<Track>
 
     init {
         searchHistoryTracks = getTrackFromHistory()
@@ -14,7 +14,7 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
 
     fun saveTrackToHistory(track: Track) {
         var currentHistoryList = getTrackFromHistory()
-//      currentHistoryList=checkDuplicates(track, currentHistoryList)
+        currentHistoryList = checkDuplicates(track, currentHistoryList)
         currentHistoryList.add(0, track)
         if (currentHistoryList.size > 10) currentHistoryList.removeLast()
         historyList = Gson().toJson(currentHistoryList)
@@ -23,6 +23,7 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
 
     fun getTrackFromHistory(): MutableList<Track> {
         val typeToken = object : TypeToken<MutableList<Track>>() {}.type
+        historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
         if (!historyList.isNullOrBlank()) {
             return Gson().fromJson<MutableList<Track>>(historyList, typeToken).toMutableList()
         }
@@ -31,7 +32,7 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
 
     fun clearHistory() {
         searchHistoryTracks.clear()
-        sharedPrefs.edit().putString(SEARCH_HISTORY, null).apply()
+        sharedPrefs.edit().clear().apply()
     }
 
     fun checkDuplicates(track: Track, list: MutableList<Track>): MutableList<Track> {

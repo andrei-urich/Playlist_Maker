@@ -98,7 +98,7 @@ class SearchActivity : AppCompatActivity() {
         historyClearButton.setOnClickListener {
             searchHistory.clearHistory()
             historyTracks.clear()
-            searchAdapter.notifyDataSetChanged()
+            searchHistoryAdapter.notifyDataSetChanged()
             historyVisibility(false)
         }
 
