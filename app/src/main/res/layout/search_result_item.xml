@@ -5,7 +5,8 @@
     android:id="@+id/search_main"
     android:layout_width="match_parent"
     android:layout_height="@dimen/search_result_card_height"
-    android:background="@color/primary">
+    android:background="?android:selectableItemBackground">
+    <!-- ?>android:background="@color/primary" -->
 
     <ImageView
         android:id="@+id/track_image"
@@ -16,8 +17,7 @@
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/placeholder"
-        />
+        tools:src="@drawable/placeholder" />
 
     <TextView
         android:id="@+id/trackName"

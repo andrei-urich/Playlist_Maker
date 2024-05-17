@@ -36,10 +36,13 @@
     <dimen name="search_result_track_image_margin_vertical">8dp</dimen>
     <dimen name="search_result_track_name_margin_left">8dp</dimen>
     <dimen name="search_result_track_name_margin_top">14dp</dimen>
-    <dimen name="search_result_artist_name_max_width">250dp</dimen>
+    <dimen name="search_result_artist_name_max_width">195dp</dimen>
     <dimen name="track_info_divider_vertical_correction">2dp</dimen>
     <dimen name="refresh_button_radius">54dp</dimen>
     <dimen name="refresh_button_text">14sp</dimen>
     <dimen name="refresh_button_margin_top">24dp</dimen>
     <dimen name="placeholder_image_margin_top">110dp</dimen>
+    <dimen name="head_history_margin_top">42dp</dimen>
+    <dimen name="history_header_margin_bottom">4dp</dimen>
+    <dimen name="clear_history_button_margin_top">24dp</dimen>
 </resources>

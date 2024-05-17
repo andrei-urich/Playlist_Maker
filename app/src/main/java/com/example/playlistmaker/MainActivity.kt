@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         val buttonLibrary = findViewById<Button>(R.id.btn_Library)
         val buttonSetup = findViewById<Button>(R.id.btn_Setup)
 
-
         val buttonClickListener: View.OnClickListener = View.OnClickListener { v ->
             when (v) {
                 buttonSearch -> {

@@ -73,15 +73,47 @@
 
     </FrameLayout>
 
-    <!-- Выдача списка результатов -->
+    <!-- Вывод истории и рез-в поиска списка -->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_search"
+    <LinearLayout
+        android:id="@+id/listLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/search_result_top_margin"
+        android:layout_marginTop="@dimen/head_history_margin_top"
+        android:orientation="vertical"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flSearch" />
+        app:layout_constraintTop_toBottomOf="@id/flSearch">
+
+        <TextView
+            android:id="@+id/searchHistoryHeader"
+            style="@style/search_history_header_text_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/history_header_margin_bottom"
+            android:text="@string/search_history_header"
+            android:layout_weight="0"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_search"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/search_result_top_margin"
+            android:layout_weight="1"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/historyClearButton"
+            style="@style/refresh_btn_style"
+            android:layout_marginVertical="@dimen/clear_history_button_margin_top"
+            android:text="@string/clear_history_btn_text"
+            android:layout_weight="0"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
 
     <!-- Плейсхолдер под нулевой результат -->
 
