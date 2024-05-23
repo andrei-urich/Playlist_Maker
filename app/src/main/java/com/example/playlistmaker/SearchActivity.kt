@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -138,11 +140,24 @@ class SearchActivity : AppCompatActivity() {
             request()
         }
 
-        //сохранение в историю результатов поиска
+        //переход в плеер и сохранение в историю результатов поиска
         searchAdapter.onItemClick = {
             searchHistory.saveTrackToHistory(it)
+            val playerIntent = Intent(this, Audioplayer::class.java)
+            val trackToPlay: String? = Gson().toJson(it)
+            playerIntent.putExtra(TRACK_INFO, trackToPlay)
+            startActivity(playerIntent)
         }
+
+
+    //переход в плеер из истории
+    searchHistoryAdapter.onItemClick = {
+        val playerIntent = Intent(this, Audioplayer::class.java)
+        val trackToPlay: String? = Gson().toJson(it)
+        playerIntent.putExtra(TRACK_INFO, trackToPlay)
+        startActivity(playerIntent)
     }
+}
 
     // метод отправки вызова "поиска" на сервер
     fun request() {

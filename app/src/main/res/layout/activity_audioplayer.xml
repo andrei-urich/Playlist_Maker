@@ -2,15 +2,16 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/svPlayer"
+    android:id="@+id/audioplayer_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    tools:context=".audioplayer">
+    tools:context=".Audioplayer">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/primary">
 
 
         <androidx.appcompat.widget.Toolbar
@@ -24,9 +25,9 @@
         <ImageView
             android:id="@+id/trackImage"
             style="@style/player_border_for_images"
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/player_track_image_margin_top"
-
             android:src="@drawable/placeholder_big"
             app:layout_constraintTop_toBottomOf="@id/tbPlayer"
             tools:ignore="MissingConstraints" />
@@ -34,6 +35,8 @@
         <TextView
             android:id="@+id/trackName"
             style="@style/player_border_for_images"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/player_track_name_margin_top"
             android:ellipsize="end"
             android:fontFamily="@font/ys_display_medium"
@@ -43,12 +46,13 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toBottomOf="@id/trackImage"
             tools:ignore="MissingConstraints"
-
             tools:text="trackName" />
 
         <TextView
             android:id="@+id/artistName"
             style="@style/player_border_for_images"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/player_artist_name_margin_top"
             android:ellipsize="end"
             android:fontFamily="@font/ys_display_medium"
@@ -62,7 +66,7 @@
             tools:text="artistName" />
 
         <ImageView
-            android:id="@+id/bnAddToPlaylist"
+            android:id="@+id/btnAddToPlaylist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -70,7 +74,7 @@
             android:layout_marginTop="@dimen/player_button_addPlaylist_margin_top"
 
             android:src="@drawable/btn_add_playlist"
-            app:layout_constraintEnd_toStartOf="@id/bnPlay"
+            app:layout_constraintEnd_toStartOf="@id/btnPlay"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/artistName"
@@ -78,26 +82,26 @@
             />
 
         <ImageView
-            android:id="@+id/bnPlay"
+            android:id="@+id/btnPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/btn_play"
-            app:layout_constraintBottom_toBottomOf="@+id/bnAddToPlaylist"
-            app:layout_constraintEnd_toStartOf="@id/bnLike"
-            app:layout_constraintStart_toEndOf="@id/bnAddToPlaylist"
-            app:layout_constraintTop_toTopOf="@+id/bnAddToPlaylist" />
+            app:layout_constraintBottom_toBottomOf="@+id/btnAddToPlaylist"
+            app:layout_constraintEnd_toStartOf="@id/btnLike"
+            app:layout_constraintStart_toEndOf="@id/btnAddToPlaylist"
+            app:layout_constraintTop_toTopOf="@+id/btnAddToPlaylist" />
 
         <ImageView
-            android:id="@+id/bnLike"
+            android:id="@+id/btnLike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/player_buttons_margin_horizontal"
 
             android:src="@drawable/btn_like"
-            app:layout_constraintBottom_toBottomOf="@+id/bnPlay"
+            app:layout_constraintBottom_toBottomOf="@+id/btnPlay"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/bnPlay"
-            app:layout_constraintTop_toTopOf="@+id/bnPlay" />
+            app:layout_constraintStart_toEndOf="@id/btnPlay"
+            app:layout_constraintTop_toTopOf="@+id/btnPlay" />
 
 
         <TextView
@@ -108,18 +112,18 @@
             android:fontFamily="@font/ys_display_medium"
 
             android:maxLines="1"
+            android:text="0:00"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/h3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bnPlay"
-            tools:text="0:29"
-
-            />
+            app:layout_constraintTop_toBottomOf="@+id/btnPlay" />
 
         <TextView
             android:id="@+id/trackTimeTitle"
             style="@style/player_track_details_LEFT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/player_track_details_margin_horiz"
             android:layout_marginTop="@dimen/player_details_margin_top"
             android:text="@string/player_track_time"
@@ -133,6 +137,8 @@
         <TextView
             android:id="@+id/trackTimeValue"
             style="@style/player_track_details_RIGHT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/player_track_details_margin_horiz"
             app:layout_constraintBottom_toBottomOf="@+id/trackTimeTitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -151,9 +157,10 @@
         <TextView
             android:id="@+id/collectionNameTitle"
             style="@style/player_track_details_LEFT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/player_track_details_margin_horiz"
             android:layout_marginTop="@dimen/player_track_details_margin_top"
-
             android:text="@string/player_collection_name"
             app:layout_constraintEnd_toStartOf="@id/collectionNameValue"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -164,6 +171,8 @@
         <TextView
             android:id="@+id/collectionNameValue"
             style="@style/player_track_details_RIGHT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/player_track_details_margin_horiz"
             app:layout_constraintBottom_toBottomOf="@+id/collectionNameTitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -183,18 +192,22 @@
         <TextView
             android:id="@+id/releaseDateTitle"
             style="@style/player_track_details_LEFT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/player_track_details_margin_horiz"
             android:layout_marginTop="@dimen/player_track_details_margin_top"
+            android:text="@string/release_date"
             app:layout_constraintEnd_toStartOf="@id/releaseDateValue"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/collectionNameTitle"
 
-            tools:text="@string/release_date" />
+            app:layout_constraintTop_toBottomOf="@id/collectionNameTitle" />
 
         <TextView
             android:id="@+id/releaseDateValue"
             style="@style/player_track_details_RIGHT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/player_track_details_margin_horiz"
             app:layout_constraintBottom_toBottomOf="@+id/releaseDateTitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -213,18 +226,22 @@
         <TextView
             android:id="@+id/primaryGenreNameTitle"
             style="@style/player_track_details_LEFT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/player_track_details_margin_horiz"
             android:layout_marginTop="@dimen/player_track_details_margin_top"
+            android:text="@string/primary_genre_name"
             app:layout_constraintEnd_toStartOf="@id/primaryGenreNameValue"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/releaseDateTitle"
 
-            tools:text="@string/primary_genre_name" />
+            app:layout_constraintTop_toBottomOf="@id/releaseDateTitle" />
 
         <TextView
             android:id="@+id/primaryGenreNameValue"
             style="@style/player_track_details_RIGHT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/player_track_details_margin_horiz"
             app:layout_constraintBottom_toBottomOf="@+id/primaryGenreNameTitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -243,6 +260,8 @@
         <TextView
             android:id="@+id/countryTitle"
             style="@style/player_track_details_LEFT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/player_track_details_margin_horiz"
             android:layout_marginTop="@dimen/player_track_details_margin_top"
             android:text="@string/player_country"
@@ -255,6 +274,8 @@
         <TextView
             android:id="@+id/countryValue"
             style="@style/player_track_details_RIGHT_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/player_track_details_margin_horiz"
             app:layout_constraintBottom_toBottomOf="@+id/countryTitle"
             app:layout_constraintEnd_toEndOf="parent"

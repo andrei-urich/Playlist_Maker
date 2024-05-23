@@ -144,8 +144,6 @@
 
     <!-- стиль деталей трека в плейере - левая часть -->
     <style name="player_track_details_LEFT_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/trackDetails</item>
         <item name="android:textSize">13sp</item>
