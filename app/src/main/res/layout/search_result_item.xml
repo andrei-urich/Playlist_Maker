@@ -52,7 +52,7 @@
         android:maxLines="1"
 
         android:textColor="@color/track_information"
-        android:textSize="@dimen/h3"
+        android:textSize="@dimen/h4"
 
 
         app:layout_constraintStart_toEndOf="@id/track_image"
@@ -80,7 +80,7 @@
         android:maxLines="1"
         android:textColor="@color/track_information"
 
-        android:textSize="@dimen/h3"
+        android:textSize="@dimen/h4"
 
         app:layout_constraintStart_toEndOf="@id/iv_divider"
         app:layout_constraintTop_toBottomOf="@id/trackName"

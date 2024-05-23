@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="placeholder_server_error" />
-                            <entry key="sourceFile" value="C:\Study_android\PlayMaker\placeholder_server_error.svg" />
+                            <entry key="outputName" value="btn_play" />
+                            <entry key="sourceFile" value="C:\Study_android\PlayMaker\ButtonPlay.svg" />
                           </map>
                         </option>
                       </PersistentState>
