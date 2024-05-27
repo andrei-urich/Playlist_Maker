@@ -7,7 +7,6 @@ import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -15,7 +14,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.Converter
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -143,12 +140,24 @@ class SearchActivity : AppCompatActivity() {
             request()
         }
 
-        //сохранение в историю результатов поиска
+        //переход в плеер и сохранение в историю результатов поиска
         searchAdapter.onItemClick = {
             searchHistory.saveTrackToHistory(it)
+            val playerIntent = Intent(this, Audioplayer::class.java)
+            val trackToPlay: String? = Gson().toJson(it)
+            playerIntent.putExtra(TRACK_INFO, trackToPlay)
+            startActivity(playerIntent)
         }
 
+
+    //переход в плеер из истории
+    searchHistoryAdapter.onItemClick = {
+        val playerIntent = Intent(this, Audioplayer::class.java)
+        val trackToPlay: String? = Gson().toJson(it)
+        playerIntent.putExtra(TRACK_INFO, trackToPlay)
+        startActivity(playerIntent)
     }
+}
 
     // метод отправки вызова "поиска" на сервер
     fun request() {
@@ -190,10 +199,10 @@ class SearchActivity : AppCompatActivity() {
         return View.VISIBLE
     }
 
-    // методы для сохранения введеного значения в поисковой строке
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        outState.putString(SEARCH_TEXT, searchText)
+    // очистка экрана от плейсхолдеров
+    fun clearPlaceholders() {
+        placeholderSearchError.visibility = View.GONE
+        placeholderServerErrors.visibility = View.GONE
     }
 
     // метод вывода плейсхолдеров при ошибках поиска
@@ -212,26 +221,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?,
-        persistentState: PersistableBundle?
-    ) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: SEARCH_TEXT_BLANK
-    }
-
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val SEARCH_TEXT_BLANK = ""
-    }
-
-    // очистка экрана от плейсхолдеров
-    fun clearPlaceholders() {
-        placeholderSearchError.visibility = View.GONE
-        placeholderServerErrors.visibility = View.GONE
-    }
-
-
+    // метод показа/скрытия истории поиска
     fun historyVisibility(flag: Boolean) {
         if (flag) {
             historyTracks.clear()
@@ -239,7 +229,7 @@ class SearchActivity : AppCompatActivity() {
             recyclerView.adapter = searchHistoryAdapter
             searchHistoryAdapter.notifyDataSetChanged()
 
-            if (!historyTracks.isNullOrEmpty()) {
+            if (historyTracks.isNotEmpty()) {
                 historyClearButton.visibility = View.VISIBLE
                 historyHeader.visibility = View.VISIBLE
                 recyclerView.visibility = View.VISIBLE
@@ -252,5 +242,17 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    // методы для сохранения введеного значения в поисковой строке
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState.putString(SEARCH_TEXT, searchText)
+    }
 
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?
+    ) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: SEARCH_TEXT_BLANK
+    }
 }
