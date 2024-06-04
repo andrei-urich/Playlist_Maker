@@ -171,39 +171,41 @@ class SearchActivity : AppCompatActivity() {
 
     // метод отправки вызова "поиска" на сервер
     fun request() {
-        clearPlaceholders()
-        progressBar.visibility = View.VISIBLE
+        if (searchText.isNotEmpty()) {
+            clearPlaceholders()
+            progressBar.visibility = View.VISIBLE
 
-        iTunesService.search(searchText).enqueue(object : Callback<TracksResponse> {
-            override fun onResponse(
-                call: Call<TracksResponse>,
-                response: Response<TracksResponse>
-            ) {
-                if (response.code() == 200) {
-                    tracks.clear()
-                    progressBar.visibility = View.GONE
-                    recyclerView.adapter = searchAdapter
-                    recyclerView.visibility = View.VISIBLE
+            iTunesService.search(searchText).enqueue(object : Callback<TracksResponse> {
+                override fun onResponse(
+                    call: Call<TracksResponse>,
+                    response: Response<TracksResponse>
+                ) {
+                    if (response.code() == 200) {
+                        tracks.clear()
+                        progressBar.visibility = View.GONE
+                        recyclerView.adapter = searchAdapter
+                        recyclerView.visibility = View.VISIBLE
 
-                    if (response.body()?.results?.isNotEmpty() == true) {
-                        tracks.addAll(response.body()?.results!!)
-                        searchAdapter.notifyDataSetChanged()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            tracks.addAll(response.body()?.results!!)
+                            searchAdapter.notifyDataSetChanged()
 
+                        } else {
+                            progressBar.visibility = View.GONE
+                            showSearchError(1)
+                        }
                     } else {
                         progressBar.visibility = View.GONE
-                        showSearchError(1)
+                        showSearchError(2)
                     }
-                } else {
-                    progressBar.visibility = View.GONE
-                    showSearchError(2)
                 }
-            }
 
-            override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                progressBar.visibility = View.GONE
-                showSearchError(3)
-            }
-        })
+                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                    progressBar.visibility = View.GONE
+                    showSearchError(3)
+                }
+            })
+        }
     }
 
     // метод очистки поисковой строки
