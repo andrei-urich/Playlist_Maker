@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -44,7 +46,7 @@ class AudioplayerActivity : AppCompatActivity() {
     private lateinit var releaseDateGroup: Group
     private lateinit var primaryGenreNameGroup: Group
     private lateinit var countryGroup: Group
-
+    private lateinit var handler: Handler
     private var mediaPlayer = MediaPlayer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +70,7 @@ class AudioplayerActivity : AppCompatActivity() {
         releaseDateGroup = findViewById(R.id.releaseDateGroup)
         primaryGenreNameGroup = findViewById(R.id.primaryGenreNameGroup)
         countryGroup = findViewById(R.id.countryGroup)
+        handler = Handler(Looper.getMainLooper())
 
         toolbar.setOnClickListener {
             finish()
@@ -96,10 +99,42 @@ class AudioplayerActivity : AppCompatActivity() {
         }
     }
 
+    private fun showTrackPlayedTime() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                handler.postDelayed(
+                    object : Runnable {
+                        override fun run() {
+                            trackProgress.setText(
+                                SimpleDateFormat(
+                                    "mm:ss",
+                                    Locale.getDefault()
+                                ).format(mediaPlayer.currentPosition)
+                            )
+                            if (playerState == STATE_PLAYING) {
+                                handler.postDelayed(this, PLAY_DEBOUNCE_DELAY)
+                            }
+                        }
+                    }, PLAY_DEBOUNCE_DELAY
+                )
+            }
+
+            STATE_PAUSED -> {
+                handler.removeCallbacksAndMessages(null)
+            }
+
+            STATE_PREPARED -> {
+                handler.removeCallbacksAndMessages(null)
+                trackProgress.setText("00:00")
+            }
+        }
+    }
+
     private fun startPlayer() {
         mediaPlayer.start()
         btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_pause))
         playerState = STATE_PLAYING
+        showTrackPlayedTime()
     }
 
 
@@ -107,6 +142,7 @@ class AudioplayerActivity : AppCompatActivity() {
         mediaPlayer.pause()
         btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
         playerState = STATE_PAUSED
+        showTrackPlayedTime()
     }
 
     private fun preparePlayer(track: Track) {
@@ -119,6 +155,7 @@ class AudioplayerActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
             playerState = STATE_PREPARED
+            showTrackPlayedTime()
         }
     }
 
@@ -169,6 +206,7 @@ class AudioplayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
         mediaPlayer.release()
     }
 }

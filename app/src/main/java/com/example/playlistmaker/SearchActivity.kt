@@ -55,6 +55,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistory: SearchHistory
     private lateinit var handler: Handler
     private lateinit var progressBar: ProgressBar
+    private var isClickAllowed = true
     private val searchRunnable = Runnable { request() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -162,10 +163,12 @@ class SearchActivity : AppCompatActivity() {
 
         //переход в плеер из истории
         searchHistoryAdapter.onItemClick = {
-            val playerIntent = Intent(this, AudioplayerActivity::class.java)
-            val trackToPlay: String? = Gson().toJson(it)
-            playerIntent.putExtra(TRACK_INFO, trackToPlay)
-            startActivity(playerIntent)
+            if (clickDebounce()) {
+                val playerIntent = Intent(this, AudioplayerActivity::class.java)
+                val trackToPlay: String? = Gson().toJson(it)
+                playerIntent.putExtra(TRACK_INFO, trackToPlay)
+                startActivity(playerIntent)
+            }
         }
     }
 
@@ -264,6 +267,16 @@ class SearchActivity : AppCompatActivity() {
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    // метод дебаунса клика на результатах поиска (клик на треке для вызова плеера)
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
 

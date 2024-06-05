@@ -112,7 +112,7 @@
             android:fontFamily="@font/ys_display_medium"
 
             android:maxLines="1"
-            android:text="0:00"
+            tools:text="00:00"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/h3"
             app:layout_constraintEnd_toEndOf="parent"
