@@ -5,6 +5,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class SearchHistory(val sharedPrefs: SharedPreferences) {
+    companion object {
+        const val SEARCH_HISTORY = "search_history"
+    }
+
     var historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
     var searchHistoryTracks: MutableList<Track>
 

@@ -30,8 +30,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
 class SearchActivity : AppCompatActivity() {
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+    }
 
-    private var searchText = SEARCH_TEXT_BLANK
+    private var searchText = EMPTY_STRING
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
@@ -291,6 +294,6 @@ class SearchActivity : AppCompatActivity() {
         persistentState: PersistableBundle?
     ) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
-        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: SEARCH_TEXT_BLANK
+        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: EMPTY_STRING
     }
 }
