@@ -153,7 +153,7 @@ class SearchActivity : AppCompatActivity() {
         //переход в плеер и сохранение в историю результатов поиска
         searchAdapter.onItemClick = {
             searchHistory.saveTrackToHistory(it)
-            val playerIntent = Intent(this, Audioplayer::class.java)
+            val playerIntent = Intent(this, AudioplayerActivity::class.java)
             val trackToPlay: String? = Gson().toJson(it)
             playerIntent.putExtra(TRACK_INFO, trackToPlay)
             startActivity(playerIntent)
@@ -162,7 +162,7 @@ class SearchActivity : AppCompatActivity() {
 
         //переход в плеер из истории
         searchHistoryAdapter.onItemClick = {
-            val playerIntent = Intent(this, Audioplayer::class.java)
+            val playerIntent = Intent(this, AudioplayerActivity::class.java)
             val trackToPlay: String? = Gson().toJson(it)
             playerIntent.putExtra(TRACK_INFO, trackToPlay)
             startActivity(playerIntent)

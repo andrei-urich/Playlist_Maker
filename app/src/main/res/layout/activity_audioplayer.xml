@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    tools:context=".Audioplayer">
+    tools:context=".AudioplayerActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -72,7 +72,7 @@
 
             android:layout_marginStart="@dimen/player_buttons_margin_horizontal"
             android:layout_marginTop="@dimen/player_button_addPlaylist_margin_top"
-
+            android:clickable="true"
             android:src="@drawable/btn_add_playlist"
             app:layout_constraintEnd_toStartOf="@id/btnPlay"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -96,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/player_buttons_margin_horizontal"
-
+            android:clickable="true"
             android:src="@drawable/btn_like"
             app:layout_constraintBottom_toBottomOf="@+id/btnPlay"
             app:layout_constraintEnd_toEndOf="parent"

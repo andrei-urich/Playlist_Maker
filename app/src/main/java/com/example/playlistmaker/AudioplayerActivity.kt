@@ -1,5 +1,7 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -12,27 +14,38 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
+import androidx.appcompat.content.res.AppCompatResources
 
-class Audioplayer : AppCompatActivity() {
+class AudioplayerActivity : AppCompatActivity() {
 
-    lateinit var track: Track
-    lateinit var trackImage: ImageView
-    lateinit var trackName: TextView
-    lateinit var artistName: TextView
-    lateinit var btnAddToPlaylist: ImageView
-    lateinit var btnPlay: ImageView
-    lateinit var btnLike: ImageView
-    lateinit var trackProgress: TextView
-    lateinit var trackTimeValue: TextView
-    lateinit var collectionNameValue: TextView
-    lateinit var releaseDateValue: TextView
-    lateinit var primaryGenreNameValue: TextView
-    lateinit var countryValue: TextView
-    lateinit var collectionGroup: Group
-    lateinit var releaseDateGroup: Group
-    lateinit var primaryGenreNameGroup: Group
-    lateinit var countryGroup: Group
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+    }
 
+    private var playerState = STATE_DEFAULT
+
+    private lateinit var track: Track
+    private lateinit var trackImage: ImageView
+    private lateinit var trackName: TextView
+    private lateinit var artistName: TextView
+    private lateinit var btnAddToPlaylist: ImageView
+    private lateinit var btnPlay: ImageView
+    private lateinit var btnLike: ImageView
+    private lateinit var trackProgress: TextView
+    private lateinit var trackTimeValue: TextView
+    private lateinit var collectionNameValue: TextView
+    private lateinit var releaseDateValue: TextView
+    private lateinit var primaryGenreNameValue: TextView
+    private lateinit var countryValue: TextView
+    private lateinit var collectionGroup: Group
+    private lateinit var releaseDateGroup: Group
+    private lateinit var primaryGenreNameGroup: Group
+    private lateinit var countryGroup: Group
+
+    private var mediaPlayer = MediaPlayer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,14 +69,56 @@ class Audioplayer : AppCompatActivity() {
         primaryGenreNameGroup = findViewById(R.id.primaryGenreNameGroup)
         countryGroup = findViewById(R.id.countryGroup)
 
+        toolbar.setOnClickListener {
+            finish()
+        }
 
         val intent = intent
         val trackInfo = intent.getStringExtra(TRACK_INFO)
         track = Gson().fromJson(trackInfo, Track::class.java)
-        putOnTrack(track)
+        preparePlayer(track)
 
-        toolbar.setOnClickListener {
-            finish()
+        btnPlay.setOnClickListener {
+            playbackControl()
+        }
+        putOnTrack(track)
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_pause))
+        playerState = STATE_PLAYING
+    }
+
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
+        playerState = STATE_PAUSED
+    }
+
+    private fun preparePlayer(track: Track) {
+        mediaPlayer.setDataSource(track.previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            btnPlay.isClickable = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
+            playerState = STATE_PREPARED
         }
     }
 
@@ -83,7 +138,7 @@ class Audioplayer : AppCompatActivity() {
             collectionGroup.visibility = View.GONE
         }
         if (!track.releaseDate.isNullOrBlank()) {
-            releaseDateValue.setText(track.releaseDate.substring(0,4))
+            releaseDateValue.setText(track.releaseDate.substring(0, 4))
         } else {
             releaseDateGroup.visibility = View.GONE
         }
@@ -105,5 +160,15 @@ class Audioplayer : AppCompatActivity() {
             .transform(RoundedCorners(8))
             .dontAnimate()
             .into(trackImage)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
     }
 }
