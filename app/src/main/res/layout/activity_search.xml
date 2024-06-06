@@ -175,6 +175,20 @@
 
     </LinearLayout>
 
+    <!-- Прогресс-бар -->
+    <ProgressBar android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_bar_dim"
+        android:layout_height="@dimen/progress_bar_dim"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/search_cursor_color"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/flSearch"
+        android:layout_marginTop="@dimen/progress_bar_margin_top"
+
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

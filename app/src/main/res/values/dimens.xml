@@ -56,4 +56,6 @@
     <dimen name="player_buttons_margin_horizontal">24dp</dimen>
     <dimen name="player_button_addPlaylist_margin_top">54dp</dimen>
     <dimen name="player_details_margin_bottom">28dp</dimen>
+    <dimen name="progress_bar_dim">44dp</dimen>
+    <dimen name="progress_bar_margin_top">148dp</dimen>
 </resources>
