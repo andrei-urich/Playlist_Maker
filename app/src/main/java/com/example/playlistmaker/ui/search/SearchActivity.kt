@@ -105,7 +105,7 @@ class SearchActivity : AppCompatActivity() {
 
         //обработчик нажатия на кнопку очистки строки поиска
         clearButton.setOnClickListener {
-            searchBar.setText("")
+            searchBar.setText(EMPTY_STRING)
             clearPlaceholders()
             inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
             historyVisibility(false)
@@ -310,5 +310,13 @@ class SearchActivity : AppCompatActivity() {
     ) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: EMPTY_STRING
+    }
+
+    override fun onDestroy() {
+        val currentRunnable = tracksRunnable
+        if (currentRunnable != null) {
+            handler.removeCallbacks(currentRunnable)
+        }
+        super.onDestroy()
     }
 }
