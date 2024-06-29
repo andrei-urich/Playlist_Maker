@@ -1,6 +1,5 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
-import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -17,6 +16,10 @@ import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 import androidx.appcompat.content.res.AppCompatResources
+import com.example.playlistmaker.PLAY_DEBOUNCE_DELAY
+import com.example.playlistmaker.R
+import com.example.playlistmaker.TRACK_INFO
+import com.example.playlistmaker.domain.model.Track
 
 class AudioplayerActivity : AppCompatActivity() {
 
