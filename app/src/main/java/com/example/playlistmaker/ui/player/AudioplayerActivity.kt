@@ -10,27 +10,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.gson.Gson
-import java.text.SimpleDateFormat
-import java.util.Locale
 import androidx.appcompat.content.res.AppCompatResources
 import com.example.playlistmaker.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
 import com.example.playlistmaker.TRACK_INFO
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
-import com.example.playlistmaker.domain.PlayerState
 import com.example.playlistmaker.domain.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.domain.PlayerState.STATE_PAUSED
 import com.example.playlistmaker.domain.PlayerState.STATE_PLAYING
 import com.example.playlistmaker.domain.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.use_case.PlayerInteractor
+import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
+import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 
 class AudioplayerActivity : AppCompatActivity() {
 
     private var playerState = "STATE_DEFAULT"
-    private val interactor = Creator.getPlayerInteractor()
+    private val interactor = Creator.providePlayerInteractor()
+    private val trackTransfer = Creator.provideTrackTransfer()
 
     private lateinit var viewBinding: ActivityAudioplayerBinding
 
@@ -84,7 +83,7 @@ class AudioplayerActivity : AppCompatActivity() {
 
         val intent = intent
         val trackInfo = intent.getStringExtra(TRACK_INFO)
-        track = Gson().fromJson(trackInfo, Track::class.java)
+        track = trackTransfer.getTrack(trackInfo.toString())
         btnPlay.setOnClickListener {
             playbackControl()
         }
@@ -165,10 +164,7 @@ class AudioplayerActivity : AppCompatActivity() {
         trackName.setText(track.trackName)
         artistName.setText(track.artistName)
         trackTimeValue.setText(
-            SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(track.trackTimeMillis)
+            TrackTimeFormatter.formatTime(track.trackTimeMillis)
         )
 
         if (!track.collectionName.isNullOrBlank()) {
@@ -193,7 +189,7 @@ class AudioplayerActivity : AppCompatActivity() {
         }
 
         Glide.with(trackImage)
-            .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(ImageLinkFormatter.formatPlayingTrackImageLink(track.artworkUrl100))
             .placeholder(R.drawable.placeholder_big)
             .fitCenter()
             .transform(RoundedCorners(8))

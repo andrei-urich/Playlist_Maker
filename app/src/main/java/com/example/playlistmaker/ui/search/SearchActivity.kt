@@ -31,11 +31,7 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.ResultCode
 import com.example.playlistmaker.domain.SearchConsumer
 import com.example.playlistmaker.domain.model.Track
-
 import com.example.playlistmaker.ui.player.AudioplayerActivity
-
-import com.google.gson.Gson
-
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -46,6 +42,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var viewBinding: ActivitySearchBinding
     private val trackSearch = Creator.provideTracksSearch()
+    private val trackTransfer = Creator.provideTrackTransfer()
 
     var tracks = mutableListOf<Track>()
     var historyTracks = mutableListOf<Track>()
@@ -166,7 +163,7 @@ class SearchActivity : AppCompatActivity() {
         searchAdapter.onItemClick = {
             searchHistory.saveTrackToHistory(it)
             val playerIntent = Intent(this, AudioplayerActivity::class.java)
-            val trackToPlay: String? = Gson().toJson(it)
+            val trackToPlay = trackTransfer.sendTrack(it)
             playerIntent.putExtra(TRACK_INFO, trackToPlay)
             startActivity(playerIntent)
         }
@@ -176,14 +173,13 @@ class SearchActivity : AppCompatActivity() {
         searchHistoryAdapter.onItemClick = {
             if (clickDebounce()) {
                 val playerIntent = Intent(this, AudioplayerActivity::class.java)
-                val trackToPlay: String? = Gson().toJson(it)
+                val trackToPlay = trackTransfer.sendTrack(it)
                 playerIntent.putExtra(TRACK_INFO, trackToPlay)
                 startActivity(playerIntent)
             }
         }
     }
 
-    // метод отправки вызова "поиска" на сервер
     fun request() {
         if (searchText.isNotEmpty()) {
             clearPlaceholders()
