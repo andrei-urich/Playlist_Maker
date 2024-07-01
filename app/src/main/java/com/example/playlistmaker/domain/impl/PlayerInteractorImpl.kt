@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.impl
 
+import com.example.playlistmaker.domain.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.repository.PlayerRepository
 import com.example.playlistmaker.domain.use_case.PlayerInteractor
@@ -16,7 +17,10 @@ class PlayerInteractorImpl(
         playerRepository.pausePlayer()
     }
 
-    override fun preparePlayer(track: Track, listener: PlayerInteractor.OnPlayerStateChangeListener) {
+    override fun preparePlayer(
+        track: Track,
+        listener: OnPlayerStateChangeListener
+    ) {
         playerRepository.preparePlayer(track, listener)
     }
 

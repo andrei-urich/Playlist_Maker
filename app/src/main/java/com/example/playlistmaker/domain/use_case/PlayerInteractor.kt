@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.use_case
 
+import com.example.playlistmaker.domain.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.model.Track
 
 interface PlayerInteractor {
@@ -8,10 +9,6 @@ interface PlayerInteractor {
     fun pausePlayer()
 
     fun preparePlayer(track: Track, listener: OnPlayerStateChangeListener)
-
-    interface OnPlayerStateChangeListener {
-        fun onChange(state: String)
-    }
 
     fun getCurrentPosition(): String
 

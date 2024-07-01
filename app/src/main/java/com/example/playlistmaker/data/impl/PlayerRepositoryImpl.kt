@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.impl
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.domain.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.domain.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
@@ -12,7 +13,7 @@ import java.util.Locale
 class PlayerRepositoryImpl : PlayerRepository {
 
     val mediaPlayer = MediaPlayer()
-    private lateinit var listener: PlayerInteractor.OnPlayerStateChangeListener
+    private lateinit var listener: OnPlayerStateChangeListener
 
     override fun startPlayer() {
         mediaPlayer.start()
@@ -24,7 +25,7 @@ class PlayerRepositoryImpl : PlayerRepository {
 
     override fun preparePlayer(
         track: Track,
-        listener: PlayerInteractor.OnPlayerStateChangeListener
+        listener: OnPlayerStateChangeListener
     ) {
         this.listener = listener
         mediaPlayer.setDataSource(track.previewUrl)
@@ -37,7 +38,7 @@ class PlayerRepositoryImpl : PlayerRepository {
         }
     }
 
-    override fun getCurrentPosition() : String {
+    override fun getCurrentPosition(): String {
         return SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
