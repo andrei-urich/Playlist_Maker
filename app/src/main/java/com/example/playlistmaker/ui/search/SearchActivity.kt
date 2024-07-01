@@ -28,7 +28,8 @@ import com.example.playlistmaker.SEARCH_HISTORY_PREFERENCES
 import com.example.playlistmaker.TRACK_INFO
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.domain.ResultCode
+import com.example.playlistmaker.domain.ResourceResponseResult
+import com.example.playlistmaker.domain.ResourceResponseResult.SUCCESS
 import com.example.playlistmaker.domain.SearchConsumer
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.AudioplayerActivity
@@ -197,7 +198,7 @@ class SearchActivity : AppCompatActivity() {
                         val newTracksRunnable = Runnable {
 
 
-                            if (ResultCode.resultCode == 200) {
+                            if (ResourceResponseResult.resourceResponseResult == SUCCESS) {
                                 this@SearchActivity.tracks.clear()
                                 progressBar.visibility = View.GONE
                                 recyclerView.adapter = searchAdapter

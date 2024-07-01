@@ -16,6 +16,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.TRACK_INFO
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
+import com.example.playlistmaker.domain.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.domain.PlayerState.STATE_PAUSED
 import com.example.playlistmaker.domain.PlayerState.STATE_PLAYING
@@ -90,7 +91,7 @@ class AudioplayerActivity : AppCompatActivity() {
         putOnTrack(track)
 
         interactor.preparePlayer(track,
-            object : PlayerInteractor.OnPlayerStateChangeListener {
+            object : OnPlayerStateChangeListener {
                 override fun onChange(state: String) {
                     playerState = state
                 }
