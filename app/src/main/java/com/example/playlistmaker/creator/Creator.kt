@@ -5,11 +5,11 @@ import com.example.playlistmaker.data.impl.TrackTransferRepositoryImpl
 import com.example.playlistmaker.data.impl.TracksRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
-import com.example.playlistmaker.domain.impl.TrackSearchImpl
+import com.example.playlistmaker.domain.impl.TrackSearchUseCaseImpl
 import com.example.playlistmaker.domain.repository.PlayerRepository
 import com.example.playlistmaker.domain.repository.TracksRepository
 import com.example.playlistmaker.domain.use_case.PlayerInteractor
-import com.example.playlistmaker.domain.use_case.TrackSearch
+import com.example.playlistmaker.domain.use_case.TrackSearchUseCase
 import com.example.playlistmaker.ui.repository.TrackTransferRepository
 
 object Creator {
@@ -17,8 +17,8 @@ object Creator {
         return TracksRepositoryImpl(RetrofitNetworkClient())
     }
 
-    fun provideTracksSearch(): TrackSearch {
-        return TrackSearchImpl(getTrackRepository())
+    fun provideTracksSearch(): TrackSearchUseCase {
+        return TrackSearchUseCaseImpl(getTrackRepository())
     }
 
 
