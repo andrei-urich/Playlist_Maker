@@ -1,9 +1,11 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.NIGHT_MODE
+import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCES
 
 class MyApp : Application() {
     private var nightMode = false

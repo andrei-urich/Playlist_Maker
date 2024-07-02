@@ -10,7 +10,7 @@
     android:paddingHorizontal="@dimen/screen_padding"
     android:paddingTop="@dimen/screen_top_padding"
     android:paddingBottom="@dimen/screen_padding"
-    tools:context=".MainActivity">
+    tools:context=".ui.main.MainActivity">
 
     <TextView
         android:layout_width="match_parent"

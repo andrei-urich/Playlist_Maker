@@ -33,5 +33,5 @@
     <string name="release_date">Год</string>
     <string name="primary_genre_name">Жанр</string>
     <string name="player_country">Страна</string>
-
+    <string name="blankTimer">00:00</string>
 </resources>

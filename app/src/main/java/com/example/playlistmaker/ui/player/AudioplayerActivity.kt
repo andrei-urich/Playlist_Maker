@@ -1,7 +1,5 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
-import android.annotation.SuppressLint
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,25 +7,32 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.gson.Gson
-import java.text.SimpleDateFormat
-import java.util.Locale
 import androidx.appcompat.content.res.AppCompatResources
+import com.example.playlistmaker.PLAY_DEBOUNCE_DELAY
+import com.example.playlistmaker.R
+import com.example.playlistmaker.TRACK_INFO
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
+import com.example.playlistmaker.domain.OnPlayerStateChangeListener
+import com.example.playlistmaker.domain.PlayerState.STATE_COMPLETE
+import com.example.playlistmaker.domain.PlayerState.STATE_PAUSED
+import com.example.playlistmaker.domain.PlayerState.STATE_PLAYING
+import com.example.playlistmaker.domain.PlayerState.STATE_PREPARED
+import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.use_case.PlayerInteractor
+import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
+import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 
 class AudioplayerActivity : AppCompatActivity() {
 
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-    }
+    private var playerState = "STATE_DEFAULT"
+    private val interactor = Creator.providePlayerInteractor()
+    private val trackTransfer = Creator.provideTrackTransfer()
 
-    private var playerState = STATE_DEFAULT
+    private lateinit var viewBinding: ActivityAudioplayerBinding
 
     private lateinit var track: Track
     private lateinit var trackImage: ImageView
@@ -47,29 +52,30 @@ class AudioplayerActivity : AppCompatActivity() {
     private lateinit var primaryGenreNameGroup: Group
     private lateinit var countryGroup: Group
     private lateinit var handler: Handler
-    private var mediaPlayer = MediaPlayer()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_audioplayer)
+        viewBinding = ActivityAudioplayerBinding.inflate(this.layoutInflater)
+        setContentView(viewBinding.root)
 
-        val toolbar = findViewById<Toolbar>(R.id.tbPlayer)
-        trackImage = findViewById(R.id.trackImage)
-        trackName = findViewById((R.id.trackName))
-        artistName = findViewById(R.id.artistName)
-        btnAddToPlaylist = findViewById((R.id.btnAddToPlaylist))
-        btnPlay = findViewById((R.id.btnPlay))
-        btnLike = findViewById(R.id.btnLike)
-        trackProgress = findViewById(R.id.trackProgress)
-        trackTimeValue = findViewById(R.id.trackTimeValue)
-        collectionNameValue = findViewById(R.id.collectionNameValue)
-        releaseDateValue = findViewById(R.id.releaseDateValue)
-        primaryGenreNameValue = findViewById(R.id.primaryGenreNameValue)
-        countryValue = findViewById(R.id.countryValue)
-        collectionGroup = findViewById(R.id.collectionGroup)
-        releaseDateGroup = findViewById(R.id.releaseDateGroup)
-        primaryGenreNameGroup = findViewById(R.id.primaryGenreNameGroup)
-        countryGroup = findViewById(R.id.countryGroup)
+        val toolbar = viewBinding.tbPlayer
+        trackImage = viewBinding.trackImage
+        trackName = viewBinding.trackName
+        artistName = viewBinding.artistName
+        btnAddToPlaylist = viewBinding.btnAddToPlaylist
+        btnPlay = viewBinding.btnPlay
+        btnLike = viewBinding.btnLike
+        trackProgress = viewBinding.trackProgress
+        trackTimeValue = viewBinding.trackTimeValue
+        collectionNameValue = viewBinding.collectionNameValue
+        releaseDateValue = viewBinding.releaseDateValue
+        primaryGenreNameValue = viewBinding.primaryGenreNameValue
+        countryValue = viewBinding.countryValue
+        collectionGroup = viewBinding.collectionGroup
+        releaseDateGroup = viewBinding.releaseDateGroup
+        primaryGenreNameGroup = viewBinding.primaryGenreNameGroup
+        countryGroup = viewBinding.countryGroup
         handler = Handler(Looper.getMainLooper())
 
         toolbar.setOnClickListener {
@@ -78,13 +84,19 @@ class AudioplayerActivity : AppCompatActivity() {
 
         val intent = intent
         val trackInfo = intent.getStringExtra(TRACK_INFO)
-        track = Gson().fromJson(trackInfo, Track::class.java)
-        preparePlayer(track)
-
+        track = trackTransfer.getTrack(trackInfo.toString())
         btnPlay.setOnClickListener {
             playbackControl()
         }
         putOnTrack(track)
+
+        interactor.preparePlayer(track,
+            object : OnPlayerStateChangeListener {
+                override fun onChange(state: String) {
+                    playerState = state
+                }
+            }
+        )
     }
 
     private fun playbackControl() {
@@ -96,6 +108,12 @@ class AudioplayerActivity : AppCompatActivity() {
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
             }
+
+            STATE_COMPLETE -> {
+                btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
+                playerState = STATE_PREPARED
+                showTrackPlayedTime()
+            }
         }
     }
 
@@ -106,10 +124,7 @@ class AudioplayerActivity : AppCompatActivity() {
                     object : Runnable {
                         override fun run() {
                             trackProgress.setText(
-                                SimpleDateFormat(
-                                    "mm:ss",
-                                    Locale.getDefault()
-                                ).format(mediaPlayer.currentPosition)
+                                interactor.getCurrentPosition()
                             )
                             if (playerState == STATE_PLAYING) {
                                 handler.postDelayed(this, PLAY_DEBOUNCE_DELAY)
@@ -125,13 +140,13 @@ class AudioplayerActivity : AppCompatActivity() {
 
             STATE_PREPARED -> {
                 handler.removeCallbacksAndMessages(null)
-                trackProgress.setText("00:00")
+                trackProgress.setText(R.string.blankTimer)
             }
         }
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        interactor.startPlayer()
         btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_pause))
         playerState = STATE_PLAYING
         showTrackPlayedTime()
@@ -139,34 +154,18 @@ class AudioplayerActivity : AppCompatActivity() {
 
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        interactor.pausePlayer()
         btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
         playerState = STATE_PAUSED
         showTrackPlayedTime()
     }
 
-    private fun preparePlayer(track: Track) {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            btnPlay.isClickable = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
-            playerState = STATE_PREPARED
-            showTrackPlayedTime()
-        }
-    }
 
     private fun putOnTrack(track: Track) {
         trackName.setText(track.trackName)
         artistName.setText(track.artistName)
         trackTimeValue.setText(
-            SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(track.trackTimeMillis)
+            TrackTimeFormatter.formatTime(track.trackTimeMillis)
         )
 
         if (!track.collectionName.isNullOrBlank()) {
@@ -191,7 +190,7 @@ class AudioplayerActivity : AppCompatActivity() {
         }
 
         Glide.with(trackImage)
-            .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(ImageLinkFormatter.formatPlayingTrackImageLink(track.artworkUrl100))
             .placeholder(R.drawable.placeholder_big)
             .fitCenter()
             .transform(RoundedCorners(8))
@@ -205,8 +204,8 @@ class AudioplayerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         handler.removeCallbacksAndMessages(null)
-        mediaPlayer.release()
+        interactor.release()
+        super.onDestroy()
     }
 }

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/search_main"
+    android:id="@+id/searchScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary">
@@ -31,7 +31,7 @@
         <!-- Поисковая строка -->
 
         <EditText
-            android:id="@+id/search_bar"
+            android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/search_edittext_right_margin"
@@ -58,7 +58,7 @@
             />
 
         <ImageView
-            android:id="@+id/iv_clearButton"
+            android:id="@+id/ivClearButton"
             android:layout_width="@dimen/search_clear_button_width"
             android:layout_height="match_parent"
             android:layout_gravity="end"
@@ -95,7 +95,7 @@
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_search"
+            android:id="@+id/recyclerViewSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/search_result_top_margin"
