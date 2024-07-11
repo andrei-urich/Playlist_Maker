@@ -22,7 +22,6 @@ import com.example.playlistmaker.domain.PlayerState.STATE_PAUSED
 import com.example.playlistmaker.domain.PlayerState.STATE_PLAYING
 import com.example.playlistmaker.domain.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.domain.use_case.PlayerInteractor
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 

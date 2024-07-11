@@ -1,0 +1,6 @@
+package com.example.playlistmaker.domain.comsumers
+
+sealed interface ConsumerData<T> {
+    data class Data<T>(val value: T) : ConsumerData<T>
+    data class Error<T>(val resultCode: Int) : ConsumerData<T>
+}
