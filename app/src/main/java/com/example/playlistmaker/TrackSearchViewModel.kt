@@ -44,17 +44,4 @@ class TrackSearchViewModel(
             )
         }
     }
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    val searchInteractor =
-                        Creator.provideTracksSearchInteractor()
-                    TrackSearchViewModel(
-                        searchInteractor
-                    )
-                }
-            }
-    }
 }

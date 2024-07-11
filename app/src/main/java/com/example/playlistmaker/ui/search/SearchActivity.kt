@@ -17,9 +17,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.EMPTY_STRING
@@ -32,7 +31,7 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.AudioplayerActivity
 
-class SearchActivity : ComponentActivity() {
+class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
@@ -90,10 +89,7 @@ class SearchActivity : ComponentActivity() {
 
         handler = Handler(Looper.getMainLooper())
 
-        viewModel = ViewModelProvider(
-            this,
-            TrackSearchViewModel.getViewModelFactory()
-        )[TrackSearchViewModel::class.java]
+        viewModel = TrackSearchViewModel()
 
         searchRunnable = Runnable { viewModel.request(searchText) }
         searchBar.setText(searchText)
