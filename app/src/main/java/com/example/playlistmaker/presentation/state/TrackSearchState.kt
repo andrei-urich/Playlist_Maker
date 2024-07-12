@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.state
 
 import com.example.playlistmaker.domain.model.Track
 

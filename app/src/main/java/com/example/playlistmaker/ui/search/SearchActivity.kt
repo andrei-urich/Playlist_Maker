@@ -24,8 +24,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.EMPTY_STRING
 import com.example.playlistmaker.SEARCH_HISTORY_PREFERENCES
 import com.example.playlistmaker.TRACK_INFO
-import com.example.playlistmaker.TrackSearchState
-import com.example.playlistmaker.TrackSearchViewModel
+import com.example.playlistmaker.presentation.state.TrackSearchState
+import com.example.playlistmaker.presentation.viewmodel.TrackSearchViewModel
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
@@ -47,11 +47,13 @@ class SearchActivity : AppCompatActivity() {
     private val trackTransfer = Creator.provideTrackTransfer()
 
     private var tracks = mutableListOf<Track>()
+    private var historyTracks = mutableListOf<Track>()
+
     private lateinit var viewModel: TrackSearchViewModel
 
-    var historyTracks = mutableListOf<Track>()
-    val searchAdapter = SearchAdapter(tracks)
-    val searchHistoryAdapter = SearchHistoryAdapter(historyTracks)
+    lateinit var searchAdapter: SearchAdapter
+    lateinit var searchHistoryAdapter : SearchHistoryAdapter
+
     private lateinit var searchToolbar: Toolbar
     private lateinit var searchBar: EditText
     private lateinit var clearButton: ImageView
@@ -96,6 +98,10 @@ class SearchActivity : AppCompatActivity() {
 
         val sharedPrefs = getSharedPreferences(SEARCH_HISTORY_PREFERENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPrefs)
+
+        searchAdapter = SearchAdapter(tracks, viewModel::playTrack)
+        searchHistoryAdapter = SearchHistoryAdapter(historyTracks, viewModel::playTrack )
+
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         //обработчик всплывающей клавиатуры
@@ -165,25 +171,15 @@ class SearchActivity : AppCompatActivity() {
             viewModel.request(searchText)
         }
 
-        //переход в плеер и сохранение в историю результатов поиска
-        searchAdapter.onItemClick = {
-            searchHistory.saveTrackToHistory(it)
-            val playerIntent = Intent(this, AudioplayerActivity::class.java)
-            val trackToPlay = trackTransfer.sendTrack(it)
-            playerIntent.putExtra(TRACK_INFO, trackToPlay)
-            startActivity(playerIntent)
-        }
-
-
         //переход в плеер из истории
-        searchHistoryAdapter.onItemClick = {
-            if (clickDebounce()) {
-                val playerIntent = Intent(this, AudioplayerActivity::class.java)
-                val trackToPlay = trackTransfer.sendTrack(it)
-                playerIntent.putExtra(TRACK_INFO, trackToPlay)
-                startActivity(playerIntent)
-            }
-        }
+//        searchHistoryAdapter.onItemClick = {
+//            if (clickDebounce()) {
+//                val playerIntent = Intent(this, AudioplayerActivity::class.java)
+//                val trackToPlay = trackTransfer.sendTrack(it)
+//                playerIntent.putExtra(TRACK_INFO, trackToPlay)
+//                startActivity(playerIntent)
+//            }
+//        }
 
         viewModel.getSearchStateLiveData().observe(this) { searchState ->
             when (searchState) {
@@ -202,7 +198,25 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         }
+
+//        //переход в плеер и сохранение в историю результатов поиска
+//        searchAdapter.onItemClick = { it ->
+//            viewModel::playTrack
+//        }
+
+        viewModel.getPlayTrackTrigger().observe(this) { track ->
+            playTrack(track)
+        }
+
     }
+
+    private fun playTrack(track: Track) {
+        val playerIntent = Intent(this, AudioplayerActivity::class.java)
+        val trackToPlay = trackTransfer.sendTrack(track)
+        playerIntent.putExtra(TRACK_INFO, trackToPlay)
+        startActivity(playerIntent)
+    }
+
 
     private fun changeContentVisibility(showCase: String) {
         when (showCase) {
@@ -302,7 +316,6 @@ class SearchActivity : AppCompatActivity() {
         return current
     }
 
-
     // методы для сохранения введеного значения в поисковой строке
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
@@ -310,8 +323,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?,
-        persistentState: PersistableBundle?
+        savedInstanceState: Bundle?, persistentState: PersistableBundle?
     ) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: EMPTY_STRING

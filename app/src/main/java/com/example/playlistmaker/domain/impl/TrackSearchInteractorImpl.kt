@@ -4,11 +4,11 @@ import com.example.playlistmaker.domain.comsumers.ConsumerData
 import com.example.playlistmaker.domain.comsumers.SearchConsumer
 import com.example.playlistmaker.domain.model.Resource
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.domain.repository.TracksRepository
+import com.example.playlistmaker.domain.repository.SearchTracksRepository
 import com.example.playlistmaker.domain.use_case.TrackSearchInteractor
 import java.util.concurrent.Executors
 
-class TrackSearchInteractorImpl(private val repository: TracksRepository) : TrackSearchInteractor {
+class TrackSearchInteractorImpl(private val repository: SearchTracksRepository) : TrackSearchInteractor {
 
     private val executor = Executors.newCachedThreadPool()
 

@@ -1,29 +1,27 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.comsumers.ConsumerData
 import com.example.playlistmaker.domain.comsumers.SearchConsumer
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.use_case.TrackSearchInteractor
+import com.example.playlistmaker.presentation.state.TrackSearchState
+import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 
 class TrackSearchViewModel(
     private val searchInteractor: TrackSearchInteractor = Creator.provideTracksSearchInteractor()
 ) : ViewModel() {
 
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
-
+    private var playTrackTrigger = SingleEventLiveData<Track>()
+    private var historyLiveData = MutableLiveData<List<Track>>()
 
     fun getSearchStateLiveData(): LiveData<TrackSearchState> = searchStateLiveData
-
-    private var historyLiveData = MutableLiveData<List<Track>>()
+    fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
     fun getHistoryLiveData(): LiveData<List<Track>> = historyLiveData
-
 
     fun request(request: String) {
         if (request.isNotEmpty()) {
@@ -44,4 +42,11 @@ class TrackSearchViewModel(
             )
         }
     }
+
+    fun playTrack(track: Track) {
+        playTrackTrigger.postValue(track)
+    }
 }
+
+
+
