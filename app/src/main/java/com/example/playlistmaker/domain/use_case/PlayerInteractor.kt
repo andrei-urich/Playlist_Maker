@@ -4,6 +4,7 @@ import com.example.playlistmaker.domain.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.model.Track
 
 interface PlayerInteractor {
+
     fun startPlayer()
 
     fun pausePlayer()

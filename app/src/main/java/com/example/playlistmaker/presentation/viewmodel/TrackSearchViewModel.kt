@@ -19,11 +19,10 @@ class TrackSearchViewModel(
 
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
     private var playTrackTrigger = SingleEventLiveData<Track>()
-    private var historyLiveData = MutableLiveData<List<Track>>()
 
     fun getSearchStateLiveData(): LiveData<TrackSearchState> = searchStateLiveData
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
-    fun getHistoryLiveData(): LiveData<List<Track>> = historyLiveData
+
 
     fun request(request: String) {
         if (request.isNotEmpty()) {

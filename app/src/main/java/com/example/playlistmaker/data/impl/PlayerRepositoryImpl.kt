@@ -2,11 +2,10 @@ package com.example.playlistmaker.data.impl
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.domain.OnPlayerStateChangeListener
-import com.example.playlistmaker.domain.PlayerState.STATE_COMPLETE
-import com.example.playlistmaker.domain.PlayerState.STATE_PREPARED
+import com.example.playlistmaker.domain.model.PlayerState.STATE_COMPLETE
+import com.example.playlistmaker.domain.model.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.repository.PlayerRepository
-import com.example.playlistmaker.domain.use_case.PlayerInteractor
 import java.text.SimpleDateFormat
 import java.util.Locale
 
