@@ -1,17 +1,18 @@
-package com.example.playlistmaker.ui
+package com.example.playlistmaker
 
 import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.NIGHT_MODE
-import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCES
+import com.example.playlistmaker.creator.Creator
 
 class MyApp : Application() {
     private var nightMode = false
 
     override fun onCreate() {
         super.onCreate()
+        Creator.initApplication(this)
+
         val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
         nightMode = sharedPrefs.getBoolean(
             NIGHT_MODE, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

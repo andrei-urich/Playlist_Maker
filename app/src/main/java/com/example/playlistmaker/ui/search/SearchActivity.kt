@@ -22,7 +22,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.EMPTY_STRING
-import com.example.playlistmaker.SEARCH_HISTORY_PREFERENCES
 import com.example.playlistmaker.TRACK_INFO
 import com.example.playlistmaker.presentation.state.TrackSearchState
 import com.example.playlistmaker.presentation.viewmodel.TrackSearchViewModel
@@ -52,7 +51,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var viewModel: TrackSearchViewModel
 
     lateinit var searchAdapter: SearchAdapter
-    lateinit var searchHistoryAdapter : SearchHistoryAdapter
+    lateinit var searchHistoryAdapter: SearchHistoryAdapter
 
     private lateinit var searchToolbar: Toolbar
     private lateinit var searchBar: EditText
@@ -64,7 +63,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderSearchError: LinearLayout
     private lateinit var placeholderServerErrors: LinearLayout
     private lateinit var refreshButton: Button
-    private lateinit var searchHistory: SearchHistory
     private lateinit var handler: Handler
     private lateinit var progressBar: ProgressBar
     private var isClickAllowed = true
@@ -96,11 +94,8 @@ class SearchActivity : AppCompatActivity() {
         searchRunnable = Runnable { viewModel.request(searchText) }
         searchBar.setText(searchText)
 
-        val sharedPrefs = getSharedPreferences(SEARCH_HISTORY_PREFERENCES, MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPrefs)
-
         searchAdapter = SearchAdapter(tracks, viewModel::playTrack)
-        searchHistoryAdapter = SearchHistoryAdapter(historyTracks, viewModel::playTrack )
+        searchHistoryAdapter = SearchHistoryAdapter(historyTracks, viewModel::playTrackFromHistory)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -124,7 +119,7 @@ class SearchActivity : AppCompatActivity() {
 
         //очистка истории при нажатии на кнопку "удалить историю"
         historyClearButton.setOnClickListener {
-            searchHistory.clearHistory()
+            viewModel.clearHistory()
             historyTracks.clear()
             searchHistoryAdapter.notifyDataSetChanged()
             historyVisibility(false)
@@ -199,15 +194,9 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-//        //переход в плеер и сохранение в историю результатов поиска
-//        searchAdapter.onItemClick = { it ->
-//            viewModel::playTrack
-//        }
-
         viewModel.getPlayTrackTrigger().observe(this) { track ->
             playTrack(track)
         }
-
     }
 
     private fun playTrack(track: Track) {
@@ -288,7 +277,7 @@ class SearchActivity : AppCompatActivity() {
     fun historyVisibility(flag: Boolean) {
         if (flag) {
             historyTracks.clear()
-            historyTracks.addAll(searchHistory.getTrackFromHistory())
+            historyTracks.addAll(viewModel.getHistoryList())
             recyclerView.adapter = searchHistoryAdapter
             searchHistoryAdapter.notifyDataSetChanged()
 

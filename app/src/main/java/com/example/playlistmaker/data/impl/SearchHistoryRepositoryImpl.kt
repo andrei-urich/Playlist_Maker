@@ -1,41 +1,43 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.data.impl
 
-import android.content.SharedPreferences
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.model.Track
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.playlistmaker.domain.repository.SearchHistoryRepository
 
-class SearchHistory(val sharedPrefs: SharedPreferences) {
+class SearchHistoryRepositoryImpl : SearchHistoryRepository {
     companion object {
         const val SEARCH_HISTORY = "search_history"
     }
 
-    var historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
-    var searchHistoryTracks: MutableList<Track>
+    private val sharedPrefs = Creator.getSharedPreferences(SEARCH_HISTORY)
+    private val trackTransfer = Creator.provideTrackTransfer()
+
+    private var historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
+    private var searchHistoryTracks: MutableList<Track>
 
     init {
-        searchHistoryTracks = getTrackFromHistory()
+        searchHistoryTracks = getHistoryList()
     }
 
-    fun saveTrackToHistory(track: Track) {
-        var currentHistoryList = getTrackFromHistory()
+    override fun addToHistory(track: Track) {
+        var currentHistoryList = this.getHistoryList()
         currentHistoryList = checkDuplicates(track, currentHistoryList)
         currentHistoryList.add(0, track)
         if (currentHistoryList.size > 10) currentHistoryList.removeLast()
-        historyList = Gson().toJson(currentHistoryList)
+        historyList = trackTransfer.sendTrackList(currentHistoryList)
         sharedPrefs.edit().putString(SEARCH_HISTORY, historyList).apply()
     }
 
-    fun getTrackFromHistory(): MutableList<Track> {
-        val typeToken = object : TypeToken<MutableList<Track>>() {}.type
+
+    override fun getHistoryList(): MutableList<Track> {
         historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
         if (!historyList.isNullOrBlank()) {
-            return Gson().fromJson<MutableList<Track>>(historyList, typeToken).toMutableList()
+            return trackTransfer.getTrackList(historyList!!)
         }
         return emptyList<Track>().toMutableList()
     }
 
-    fun clearHistory() {
+    override fun clearHistory() {
         sharedPrefs.edit().clear().apply()
     }
 
@@ -50,5 +52,4 @@ class SearchHistory(val sharedPrefs: SharedPreferences) {
         }
         return list
     }
-
 }

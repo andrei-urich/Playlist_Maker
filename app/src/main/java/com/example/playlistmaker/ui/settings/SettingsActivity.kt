@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.example.playlistmaker.ui.MyApp
+import com.example.playlistmaker.MyApp
 import com.example.playlistmaker.NIGHT_MODE
 import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCES
 import com.example.playlistmaker.R
