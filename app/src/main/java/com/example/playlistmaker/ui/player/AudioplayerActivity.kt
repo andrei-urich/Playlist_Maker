@@ -11,17 +11,17 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
-import com.example.playlistmaker.PLAY_DEBOUNCE_DELAY
+import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
-import com.example.playlistmaker.TRACK_INFO
+import com.example.playlistmaker.utils.TRACK_INFO
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
-import com.example.playlistmaker.domain.model.AudioplayerPlayState
-import com.example.playlistmaker.domain.model.PlayerState.STATE_PAUSED
-import com.example.playlistmaker.domain.model.PlayerState.STATE_PLAYING
-import com.example.playlistmaker.domain.model.PlayerState.STATE_PREPARED
+import com.example.playlistmaker.domain.player.AudioplayerPlayState
+import com.example.playlistmaker.domain.player.PlayerState.STATE_PAUSED
+import com.example.playlistmaker.domain.player.PlayerState.STATE_PLAYING
+import com.example.playlistmaker.domain.player.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.presentation.viewmodel.AudioplayerViewModel
+import com.example.playlistmaker.presentation.player.AudioplayerViewModel
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 
@@ -163,7 +163,7 @@ class AudioplayerActivity : AppCompatActivity() {
 
         if (!track.collectionName.isNullOrBlank()) {
             collectionNameValue.setText(
-                if (track.collectionName.length<=20) track.collectionName else (track.collectionName.substring(0, 30)+"..."))
+                if (track.collectionName.length<=26) track.collectionName else (track.collectionName.substring(0, 23)+"..."))
         } else {
             collectionGroup.visibility = View.GONE
         }

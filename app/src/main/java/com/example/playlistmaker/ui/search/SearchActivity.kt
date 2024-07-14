@@ -21,10 +21,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.EMPTY_STRING
-import com.example.playlistmaker.TRACK_INFO
-import com.example.playlistmaker.presentation.state.TrackSearchState
-import com.example.playlistmaker.presentation.viewmodel.TrackSearchViewModel
+import com.example.playlistmaker.utils.EMPTY_STRING
+import com.example.playlistmaker.utils.TRACK_INFO
+import com.example.playlistmaker.presentation.search.TrackSearchState
+import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
@@ -48,7 +48,7 @@ class SearchActivity : AppCompatActivity() {
     private var tracks = mutableListOf<Track>()
     private var historyTracks = mutableListOf<Track>()
 
-    private lateinit var viewModel: TrackSearchViewModel
+    private lateinit var viewModel: SearchViewModel
 
     lateinit var searchAdapter: SearchAdapter
     lateinit var searchHistoryAdapter: SearchHistoryAdapter
@@ -89,7 +89,7 @@ class SearchActivity : AppCompatActivity() {
 
         handler = Handler(Looper.getMainLooper())
 
-        viewModel = TrackSearchViewModel()
+        viewModel = SearchViewModel()
 
         searchRunnable = Runnable { viewModel.request(searchText) }
         searchBar.setText(searchText)

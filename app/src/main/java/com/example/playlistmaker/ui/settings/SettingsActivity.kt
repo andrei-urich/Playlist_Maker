@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.presentation.viewmodel.SettingsViewModel
+import com.example.playlistmaker.presentation.settings.SettingsViewModel
 import kotlin.properties.Delegates
 
 
