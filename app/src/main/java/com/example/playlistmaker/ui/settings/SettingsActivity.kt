@@ -1,62 +1,50 @@
 package com.example.playlistmaker.ui.settings
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import com.example.playlistmaker.MyApp
-import com.example.playlistmaker.NIGHT_MODE
-import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCES
-import com.example.playlistmaker.R
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.presentation.viewmodel.SettingsViewModel
+import kotlin.properties.Delegates
 
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySettingsBinding
+    private lateinit var viewModel: SettingsViewModel
+    private var nightModeOn by Delegates.notNull<Boolean>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(LayoutInflater.from(this))
+        setContentView(binding.root)
 
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-        val settingsToolbar = findViewById<Toolbar>(R.id.tbSettings)
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.swtch)
-        val shareButton = findViewById<ImageView>(R.id.iv_option2)
-        val callSupportButton = findViewById<ImageView>(R.id.iv_option3)
-        val readAgreementButton = findViewById<ImageView>(R.id.iv_option4)
+        val settingsToolbar = binding.tbSettings
+        val themeSwitcher = binding.swtch
+        val shareButton = binding.ivOption2
+        val callSupportButton = binding.ivOption3
+        val readAgreementButton = binding.ivOption4
+
+        viewModel = SettingsViewModel()
 
         settingsToolbar.setOnClickListener {
             finish()
         }
         shareButton.setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.app_link))
-            startActivity(Intent.createChooser(shareIntent, getString(R.string.app_share_header)))
+            viewModel.shareApp()
         }
 
         callSupportButton.setOnClickListener {
-            val emailIntent = Intent(Intent.ACTION_SENDTO)
-            emailIntent.data = Uri.parse("mailto:")
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.supportEmail)))
-            emailIntent.putExtra(
-                Intent.EXTRA_SUBJECT,
-                getString(R.string.callSupportDefaultSubject)
-            )
-            emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.callSupportDefaultMessage))
-            startActivity(emailIntent)
+            viewModel.openSupport()
         }
 
         readAgreementButton.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW)
-            browserIntent.data = Uri.parse(getString(R.string.agreement_link))
-            startActivity(browserIntent)
+            viewModel.openTerms()
         }
 
         themeSwitcher.setOnCheckedChangeListener() { _, checked ->
-            (applicationContext as MyApp).switchTheme(checked)
-            sharedPrefs.edit().putBoolean(NIGHT_MODE, checked).apply()
+            nightModeOn = checked
+            viewModel.updateThemeSetting(nightModeOn)
         }
 
     }

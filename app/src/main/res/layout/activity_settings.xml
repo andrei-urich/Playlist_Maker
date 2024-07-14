@@ -18,7 +18,7 @@
     <!-- первый пункт меню  -->
 
     <TextView
-        android:id="@+id/tv_option1"
+        android:id="@+id/tvOption1"
         style="@style/settings_option_text_style"
 
         android:layout_marginTop="@dimen/settings_header_margin_bottom"
@@ -26,18 +26,18 @@
         android:text="@string/setup_1_option"
 
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintRight_toLeftOf="@id/space_settings1"
+        app:layout_constraintRight_toLeftOf="@id/spaceSettings1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tbSettings" />
 
     <Space
-        android:id="@+id/space_settings1"
+        android:id="@+id/spaceSettings1"
         android:layout_width="0dp"
         android:layout_height="@dimen/setup_options_height"
 
         android:layout_marginTop="@dimen/settings_header_margin_bottom"
 
-        app:layout_constraintLeft_toRightOf="@id/tv_option1"
+        app:layout_constraintLeft_toRightOf="@id/tvOption1"
         app:layout_constraintRight_toLeftOf="@id/swtch"
         app:layout_constraintTop_toBottomOf="@+id/tbSettings" />
 
@@ -48,9 +48,9 @@
         android:layout_height="@dimen/setup_options_height"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="@dimen/settings_switch_right_margin"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_option1"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvOption1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/space_settings1"
+        app:layout_constraintStart_toEndOf="@+id/spaceSettings1"
         app:thumbTint="@color/thumbTint"
         app:trackTint="@color/trackTint"
         app:useMaterialThemeColors="false" />
@@ -65,7 +65,7 @@
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintRight_toLeftOf="@id/space_settings2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_option1" />
+        app:layout_constraintTop_toBottomOf="@id/tvOption1" />
 
     <Space
         android:id="@+id/space_settings2"
@@ -73,11 +73,11 @@
         android:layout_height="@dimen/setup_options_height"
 
         app:layout_constraintLeft_toRightOf="@id/tv_option2"
-        app:layout_constraintRight_toLeftOf="@id/iv_option2"
-        app:layout_constraintTop_toBottomOf="@+id/tv_option1" />
+        app:layout_constraintRight_toLeftOf="@id/ivOption2"
+        app:layout_constraintTop_toBottomOf="@+id/tvOption1" />
 
     <ImageView
-        android:id="@+id/iv_option2"
+        android:id="@+id/ivOption2"
         style="@style/settings_option_image_style"
         android:src="@drawable/ic_share"
 
@@ -106,18 +106,18 @@
         android:layout_height="@dimen/setup_options_height"
 
         app:layout_constraintLeft_toRightOf="@id/tv_option3"
-        app:layout_constraintRight_toLeftOf="@id/iv_option3"
+        app:layout_constraintRight_toLeftOf="@id/ivOption3"
         app:layout_constraintTop_toBottomOf="@+id/tv_option2" />
 
     <ImageView
-        android:id="@+id/iv_option3"
+        android:id="@+id/ivOption3"
         style="@style/settings_option_image_style"
         android:src="@drawable/ic_support"
 
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/space_settings3"
-        app:layout_constraintTop_toBottomOf="@+id/iv_option2" />
+        app:layout_constraintTop_toBottomOf="@+id/ivOption2" />
 
     <!-- Четвертый пункт меню -->
 
@@ -139,17 +139,17 @@
         android:layout_height="@dimen/setup_options_height"
 
         app:layout_constraintLeft_toRightOf="@id/tv_option4"
-        app:layout_constraintRight_toLeftOf="@id/iv_option4"
+        app:layout_constraintRight_toLeftOf="@id/ivOption4"
         app:layout_constraintTop_toBottomOf="@+id/tv_option3" />
 
     <ImageView
-        android:id="@+id/iv_option4"
+        android:id="@+id/ivOption4"
         style="@style/settings_option_image_style"
         android:src="@drawable/ic_arrow_frwrd"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/space_settings4"
-        app:layout_constraintTop_toBottomOf="@+id/iv_option3" />
+        app:layout_constraintTop_toBottomOf="@+id/ivOption3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
