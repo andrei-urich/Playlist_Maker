@@ -162,7 +162,8 @@ class AudioplayerActivity : AppCompatActivity() {
         )
 
         if (!track.collectionName.isNullOrBlank()) {
-            collectionNameValue.setText(track.collectionName)
+            collectionNameValue.setText(
+                if (track.collectionName.length<=20) track.collectionName else (track.collectionName.substring(0, 30)+"..."))
         } else {
             collectionGroup.visibility = View.GONE
         }

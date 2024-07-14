@@ -12,27 +12,5 @@ class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Creator.initApplication(this)
-
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-        nightMode = sharedPrefs.getBoolean(
-            NIGHT_MODE, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                resources.configuration.isNightModeActive
-            } else {
-                resources.configuration.uiMode and
-                        Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-            }
-        )
-        switchTheme(nightMode)
-    }
-
-    fun switchTheme(nightModeEnabled: Boolean) {
-        nightMode = nightModeEnabled
-        AppCompatDelegate.setDefaultNightMode(
-            if (nightModeEnabled) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
     }
 }
