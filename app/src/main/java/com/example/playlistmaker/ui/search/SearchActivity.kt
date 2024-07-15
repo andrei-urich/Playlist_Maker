@@ -19,6 +19,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.utils.EMPTY_STRING
@@ -28,6 +29,7 @@ import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.presentation.search.SearchViewModel.Companion.factory
 import com.example.playlistmaker.ui.player.AudioplayerActivity
 
 class SearchActivity : AppCompatActivity() {
@@ -89,7 +91,10 @@ class SearchActivity : AppCompatActivity() {
 
         handler = Handler(Looper.getMainLooper())
 
-        viewModel = SearchViewModel()
+        viewModel = ViewModelProvider(
+            this,
+            factory()
+        )[SearchViewModel::class.java]
 
         searchRunnable = Runnable { viewModel.request(searchText) }
         searchBar.setText(searchText)

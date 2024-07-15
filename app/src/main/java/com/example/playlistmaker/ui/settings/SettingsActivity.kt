@@ -3,8 +3,10 @@ package com.example.playlistmaker.ui.settings
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
+import com.example.playlistmaker.presentation.settings.SettingsViewModel.Companion.factory
 import kotlin.properties.Delegates
 
 
@@ -25,7 +27,10 @@ class SettingsActivity : AppCompatActivity() {
         val callSupportButton = binding.ivOption3
         val readAgreementButton = binding.ivOption4
 
-        viewModel = SettingsViewModel()
+        viewModel = ViewModelProvider(
+            this,
+            factory()
+        )[SettingsViewModel::class.java]
 
         settingsToolbar.setOnClickListener {
             finish()

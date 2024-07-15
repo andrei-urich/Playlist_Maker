@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.TRACK_INFO
@@ -84,7 +85,10 @@ class AudioplayerActivity : AppCompatActivity() {
         val trackInfo = intent.getStringExtra(TRACK_INFO)
         track = trackTransfer.getTrack(trackInfo.toString())
 
-        viewModel = AudioplayerViewModel(track)
+        viewModel = ViewModelProvider(
+            this,
+            AudioplayerViewModel.factory(track)
+        )[AudioplayerViewModel::class.java]
 
         putOnTrack(track)
 
