@@ -19,36 +19,40 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.CLICK_DEBOUNCE_DELAY
-import com.example.playlistmaker.EMPTY_STRING
-import com.example.playlistmaker.SEARCH_DEBOUNCE_DELAY
-import com.example.playlistmaker.SEARCH_HISTORY_PREFERENCES
-import com.example.playlistmaker.TRACK_INFO
+import com.example.playlistmaker.utils.EMPTY_STRING
+import com.example.playlistmaker.utils.TRACK_INFO
+import com.example.playlistmaker.presentation.search.TrackSearchState
+import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.domain.ResourceResponseResult
-import com.example.playlistmaker.domain.ResourceResponseResult.SUCCESS
-import com.example.playlistmaker.domain.SearchConsumer
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.presentation.search.SearchViewModel.Companion.factory
 import com.example.playlistmaker.ui.player.AudioplayerActivity
 
 class SearchActivity : AppCompatActivity() {
+
     companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val ERROR = "ERROR"
+        private const val LOADING = "LOADING"
+        private const val SHOW_RESULT = "SHOW_RESULT"
     }
 
     private var searchText = EMPTY_STRING
-
     private lateinit var viewBinding: ActivitySearchBinding
-    private val trackSearch = Creator.provideTracksSearch()
     private val trackTransfer = Creator.provideTrackTransfer()
 
-    var tracks = mutableListOf<Track>()
-    var historyTracks = mutableListOf<Track>()
-    val searchAdapter = SearchAdapter(tracks)
-    val searchHistoryAdapter = SearchHistoryAdapter(historyTracks)
+    private var tracks = mutableListOf<Track>()
+    private var historyTracks = mutableListOf<Track>()
+
+    private lateinit var viewModel: SearchViewModel
+
+    lateinit var searchAdapter: SearchAdapter
+    lateinit var searchHistoryAdapter: SearchHistoryAdapter
+
     private lateinit var searchToolbar: Toolbar
     private lateinit var searchBar: EditText
     private lateinit var clearButton: ImageView
@@ -59,13 +63,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderSearchError: LinearLayout
     private lateinit var placeholderServerErrors: LinearLayout
     private lateinit var refreshButton: Button
-    private lateinit var searchHistory: SearchHistory
-    private lateinit var handler: Handler
     private lateinit var progressBar: ProgressBar
-    private var isClickAllowed = true
 
-    private val searchRunnable = Runnable { request() }
-    private var tracksRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,12 +83,17 @@ class SearchActivity : AppCompatActivity() {
         historyHeader = viewBinding.searchHistoryHeader
         progressBar = viewBinding.progressBar
 
-        handler = Handler(Looper.getMainLooper())
+
+        viewModel = ViewModelProvider(
+            this,
+            factory()
+        )[SearchViewModel::class.java]
 
         searchBar.setText(searchText)
 
-        val sharedPrefs = getSharedPreferences(SEARCH_HISTORY_PREFERENCES, MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPrefs)
+        searchAdapter = SearchAdapter(tracks, viewModel::playTrack)
+        searchHistoryAdapter = SearchHistoryAdapter(historyTracks, viewModel::playTrackFromHistory)
+
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         //обработчик всплывающей клавиатуры
@@ -112,13 +116,12 @@ class SearchActivity : AppCompatActivity() {
 
         //очистка истории при нажатии на кнопку "удалить историю"
         historyClearButton.setOnClickListener {
-            searchHistory.clearHistory()
+            viewModel.clearHistory()
             historyTracks.clear()
             searchHistoryAdapter.notifyDataSetChanged()
             historyVisibility(false)
         }
 
-        //текствотчер для поисковой строки
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -129,7 +132,7 @@ class SearchActivity : AppCompatActivity() {
                 if (searchBar.hasFocus() && s?.isEmpty() == true) historyVisibility(true) else historyVisibility(
                     false
                 )
-                searchDebounce()
+                viewModel.getSearchText(searchText)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -148,7 +151,7 @@ class SearchActivity : AppCompatActivity() {
         //обработка нажатия "ввод" на виртуальной клавиатуре
         searchBar.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                request()
+                viewModel.request(searchText)
                 true
             }
             false
@@ -157,72 +160,65 @@ class SearchActivity : AppCompatActivity() {
         //кнопка "Обновить" для отправки повторного запроса в случае ошибки соединения
         refreshButton.setOnClickListener {
             clearPlaceholders()
-            request()
+            viewModel.request(searchText)
         }
 
-        //переход в плеер и сохранение в историю результатов поиска
-        searchAdapter.onItemClick = {
-            searchHistory.saveTrackToHistory(it)
-            val playerIntent = Intent(this, AudioplayerActivity::class.java)
-            val trackToPlay = trackTransfer.sendTrack(it)
-            playerIntent.putExtra(TRACK_INFO, trackToPlay)
-            startActivity(playerIntent)
-        }
+        viewModel.getSearchStateLiveData().observe(this) { searchState ->
+            when (searchState) {
+                is TrackSearchState.Error -> {
+                    changeContentVisibility(showCase = ERROR)
+                }
 
+                is TrackSearchState.Content -> {
+                    tracks.clear()
+                    tracks.addAll(searchState.trackList.toMutableList())
+                    changeContentVisibility(showCase = SHOW_RESULT)
+                }
 
-        //переход в плеер из истории
-        searchHistoryAdapter.onItemClick = {
-            if (clickDebounce()) {
-                val playerIntent = Intent(this, AudioplayerActivity::class.java)
-                val trackToPlay = trackTransfer.sendTrack(it)
-                playerIntent.putExtra(TRACK_INFO, trackToPlay)
-                startActivity(playerIntent)
+                is TrackSearchState.Loading -> {
+                    changeContentVisibility(showCase = LOADING)
+                }
             }
+        }
+
+        viewModel.getPlayTrackTrigger().observe(this) { track ->
+            playTrack(track)
         }
     }
 
-    fun request() {
-        if (searchText.isNotEmpty()) {
-            clearPlaceholders()
-            progressBar.visibility = View.VISIBLE
+    private fun playTrack(track: Track) {
+        val playerIntent = Intent(this, AudioplayerActivity::class.java)
+        val trackToPlay = trackTransfer.sendTrack(track)
+        playerIntent.putExtra(TRACK_INFO, trackToPlay)
+        startActivity(playerIntent)
+    }
 
-            trackSearch.search(
-                searchText,
-                consumer = object : SearchConsumer {
-                    override fun consume(tracks: List<Track>) {
-                        val currentRunnable = tracksRunnable
-                        if (currentRunnable != null) {
-                            handler.removeCallbacks(currentRunnable)
-                        }
+    private fun changeContentVisibility(showCase: String) {
+        when (showCase) {
+            ERROR -> {
+                progressBar.visibility = View.GONE
+                showSearchError(2)
+            }
 
-                        val newTracksRunnable = Runnable {
+            LOADING -> {
+                clearPlaceholders()
+                progressBar.visibility = View.VISIBLE
+            }
 
+            SHOW_RESULT -> {
+                clearPlaceholders()
+                progressBar.visibility = View.GONE
+                recyclerView.adapter = searchAdapter
+                recyclerView.visibility = View.VISIBLE
 
-                            if (ResourceResponseResult.resourceResponseResult == SUCCESS) {
-                                this@SearchActivity.tracks.clear()
-                                progressBar.visibility = View.GONE
-                                recyclerView.adapter = searchAdapter
-                                recyclerView.visibility = View.VISIBLE
+                if (tracks.isNotEmpty() == true) {
+                    searchAdapter.notifyDataSetChanged()
 
-                                if (tracks.isNotEmpty() == true) {
-                                    this@SearchActivity.tracks.addAll(tracks)
-                                    searchAdapter.notifyDataSetChanged()
-
-                                } else {
-                                    progressBar.visibility = View.GONE
-                                    showSearchError(1)
-                                }
-                            } else {
-                                progressBar.visibility = View.GONE
-                                showSearchError(2)
-                            }
-                        }
-
-                        tracksRunnable = newTracksRunnable
-                        handler.post(newTracksRunnable)
-                    }
-
-                })
+                } else {
+                    progressBar.visibility = View.GONE
+                    showSearchError(1)
+                }
+            }
         }
     }
 
@@ -261,7 +257,7 @@ class SearchActivity : AppCompatActivity() {
     fun historyVisibility(flag: Boolean) {
         if (flag) {
             historyTracks.clear()
-            historyTracks.addAll(searchHistory.getTrackFromHistory())
+            historyTracks.addAll(viewModel.getHistoryList())
             recyclerView.adapter = searchHistoryAdapter
             searchHistoryAdapter.notifyDataSetChanged()
 
@@ -278,23 +274,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    // метод дебаунса ввода в строке поиска
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
-
-    // метод дебаунса клика на результатах поиска (клик на треке для вызова плеера)
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
-
     // методы для сохранения введеного значения в поисковой строке
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
@@ -302,18 +281,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?,
-        persistentState: PersistableBundle?
+        savedInstanceState: Bundle?, persistentState: PersistableBundle?
     ) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: EMPTY_STRING
     }
 
-    override fun onDestroy() {
-        val currentRunnable = tracksRunnable
-        if (currentRunnable != null) {
-            handler.removeCallbacks(currentRunnable)
-        }
-        super.onDestroy()
-    }
 }
