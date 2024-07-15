@@ -35,8 +35,6 @@ import com.example.playlistmaker.ui.player.AudioplayerActivity
 class SearchActivity : AppCompatActivity() {
 
     companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val ERROR = "ERROR"
         private const val LOADING = "LOADING"
@@ -65,12 +63,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderSearchError: LinearLayout
     private lateinit var placeholderServerErrors: LinearLayout
     private lateinit var refreshButton: Button
-    private lateinit var handler: Handler
     private lateinit var progressBar: ProgressBar
-    private var isClickAllowed = true
 
-    private lateinit var searchRunnable: Runnable
-    private var tracksRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,14 +83,12 @@ class SearchActivity : AppCompatActivity() {
         historyHeader = viewBinding.searchHistoryHeader
         progressBar = viewBinding.progressBar
 
-        handler = Handler(Looper.getMainLooper())
 
         viewModel = ViewModelProvider(
             this,
             factory()
         )[SearchViewModel::class.java]
 
-        searchRunnable = Runnable { viewModel.request(searchText) }
         searchBar.setText(searchText)
 
         searchAdapter = SearchAdapter(tracks, viewModel::playTrack)
@@ -140,7 +132,7 @@ class SearchActivity : AppCompatActivity() {
                 if (searchBar.hasFocus() && s?.isEmpty() == true) historyVisibility(true) else historyVisibility(
                     false
                 )
-                searchDebounce()
+                viewModel.getSearchText(searchText)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -170,16 +162,6 @@ class SearchActivity : AppCompatActivity() {
             clearPlaceholders()
             viewModel.request(searchText)
         }
-
-        //переход в плеер из истории
-//        searchHistoryAdapter.onItemClick = {
-//            if (clickDebounce()) {
-//                val playerIntent = Intent(this, AudioplayerActivity::class.java)
-//                val trackToPlay = trackTransfer.sendTrack(it)
-//                playerIntent.putExtra(TRACK_INFO, trackToPlay)
-//                startActivity(playerIntent)
-//            }
-//        }
 
         viewModel.getSearchStateLiveData().observe(this) { searchState ->
             when (searchState) {
@@ -211,7 +193,6 @@ class SearchActivity : AppCompatActivity() {
         startActivity(playerIntent)
     }
 
-
     private fun changeContentVisibility(showCase: String) {
         when (showCase) {
             ERROR -> {
@@ -239,12 +220,6 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    // метод дебаунса ввода в строке поиска
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     // метод очистки поисковой строки
@@ -299,17 +274,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-
-    // метод дебаунса клика на результатах поиска (клик на треке для вызова плеера)
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
     // методы для сохранения введеного значения в поисковой строке
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
@@ -323,11 +287,4 @@ class SearchActivity : AppCompatActivity() {
         searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: EMPTY_STRING
     }
 
-    override fun onDestroy() {
-        val currentRunnable = tracksRunnable
-        if (currentRunnable != null) {
-            handler.removeCallbacks(currentRunnable)
-        }
-        super.onDestroy()
-    }
 }
