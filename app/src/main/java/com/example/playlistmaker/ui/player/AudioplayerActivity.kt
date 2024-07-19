@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.TRACK_INFO
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PAUSED
@@ -29,7 +29,6 @@ import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 class AudioplayerActivity : AppCompatActivity() {
 
     private var playerState = "STATE_DEFAULT"
-    private val trackTransfer = Creator.provideTrackTransfer()
     private lateinit var viewModel: AudioplayerViewModel
     private lateinit var viewBinding: ActivityAudioplayerBinding
 
@@ -82,8 +81,11 @@ class AudioplayerActivity : AppCompatActivity() {
         }
 
         val intent = intent
-        val trackInfo = intent.getStringExtra(TRACK_INFO)
-        track = trackTransfer.getTrack(trackInfo.toString())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            track = intent.getParcelableExtra(TRACK_INFO, Track::class.java)!!
+        } else {
+            track = intent.getParcelableExtra<Track>(TRACK_INFO)!!
+        }
 
         viewModel = ViewModelProvider(
             this,
@@ -99,19 +101,34 @@ class AudioplayerActivity : AppCompatActivity() {
         viewModel.getPlayStatusLiveData().observe(this) { state ->
             when (state) {
                 is AudioplayerPlayState.Prepared -> {
-                    btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
+                    btnPlay.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            this,
+                            R.drawable.btn_play
+                        )
+                    )
                     playerState = STATE_PREPARED
                     showTrackPlayedTime()
                 }
 
                 is AudioplayerPlayState.Playing -> {
-                    btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_pause))
+                    btnPlay.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            this,
+                            R.drawable.btn_pause
+                        )
+                    )
                     playerState = STATE_PLAYING
                     showTrackPlayedTime()
                 }
 
                 is AudioplayerPlayState.Paused -> {
-                    btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
+                    btnPlay.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            this,
+                            R.drawable.btn_play
+                        )
+                    )
                     playerState = STATE_PAUSED
                     showTrackPlayedTime()
                 }
@@ -167,7 +184,11 @@ class AudioplayerActivity : AppCompatActivity() {
 
         if (!track.collectionName.isNullOrBlank()) {
             collectionNameValue.setText(
-                if (track.collectionName.length<=26) track.collectionName else (track.collectionName.substring(0, 23)+"..."))
+                if (track.collectionName.length <= 26) track.collectionName else (track.collectionName.substring(
+                    0,
+                    23
+                ) + "...")
+            )
         } else {
             collectionGroup.visibility = View.GONE
         }

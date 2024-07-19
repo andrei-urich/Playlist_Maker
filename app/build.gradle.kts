@@ -56,6 +56,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.recyclerview.selection)
-
-
+    implementation (libs.koin)
 }

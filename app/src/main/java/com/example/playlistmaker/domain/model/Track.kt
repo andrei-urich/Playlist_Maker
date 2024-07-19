@@ -1,6 +1,9 @@
 package com.example.playlistmaker.domain.model
 
-data class Track(
+import android.os.Parcel
+import android.os.Parcelable
+
+data class Track (
     val trackId: Int,
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
@@ -12,4 +15,47 @@ data class Track(
     val primaryGenreName: String?,
     val country: String?,
     val previewUrl: String?
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString(),
+        parcel.readString().toString(),
+        parcel.readValue(Long::class.java.classLoader) as? Long,
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(trackId)
+        parcel.writeString(trackName)
+        parcel.writeString(artistName)
+        parcel.writeString(trackTime)
+        parcel.writeString(artworkUrl100)
+        parcel.writeValue(trackTimeMillis)
+        parcel.writeString(collectionName)
+        parcel.writeString(releaseDate)
+        parcel.writeString(primaryGenreName)
+        parcel.writeString(country)
+        parcel.writeString(previewUrl)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Track> {
+        override fun createFromParcel(parcel: Parcel): Track {
+            return Track(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Track?> {
+            return arrayOfNulls(size)
+        }
+    }
+}

@@ -3,8 +3,6 @@ package com.example.playlistmaker.ui.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -26,7 +24,6 @@ import com.example.playlistmaker.utils.EMPTY_STRING
 import com.example.playlistmaker.utils.TRACK_INFO
 import com.example.playlistmaker.presentation.search.TrackSearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.search.SearchViewModel.Companion.factory
@@ -43,7 +40,6 @@ class SearchActivity : AppCompatActivity() {
 
     private var searchText = EMPTY_STRING
     private lateinit var viewBinding: ActivitySearchBinding
-    private val trackTransfer = Creator.provideTrackTransfer()
 
     private var tracks = mutableListOf<Track>()
     private var historyTracks = mutableListOf<Track>()
@@ -188,8 +184,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun playTrack(track: Track) {
         val playerIntent = Intent(this, AudioplayerActivity::class.java)
-        val trackToPlay = trackTransfer.sendTrack(track)
-        playerIntent.putExtra(TRACK_INFO, trackToPlay)
+        playerIntent.putExtra(TRACK_INFO, track)
         startActivity(playerIntent)
     }
 
