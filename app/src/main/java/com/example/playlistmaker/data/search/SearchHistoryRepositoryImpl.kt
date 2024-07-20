@@ -1,16 +1,18 @@
 package com.example.playlistmaker.data.search
 
+import android.content.SharedPreferences
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
+import com.example.playlistmaker.ui.repository.TrackTransferRepository
 
-class SearchHistoryRepositoryImpl : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(
+    private val sharedPrefs: SharedPreferences,
+    private val trackTransfer: TrackTransferRepository
+) : SearchHistoryRepository {
     companion object {
         const val SEARCH_HISTORY = "search_history"
     }
-
-    private val sharedPrefs = Creator.getSharedPreferences(SEARCH_HISTORY)
-    private val trackTransfer = Creator.provideTrackTransfer()
 
     private var historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
     private var searchHistoryTracks: MutableList<Track>

@@ -34,13 +34,13 @@ object Creator {
         this.application = application
     }
 
-    private fun getTrackSearchRepository(): TracksSearchRepository {
-        return TracksSearchRepositoryImpl(RetrofitNetworkClient())
-    }
+//    private fun getTrackSearchRepository(): TracksSearchRepository {
+//        return TracksSearchRepositoryImpl(RetrofitNetworkClient())
+//    }
 
-    fun provideTrackSearchInteractor(): TrackSearchInteractor {
-        return TrackSearchInteractorImpl(getTrackSearchRepository())
-    }
+//    fun provideTrackSearchInteractor(): TrackSearchInteractor {
+//        return TrackSearchInteractorImpl(getTrackSearchRepository())
+//    }
 
 
     private fun getPlayerRepository(): PlayerRepository {
@@ -59,13 +59,13 @@ object Creator {
         return application.getSharedPreferences(name, Context.MODE_PRIVATE)
     }
 
-    fun getSearchHistoryRepository(): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl()
-    }
-
-    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
-        return SearchHistoryInteractorImpl(getSearchHistoryRepository())
-    }
+//    fun getSearchHistoryRepository(): SearchHistoryRepository {
+//        return SearchHistoryRepositoryImpl()
+//    }
+//
+//    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
+//        return SearchHistoryInteractorImpl(getSearchHistoryRepository())
+//    }
 
     fun getExternalNavigator(): ExternalNavigator {
         return ExternalNavigatorImpl(application)
@@ -74,6 +74,7 @@ object Creator {
     fun provideSharingInteractor(): SharingInteractor {
         return SharingInteractorImpl(getExternalNavigator())
     }
+
     fun getSettingsRepository(): SettingsRepository {
         return SettingsRepositoryImpl(application)
     }
