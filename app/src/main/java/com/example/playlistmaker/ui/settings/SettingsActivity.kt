@@ -3,17 +3,18 @@ package com.example.playlistmaker.ui.settings
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
-import com.example.playlistmaker.presentation.settings.SettingsViewModel.Companion.factory
 import kotlin.properties.Delegates
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var viewModel: SettingsViewModel
+
+    private val viewModel: SettingsViewModel by viewModel()
+
     private var nightModeOn by Delegates.notNull<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,11 +27,6 @@ class SettingsActivity : AppCompatActivity() {
         val shareButton = binding.ivOption2
         val callSupportButton = binding.ivOption3
         val readAgreementButton = binding.ivOption4
-
-        viewModel = ViewModelProvider(
-            this,
-            factory()
-        )[SettingsViewModel::class.java]
 
         settingsToolbar.setOnClickListener {
             finish()

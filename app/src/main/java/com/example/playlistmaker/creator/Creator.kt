@@ -34,14 +34,6 @@ object Creator {
         this.application = application
     }
 
-//    private fun getTrackSearchRepository(): TracksSearchRepository {
-//        return TracksSearchRepositoryImpl(RetrofitNetworkClient())
-//    }
-
-//    fun provideTrackSearchInteractor(): TrackSearchInteractor {
-//        return TrackSearchInteractorImpl(getTrackSearchRepository())
-//    }
-
 
     private fun getPlayerRepository(): PlayerRepository {
         return PlayerRepositoryImpl()
@@ -55,33 +47,27 @@ object Creator {
         return TrackTransferRepositoryImpl()
     }
 
-    fun getSharedPreferences(name: String): SharedPreferences {
-        return application.getSharedPreferences(name, Context.MODE_PRIVATE)
-    }
 
-//    fun getSearchHistoryRepository(): SearchHistoryRepository {
-//        return SearchHistoryRepositoryImpl()
+//    fun getSharedPreferences(name: String): SharedPreferences {
+//        return application.getSharedPreferences(name, Context.MODE_PRIVATE)
+//    }
+
+
+//    fun getExternalNavigator(): ExternalNavigator {
+//        return ExternalNavigatorImpl(application)
 //    }
 //
-//    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
-//        return SearchHistoryInteractorImpl(getSearchHistoryRepository())
+//    fun provideSharingInteractor(): SharingInteractor {
+//        return SharingInteractorImpl(getExternalNavigator())
 //    }
 
-    fun getExternalNavigator(): ExternalNavigator {
-        return ExternalNavigatorImpl(application)
-    }
+//    fun getSettingsRepository(): SettingsRepository {
+//        return SettingsRepositoryImpl(application)
+//    }
 
-    fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(getExternalNavigator())
-    }
-
-    fun getSettingsRepository(): SettingsRepository {
-        return SettingsRepositoryImpl(application)
-    }
-
-    fun provideSettingsInteractor(): SettingsInteractor {
-        return SettingsInteractorImpl(getSettingsRepository())
-    }
+//    fun provideSettingsInteractor(): SettingsInteractor {
+//        return SettingsInteractorImpl(getSettingsRepository())
+//    }
 
 
 }

@@ -31,7 +31,7 @@ class SearchViewModel(
 
 
     fun getSearchText(searchText: String) {
-        this.searchText= searchText
+        this.searchText = searchText
         searchDebounce()
     }
 
@@ -103,14 +103,6 @@ class SearchViewModel(
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-
-//        fun factory(): ViewModelProvider.Factory {
-//            return viewModelFactory {
-//                initializer {
-//                    SearchViewModel()
-//                }
-//            }
-//        }
     }
 }
 
