@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.di.player.audioplayerViewModelModule
 import com.example.playlistmaker.di.player.playerModule
 import com.example.playlistmaker.di.search.searchModule
@@ -22,8 +21,6 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Creator.initApplication(this)
-
         startKoin {
             androidLogger()
             androidContext(this@MyApp)
@@ -55,7 +52,5 @@ class MyApp : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        sharedPrefs.edit().putBoolean(NIGHT_MODE, nightModeEnabled).apply()
-
     }
 }
