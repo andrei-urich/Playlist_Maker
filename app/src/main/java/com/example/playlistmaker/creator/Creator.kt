@@ -35,13 +35,13 @@ object Creator {
     }
 
 
-    private fun getPlayerRepository(): PlayerRepository {
-        return PlayerRepositoryImpl()
-    }
-
-    fun providePlayerInteractor(): PlayerInteractor {
-        return PlayerInteractorImpl(getPlayerRepository())
-    }
+//    private fun getPlayerRepository(): PlayerRepository {
+//        return PlayerRepositoryImpl()
+//    }
+//
+//    fun providePlayerInteractor(): PlayerInteractor {
+//        return PlayerInteractorImpl(getPlayerRepository())
+//    }
 
     fun provideTrackTransfer(): TrackTransferRepository {
         return TrackTransferRepositoryImpl()

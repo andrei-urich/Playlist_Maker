@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.TRACK_INFO
@@ -25,11 +24,13 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.player.AudioplayerViewModel
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class AudioplayerActivity : AppCompatActivity() {
 
     private var playerState = "STATE_DEFAULT"
-    private lateinit var viewModel: AudioplayerViewModel
+    lateinit var viewModel: AudioplayerViewModel
     private lateinit var viewBinding: ActivityAudioplayerBinding
 
     private lateinit var track: Track
@@ -87,10 +88,10 @@ class AudioplayerActivity : AppCompatActivity() {
             track = intent.getParcelableExtra<Track>(TRACK_INFO)!!
         }
 
-        viewModel = ViewModelProvider(
-            this,
-            AudioplayerViewModel.factory(track)
-        )[AudioplayerViewModel::class.java]
+        val _viewModel: AudioplayerViewModel by viewModel {
+            parametersOf(track)
+        }
+        viewModel = _viewModel
 
         putOnTrack(track)
 

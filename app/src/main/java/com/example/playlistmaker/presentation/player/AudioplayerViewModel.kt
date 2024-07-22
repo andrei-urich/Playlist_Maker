@@ -3,10 +3,6 @@ package com.example.playlistmaker.presentation.player
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.player.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
@@ -18,8 +14,7 @@ import com.example.playlistmaker.domain.player.PlayerInteractor
 
 class AudioplayerViewModel(
     private val track: Track,
-    private val playerInteractor: PlayerInteractor = Creator.providePlayerInteractor()
-
+    private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
 
     private val playStatusLiveData = MutableLiveData<AudioplayerPlayState>()
@@ -40,13 +35,13 @@ class AudioplayerViewModel(
     }
 
     fun preparePlayer() {
-        playerInteractor.preparePlayer(
-            track,
-            object : OnPlayerStateChangeListener {
+        track.let {
+            playerInteractor.preparePlayer(it, object : OnPlayerStateChangeListener {
                 override fun onChange(state: String) {
                     runState(state)
                 }
             })
+        }
     }
 
     fun pause() {
@@ -82,16 +77,5 @@ class AudioplayerViewModel(
     override fun onCleared() {
         playerInteractor.release()
     }
-
-    companion object {
-        fun factory(track: Track): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    AudioplayerViewModel(track)
-                }
-            }
-        }
-    }
-
 }
 

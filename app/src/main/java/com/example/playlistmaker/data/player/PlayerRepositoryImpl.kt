@@ -9,10 +9,10 @@ import com.example.playlistmaker.domain.player.PlayerRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerRepositoryImpl : PlayerRepository {
-
-    val mediaPlayer = MediaPlayer()
-    private lateinit var listener: OnPlayerStateChangeListener
+class PlayerRepositoryImpl (
+    val mediaPlayer : MediaPlayer,
+    var listener: OnPlayerStateChangeListener
+) : PlayerRepository {
 
     override fun startPlayer() {
         mediaPlayer.start()

@@ -41,7 +41,7 @@ val searchModule = module {
     }
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(), get())
+        SearchHistoryRepositoryImpl(get())
     }
 
     single<SearchHistoryInteractor> {
@@ -56,8 +56,8 @@ val searchModule = module {
         RetrofitNetworkClient(get())
     }
 
-    single {
+    single { (key: String) ->
         androidContext()
-            .getSharedPreferences("search_history", Context.MODE_PRIVATE)
+            .getSharedPreferences(key, Context.MODE_PRIVATE)
     }
 }
