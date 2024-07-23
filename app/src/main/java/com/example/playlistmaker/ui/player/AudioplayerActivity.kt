@@ -21,6 +21,7 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_PAUSED
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PLAYING
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.presentation.player.AudioplayerViewModel
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
@@ -170,6 +171,9 @@ class AudioplayerActivity : AppCompatActivity() {
             }
 
             STATE_PREPARED -> {
+                handler.removeCallbacksAndMessages(null)
+            }
+            STATE_COMPLETE -> {
                 handler.removeCallbacksAndMessages(null)
                 trackProgress.setText(R.string.blankTimer)
             }

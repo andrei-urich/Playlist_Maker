@@ -10,9 +10,10 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerRepositoryImpl (
-    val mediaPlayer : MediaPlayer,
-    var listener: OnPlayerStateChangeListener
+    val mediaPlayer : MediaPlayer
 ) : PlayerRepository {
+
+    lateinit var listener: OnPlayerStateChangeListener
 
     override fun startPlayer() {
         mediaPlayer.start()
