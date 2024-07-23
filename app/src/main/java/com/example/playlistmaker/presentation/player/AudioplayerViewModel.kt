@@ -21,7 +21,7 @@ class AudioplayerViewModel(
 
     fun getPlayStatusLiveData(): LiveData<AudioplayerPlayState> = playStatusLiveData
 
-    fun initPlayer() {
+   init {
         preparePlayer()
     }
 

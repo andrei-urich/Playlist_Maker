@@ -31,10 +31,12 @@ import org.koin.core.parameter.parametersOf
 class AudioplayerActivity : AppCompatActivity() {
 
     private var playerState = "STATE_DEFAULT"
-    lateinit var viewModel: AudioplayerViewModel
-    private lateinit var viewBinding: ActivityAudioplayerBinding
-
     private lateinit var track: Track
+    private val viewModel: AudioplayerViewModel by viewModel() {
+        parametersOf(track)
+    }
+
+    private lateinit var viewBinding: ActivityAudioplayerBinding
     private lateinit var trackImage: ImageView
     private lateinit var trackName: TextView
     private lateinit var artistName: TextView
@@ -88,11 +90,6 @@ class AudioplayerActivity : AppCompatActivity() {
         } else {
             track = intent.getParcelableExtra<Track>(TRACK_INFO)!!
         }
-
-        val _viewModel: AudioplayerViewModel by viewModel {
-            parametersOf(track)
-        }
-        viewModel = _viewModel
 
         putOnTrack(track)
 
@@ -168,11 +165,18 @@ class AudioplayerActivity : AppCompatActivity() {
 
             STATE_PAUSED -> {
                 handler.removeCallbacksAndMessages(null)
+                if (!viewModel.getCurrentPosition().equals(R.string.blankTimer)) {
+                    trackProgress.setText(
+                        viewModel.getCurrentPosition()
+                    )
+                }
+
             }
 
             STATE_PREPARED -> {
                 handler.removeCallbacksAndMessages(null)
             }
+
             STATE_COMPLETE -> {
                 handler.removeCallbacksAndMessages(null)
                 trackProgress.setText(R.string.blankTimer)
@@ -220,13 +224,18 @@ class AudioplayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(8))
             .dontAnimate()
             .into(trackImage)
-
-        viewModel.initPlayer()
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (isChangingConfigurations) {
+            onRetainNonConfigurationInstance()
+        }
     }
 
     override fun onDestroy() {
