@@ -24,11 +24,12 @@ class SearchViewModel(
     private val searchRunnable = Runnable { request(searchText) }
 
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
+    private var searchHistoryStateLiveData = MutableLiveData<Boolean>()
     private var playTrackTrigger = SingleEventLiveData<Track>()
 
     fun getSearchStateLiveData(): LiveData<TrackSearchState> = searchStateLiveData
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
-
+    fun getSearchHistoryState(): LiveData<Boolean> = searchHistoryStateLiveData
 
     fun getSearchText(searchText: String) {
         this.searchText = searchText
@@ -99,6 +100,39 @@ class SearchViewModel(
         }
         super.onCleared()
     }
+
+    fun setSearchHistoryState(state: Boolean) {
+        when (state) {
+            true -> {
+                searchHistoryStateLiveData.postValue(true)
+            }
+
+            false -> {
+                searchHistoryStateLiveData.postValue(false)
+            }
+        }
+    }
+
+    fun onSearchBarFocusChangeListener(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+    fun onSearchTextChanged(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+    fun onClearButtonChangeListener(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+    fun historyClearButtonChangeListener(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+    fun showSearchErrorChangeChangeListener(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L

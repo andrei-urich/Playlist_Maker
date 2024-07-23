@@ -84,72 +84,6 @@ class SearchActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        //обработчик всплывающей клавиатуры
-        val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-
-        //возврат через кнопку тулбара на предыдущий экран
-        searchToolbar.setOnClickListener {
-            finish()
-        }
-
-        //обработчик нажатия на кнопку очистки строки поиска
-        clearButton.setOnClickListener {
-            searchBar.setText(EMPTY_STRING)
-            clearPlaceholders()
-            inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
-            historyVisibility(false)
-            searchBar.clearFocus()
-        }
-
-        //очистка истории при нажатии на кнопку "удалить историю"
-        historyClearButton.setOnClickListener {
-            viewModel.clearHistory()
-            historyTracks.clear()
-            searchHistoryAdapter.notifyDataSetChanged()
-            historyVisibility(false)
-        }
-
-        val searchTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchText = s.toString()
-                clearButton.visibility = clearButtonVisibility(s)
-                if (searchBar.hasFocus() && s?.isEmpty() == true) historyVisibility(true) else historyVisibility(
-                    false
-                )
-                viewModel.getSearchText(searchText)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        }
-
-        //Условие показа истории если строка поиска в фокусе
-        searchBar.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && searchBar.text.isEmpty()) historyVisibility(true) else historyVisibility(
-                false
-            )
-        }
-
-        searchBar.addTextChangedListener(searchTextWatcher)
-
-        //обработка нажатия "ввод" на виртуальной клавиатуре
-        searchBar.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.request(searchText)
-                true
-            }
-            false
-        }
-
-        //кнопка "Обновить" для отправки повторного запроса в случае ошибки соединения
-        refreshButton.setOnClickListener {
-            clearPlaceholders()
-            viewModel.request(searchText)
-        }
 
         viewModel.getSearchStateLiveData().observe(this) { searchState ->
             when (searchState) {
@@ -171,6 +105,82 @@ class SearchActivity : AppCompatActivity() {
 
         viewModel.getPlayTrackTrigger().observe(this) { track ->
             playTrack(track)
+        }
+
+        viewModel.getSearchHistoryState().observe(this) { state ->
+            if (state) {
+                changeHistoryVisibility(flag = true)
+            } else {
+                changeHistoryVisibility(flag = false)
+            }
+        }
+
+
+        //обработчик всплывающей клавиатуры
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+
+        //возврат через кнопку тулбара на предыдущий экран
+        searchToolbar.setOnClickListener {
+            finish()
+        }
+
+        //обработчик нажатия на кнопку очистки строки поиска
+        clearButton.setOnClickListener {
+            searchBar.setText(EMPTY_STRING)
+            clearPlaceholders()
+            inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
+            viewModel.onClearButtonChangeListener(false)
+            searchBar.clearFocus()
+        }
+
+        //очистка истории при нажатии на кнопку "удалить историю"
+        historyClearButton.setOnClickListener {
+            viewModel.clearHistory()
+            historyTracks.clear()
+            searchHistoryAdapter.notifyDataSetChanged()
+            viewModel.historyClearButtonChangeListener(false)
+        }
+
+        val searchTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchText = s.toString()
+                clearButton.visibility = clearButtonVisibility(s)
+                if (searchBar.hasFocus() && s?.isEmpty() == true) viewModel.onSearchTextChanged(true) else viewModel.onSearchTextChanged(
+                    false
+                )
+                viewModel.getSearchText(searchText)
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        }
+
+        //Условие показа истории если строка поиска в фокусе
+        searchBar.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && searchBar.text.isEmpty()) viewModel.onSearchBarFocusChangeListener(true) else viewModel.onSearchBarFocusChangeListener(
+                false
+            )
+        }
+
+        searchBar.addTextChangedListener(searchTextWatcher)
+
+        //обработка нажатия "ввод" на виртуальной клавиатуре
+        searchBar.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                viewModel.request(searchText)
+                true
+            }
+            false
+        }
+
+        //кнопка "Обновить" для отправки повторного запроса в случае ошибки соединения
+        refreshButton.setOnClickListener {
+            clearPlaceholders()
+            viewModel.request(searchText)
         }
     }
 
@@ -226,7 +236,7 @@ class SearchActivity : AppCompatActivity() {
 
     // метод вывода плейсхолдеров при ошибках поиска
     private fun showSearchError(codeError: Int) {
-        historyVisibility(false)
+        viewModel.showSearchErrorChangeChangeListener(false)
         if (codeError == 1) {
             placeholderSearchError.visibility = View.VISIBLE
             tracks.clear()
@@ -241,7 +251,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     // метод показа/скрытия истории поиска
-    fun historyVisibility(flag: Boolean) {
+    fun changeHistoryVisibility(flag: Boolean) {
         if (flag) {
             historyTracks.clear()
             historyTracks.addAll(viewModel.getHistoryList())
@@ -273,5 +283,4 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: EMPTY_STRING
     }
-
 }
