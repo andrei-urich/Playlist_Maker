@@ -14,7 +14,7 @@ import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.TrackSearchInteractor
 import com.example.playlistmaker.domain.search.TrackSearchInteractorImpl
 import com.example.playlistmaker.domain.search.TracksSearchRepository
-import com.example.playlistmaker.ui.repository.TrackTransferRepository
+import com.example.playlistmaker.domain.repository.TrackTransferRepository
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
