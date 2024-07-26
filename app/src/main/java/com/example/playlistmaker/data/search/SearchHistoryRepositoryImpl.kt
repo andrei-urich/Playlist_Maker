@@ -1,17 +1,24 @@
 package com.example.playlistmaker.data.search
 
-import com.example.playlistmaker.creator.Creator
+import android.content.SharedPreferences
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
+import com.example.playlistmaker.domain.repository.TrackTransferRepository
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 
-class SearchHistoryRepositoryImpl : SearchHistoryRepository {
+
+class SearchHistoryRepositoryImpl(
+    private val trackTransfer: TrackTransferRepository
+) : SearchHistoryRepository, KoinComponent {
     companion object {
         const val SEARCH_HISTORY = "search_history"
     }
 
-    private val sharedPrefs = Creator.getSharedPreferences(SEARCH_HISTORY)
-    private val trackTransfer = Creator.provideTrackTransfer()
-
+    private val sharedPrefs: SharedPreferences by inject() {
+        parametersOf(SEARCH_HISTORY)
+    }
     private var historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
     private var searchHistoryTracks: MutableList<Track>
 

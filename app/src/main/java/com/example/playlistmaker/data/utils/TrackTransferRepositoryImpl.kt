@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.utils
 
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.ui.repository.TrackTransferRepository
+import com.example.playlistmaker.domain.repository.TrackTransferRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

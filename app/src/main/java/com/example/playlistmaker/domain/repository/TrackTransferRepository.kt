@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.repository
+package com.example.playlistmaker.domain.repository
 
 import com.example.playlistmaker.domain.model.Track
 import java.lang.reflect.Type

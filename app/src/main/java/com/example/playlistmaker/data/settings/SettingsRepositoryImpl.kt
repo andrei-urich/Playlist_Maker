@@ -1,16 +1,24 @@
 package com.example.playlistmaker.data.settings
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.utils.NIGHT_MODE
-import com.example.playlistmaker.utils.PLAYLIST_MAKER_PREFERENCES
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.settings.SettingsRepository
+import com.example.playlistmaker.utils.PLAYLIST_MAKER_PREFERENCES
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 
-class SettingsRepositoryImpl(val context: Context) : SettingsRepository {
-    val sharedPrefs = Creator.getSharedPreferences(PLAYLIST_MAKER_PREFERENCES)
+class SettingsRepositoryImpl(
+    val context: Context,
+) : SettingsRepository, KoinComponent {
+
+    private val sharedPrefs: SharedPreferences by inject() {
+        parametersOf(PLAYLIST_MAKER_PREFERENCES)
+    }
 
     override fun getThemeSettings(): Boolean {
         val nightMode = sharedPrefs.getBoolean(

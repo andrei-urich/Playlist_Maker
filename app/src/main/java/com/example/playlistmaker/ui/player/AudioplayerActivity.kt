@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,29 +12,31 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.TRACK_INFO
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PAUSED
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PLAYING
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.presentation.player.AudioplayerViewModel
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class AudioplayerActivity : AppCompatActivity() {
 
     private var playerState = "STATE_DEFAULT"
-    private val trackTransfer = Creator.provideTrackTransfer()
-    private lateinit var viewModel: AudioplayerViewModel
-    private lateinit var viewBinding: ActivityAudioplayerBinding
-
     private lateinit var track: Track
+    private val viewModel: AudioplayerViewModel by viewModel() {
+        parametersOf(track)
+    }
+
+    private lateinit var viewBinding: ActivityAudioplayerBinding
     private lateinit var trackImage: ImageView
     private lateinit var trackName: TextView
     private lateinit var artistName: TextView
@@ -82,13 +85,11 @@ class AudioplayerActivity : AppCompatActivity() {
         }
 
         val intent = intent
-        val trackInfo = intent.getStringExtra(TRACK_INFO)
-        track = trackTransfer.getTrack(trackInfo.toString())
-
-        viewModel = ViewModelProvider(
-            this,
-            AudioplayerViewModel.factory(track)
-        )[AudioplayerViewModel::class.java]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            track = intent.getParcelableExtra(TRACK_INFO, Track::class.java)!!
+        } else {
+            track = intent.getParcelableExtra<Track>(TRACK_INFO)!!
+        }
 
         putOnTrack(track)
 
@@ -99,19 +100,34 @@ class AudioplayerActivity : AppCompatActivity() {
         viewModel.getPlayStatusLiveData().observe(this) { state ->
             when (state) {
                 is AudioplayerPlayState.Prepared -> {
-                    btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
+                    btnPlay.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            this,
+                            R.drawable.btn_play
+                        )
+                    )
                     playerState = STATE_PREPARED
                     showTrackPlayedTime()
                 }
 
                 is AudioplayerPlayState.Playing -> {
-                    btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_pause))
+                    btnPlay.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            this,
+                            R.drawable.btn_pause
+                        )
+                    )
                     playerState = STATE_PLAYING
                     showTrackPlayedTime()
                 }
 
                 is AudioplayerPlayState.Paused -> {
-                    btnPlay.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.btn_play))
+                    btnPlay.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            this,
+                            R.drawable.btn_play
+                        )
+                    )
                     playerState = STATE_PAUSED
                     showTrackPlayedTime()
                 }
@@ -123,7 +139,7 @@ class AudioplayerActivity : AppCompatActivity() {
                             R.drawable.btn_play
                         )
                     )
-                    playerState = STATE_PREPARED
+                    playerState = STATE_COMPLETE
                     showTrackPlayedTime()
                 }
             }
@@ -149,9 +165,19 @@ class AudioplayerActivity : AppCompatActivity() {
 
             STATE_PAUSED -> {
                 handler.removeCallbacksAndMessages(null)
+                if (!viewModel.getCurrentPosition().equals(R.string.blankTimer)) {
+                    trackProgress.setText(
+                        viewModel.getCurrentPosition()
+                    )
+                }
+
             }
 
             STATE_PREPARED -> {
+                handler.removeCallbacksAndMessages(null)
+            }
+
+            STATE_COMPLETE -> {
                 handler.removeCallbacksAndMessages(null)
                 trackProgress.setText(R.string.blankTimer)
             }
@@ -167,7 +193,11 @@ class AudioplayerActivity : AppCompatActivity() {
 
         if (!track.collectionName.isNullOrBlank()) {
             collectionNameValue.setText(
-                if (track.collectionName.length<=26) track.collectionName else (track.collectionName.substring(0, 23)+"..."))
+                if (track.collectionName.length <= 26) track.collectionName else (track.collectionName.substring(
+                    0,
+                    23
+                ) + "...")
+            )
         } else {
             collectionGroup.visibility = View.GONE
         }
@@ -194,13 +224,18 @@ class AudioplayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(8))
             .dontAnimate()
             .into(trackImage)
-
-        viewModel.initPlayer()
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (isChangingConfigurations) {
+            onRetainNonConfigurationInstance()
+        }
     }
 
     override fun onDestroy() {

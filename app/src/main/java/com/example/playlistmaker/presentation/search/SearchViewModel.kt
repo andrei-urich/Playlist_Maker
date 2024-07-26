@@ -5,10 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.search.ConsumerData
 import com.example.playlistmaker.domain.search.SearchConsumer
 import com.example.playlistmaker.domain.model.Track
@@ -18,8 +14,8 @@ import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 import com.example.playlistmaker.utils.EMPTY_STRING
 
 class SearchViewModel(
-    private val trackSearchInteractor: TrackSearchInteractor = Creator.provideTrackSearchInteractor(),
-    private val searchHistoryInteractor: SearchHistoryInteractor = Creator.provideSearchHistoryInteractor()
+    private val trackSearchInteractor: TrackSearchInteractor,
+    private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
     private var isClickAllowed = true
@@ -28,14 +24,15 @@ class SearchViewModel(
     private val searchRunnable = Runnable { request(searchText) }
 
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
+    private var searchHistoryStateLiveData = MutableLiveData<Boolean>()
     private var playTrackTrigger = SingleEventLiveData<Track>()
 
     fun getSearchStateLiveData(): LiveData<TrackSearchState> = searchStateLiveData
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
-
+    fun getSearchHistoryState(): LiveData<Boolean> = searchHistoryStateLiveData
 
     fun getSearchText(searchText: String) {
-        this.searchText= searchText
+        this.searchText = searchText
         searchDebounce()
     }
 
@@ -104,17 +101,42 @@ class SearchViewModel(
         super.onCleared()
     }
 
+    fun setSearchHistoryState(state: Boolean) {
+        when (state) {
+            true -> {
+                searchHistoryStateLiveData.postValue(true)
+            }
+
+            false -> {
+                searchHistoryStateLiveData.postValue(false)
+            }
+        }
+    }
+
+    fun onSearchBarFocusChangeListener(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+    fun onSearchTextChanged(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+    fun onClearButtonChangeListener(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+    fun historyClearButtonChangeListener(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+    fun showSearchErrorChangeChangeListener(state: Boolean) {
+        setSearchHistoryState(state)
+    }
+
+
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-
-        fun factory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    SearchViewModel()
-                }
-            }
-        }
     }
 }
 
