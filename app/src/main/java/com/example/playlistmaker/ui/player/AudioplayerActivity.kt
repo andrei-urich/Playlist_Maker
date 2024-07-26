@@ -139,7 +139,7 @@ class AudioplayerActivity : AppCompatActivity() {
                             R.drawable.btn_play
                         )
                     )
-                    playerState = STATE_PREPARED
+                    playerState = STATE_COMPLETE
                     showTrackPlayedTime()
                 }
             }
