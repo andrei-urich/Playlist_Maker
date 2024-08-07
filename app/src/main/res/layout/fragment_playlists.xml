@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.library.PlaylistsFragment">
+
+    <Button
+        android:id="@+id/bnAddPlaylist"
+        style="@style/refresh_btn_style"
+        android:text="@string/playlists_button_addPlaylist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/addPlaylist_button_margin_top"
+
+        />
+
+    <LinearLayout
+        android:id="@+id/placeholderEmptyPlaylists"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:visibility="visible"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/library_placeholder_image_margin_top"
+            android:src="@drawable/placeholder_search_error" />
+
+        <TextView
+            style="@style/search_screen_placeholder_text_style"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/search_result_top_margin"
+            android:text="@string/empty_playlists_placeholder_text" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

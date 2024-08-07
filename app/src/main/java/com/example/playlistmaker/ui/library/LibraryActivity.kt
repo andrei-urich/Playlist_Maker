@@ -1,23 +1,28 @@
 package com.example.playlistmaker.ui.library
 
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.R
+import androidx.fragment.app.commit
+import com.example.playlistmaker.databinding.ActivityLibraryBinding
 
 
 class LibraryActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityLibraryBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_library)
+        binding = ActivityLibraryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.tbLib)
-       val trackImage = findViewById<ImageView>(R.id.trackImageLib)
-       trackImage.setImageDrawable(getDrawable(R.drawable.placeholder_big))
-
+        val toolbar = binding.tbLib
         toolbar.setOnClickListener {
-            finish()
+            this.onBackPressedDispatcher.onBackPressed()
+
+            supportFragmentManager.commit {
+
+            }
+
         }
 
     }
