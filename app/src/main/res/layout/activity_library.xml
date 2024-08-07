@@ -23,11 +23,19 @@
         android:background="@color/primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        style="@style/tabLayout_text_style"
+        app:tabMode="fixed"
         app:layout_constraintTop_toBottomOf="@id/tbLib">
 
-        <com.google.android.material.tabs.TabItem style="@style/tabLayout_text_style" />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Избранные треки" />
 
-        <com.google.android.material.tabs.TabItem style="@style/tabLayout_text_style" />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Плейлисты" />
 
     </com.google.android.material.tabs.TabLayout>
 
