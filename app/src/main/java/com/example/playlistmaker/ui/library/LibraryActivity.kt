@@ -2,13 +2,22 @@ package com.example.playlistmaker.ui.library
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
 import com.example.playlistmaker.databinding.ActivityLibraryBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 class LibraryActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityLibraryBinding
+
+    private val fragmentList = listOf(
+        FavoriteTracksFragment.newInstance(),
+        PlaylistsFragment.newInstance()
+    )
+    private val fragmentListTitles = listOf(
+        "Избранные треки",
+        "Плейлисты"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,12 +27,12 @@ class LibraryActivity : AppCompatActivity() {
         val toolbar = binding.tbLib
         toolbar.setOnClickListener {
             this.onBackPressedDispatcher.onBackPressed()
-
-            supportFragmentManager.commit {
-
-            }
-
         }
 
+        val adapter = PagerAdapter(this, fragmentList)
+        binding.pager.adapter = adapter
+        TabLayoutMediator(binding.tlTab, binding.pager) { tab, pos -> tab.setText(fragmentListTitles[pos])
+        }.attach()
     }
 }
+
