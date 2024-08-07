@@ -5,6 +5,9 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.library.favoriteTracksViewModelModule
+import com.example.playlistmaker.di.library.libraryViewModelModule
+import com.example.playlistmaker.di.library.playlistsViewModelModule
 import com.example.playlistmaker.di.player.audioplayerViewModelModule
 import com.example.playlistmaker.di.player.playerModule
 import com.example.playlistmaker.di.search.searchModule
@@ -30,7 +33,10 @@ class MyApp : Application() {
                 playerModule,
                 searchViewModelModule,
                 settingsViewModelModule,
-                audioplayerViewModelModule
+                audioplayerViewModelModule,
+                libraryViewModelModule,
+                favoriteTracksViewModelModule,
+                playlistsViewModelModule
             )
         }
 

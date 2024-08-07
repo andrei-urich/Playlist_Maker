@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.library
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.ActivityLibraryBinding
 import com.example.playlistmaker.presentation.library.LibraryViewModel
 import com.google.android.material.tabs.TabLayoutMediator
@@ -14,13 +15,16 @@ class LibraryActivity : AppCompatActivity() {
 
     private val viewModel: LibraryViewModel by viewModel()
 
-    private val fragmentList = viewModel.getFragmentList()
-    private val fragmentListTitles = viewModel.getTabsTitle(this)
+    private lateinit var fragmentList: List<Fragment>
+    private lateinit var fragmentListTitles: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        fragmentListTitles = viewModel.getTabsTitle(this)
+        fragmentList = viewModel.getFragmentList()
 
         val toolbar = binding.tbLib
         toolbar.setOnClickListener {

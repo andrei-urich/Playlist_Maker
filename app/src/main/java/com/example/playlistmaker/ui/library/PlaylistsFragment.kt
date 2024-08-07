@@ -22,10 +22,6 @@ class PlaylistsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel.getLiveData().observe(viewLifecycleOwner){
-
-        }
     }
 
     override fun onCreateView(
@@ -33,7 +29,9 @@ class PlaylistsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
+        viewModel.getLiveData().observe(viewLifecycleOwner) {
 
+        }
         return binding.root
     }
 

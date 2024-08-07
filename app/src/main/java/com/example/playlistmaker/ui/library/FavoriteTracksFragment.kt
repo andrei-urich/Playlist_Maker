@@ -23,9 +23,6 @@ class FavoriteTracksFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.getLiveData().observe(viewLifecycleOwner){
-
-        }
     }
 
     override fun onCreateView(
@@ -34,6 +31,10 @@ class FavoriteTracksFragment : Fragment() {
     ): View {
 
         _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
+
+        viewModel.getLiveData().observe(viewLifecycleOwner){
+
+        }
         return binding.root
     }
 

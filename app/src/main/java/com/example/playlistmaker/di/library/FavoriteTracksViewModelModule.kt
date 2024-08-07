@@ -4,7 +4,7 @@ import com.example.playlistmaker.presentation.library.FavoriteTracksViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val FavoriteTracksViewModelModule = module {
+val favoriteTracksViewModelModule = module {
     viewModel {
         FavoriteTracksViewModel()
     }
