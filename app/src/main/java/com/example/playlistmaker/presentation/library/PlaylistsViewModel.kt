@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class PlaylistsViewModel : ViewModel() {
-    private var stateLiveData = MutableLiveData<Int>()
+    private val stateLiveData = MutableLiveData<Int>()
 
     fun getLiveData(): LiveData<Int> = stateLiveData
 }

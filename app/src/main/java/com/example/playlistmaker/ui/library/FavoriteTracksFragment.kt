@@ -29,13 +29,17 @@ class FavoriteTracksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        viewModel.getLiveData().observe(viewLifecycleOwner){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getLiveData().observe(viewLifecycleOwner) {
 
         }
-        return binding.root
+
     }
 
     override fun onDestroyView() {
