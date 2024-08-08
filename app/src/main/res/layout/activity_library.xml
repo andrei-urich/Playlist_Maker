@@ -10,19 +10,43 @@
         android:id="@+id/tbLib"
         style="@style/my_toolbar"
         app:layout_constraintHorizontal_bias="0.0"
+        app:title="@string/library_screen_title"
+        app:titleTextAppearance="@style/my_toolbar"
         tools:ignore="MissingConstraints">
 
     </androidx.appcompat.widget.Toolbar>
 
-    <ImageView
-        android:id="@+id/trackImageLib"
-        style="@style/player_border_for_images"
-        android:layout_width="wrap_content"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tlTab"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/player_track_image_margin_top"
+        android:background="@color/primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/tabLayout_text_style"
+        app:tabMode="fixed"
+        app:layout_constraintTop_toBottomOf="@id/tbLib">
 
-        android:src="@drawable/placeholder_big"
-        app:layout_constraintTop_toBottomOf="@id/tbLib"
-        tools:ignore="MissingConstraints" />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Избранные треки" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Плейлисты" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tlTab" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

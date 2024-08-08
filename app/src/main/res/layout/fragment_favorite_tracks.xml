@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/placeholderEmptyFavoriteTracks"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/primary"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:context=".ui.library.FavoriteTracksFragment">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/library_placeholder_image_margin_top"
+        android:src="@drawable/placeholder_search_error" />
+
+    <TextView
+        style="@style/search_screen_placeholder_text_style"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/search_result_top_margin"
+        android:text="@string/favorite_tracks_empty_placeholder_text" />
+
+</LinearLayout>

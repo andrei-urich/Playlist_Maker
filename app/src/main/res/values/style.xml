@@ -45,7 +45,21 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">@dimen/h2</item>
+    </style>
 
+    <!-- стиль текста пунктов Табов на экране Медиатека -->
+    <style name="tabLayout_text_style" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:gravity">center_vertical</item>
+        <item name="tabIndicatorColor">@color/text_primary</item>
+        <item name="tabTextColor">@color/text_primary</item>
+        <item name="tabSelectedTextColor">@color/text_primary</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="tabTextAppearance">@style/tabTextStyle</item>
+    </style>
+    <style name="tabTextStyle" parent="main_btn_style">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">@dimen/h3</item>
     </style>
 
     <!-- стиль кнопок меню -->
@@ -78,7 +92,7 @@
         <item name="android:textSize">@dimen/h1</item>
     </style>
 
-    <!-- стиль текста плейсхолдеров на экране поиска треков -->
+    <!-- стиль текста плейсхолдеров  -->
     <style name="search_screen_placeholder_text_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

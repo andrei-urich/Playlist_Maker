@@ -131,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/placeholder_image_margin_top"
+            android:layout_marginTop="@dimen/search_placeholder_image_margin_top"
             android:src="@drawable/placeholder_search_error" />
 
         <TextView
@@ -158,7 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/placeholder_image_margin_top"
+            android:layout_marginTop="@dimen/search_placeholder_image_margin_top"
             android:src="@drawable/placeholder_server_error" />
 
         <TextView

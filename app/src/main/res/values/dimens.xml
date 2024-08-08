@@ -42,7 +42,8 @@
     <dimen name="refresh_button_radius">54dp</dimen>
     <dimen name="refresh_button_text">14sp</dimen>
     <dimen name="refresh_button_margin_top">24dp</dimen>
-    <dimen name="placeholder_image_margin_top">110dp</dimen>
+    <dimen name="search_placeholder_image_margin_top">110dp</dimen>
+    <dimen name="library_placeholder_image_margin_top">106dp</dimen>
     <dimen name="head_history_margin_top">24dp</dimen>
     <dimen name="history_header_margin_bottom">4dp</dimen>
     <dimen name="clear_history_button_margin_top">24dp</dimen>
@@ -58,4 +59,5 @@
     <dimen name="player_details_margin_bottom">28dp</dimen>
     <dimen name="progress_bar_dim">44dp</dimen>
     <dimen name="progress_bar_margin_top">148dp</dimen>
+    <dimen name="addPlaylist_button_margin_top">24dp</dimen>
 </resources>
