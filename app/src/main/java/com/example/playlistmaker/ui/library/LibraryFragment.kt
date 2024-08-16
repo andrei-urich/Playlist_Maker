@@ -1,37 +1,45 @@
 package com.example.playlistmaker.ui.library
+
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityLibraryBinding
+import com.example.playlistmaker.databinding.FragmentLibraryBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 
-class LibraryActivity : AppCompatActivity() {
+class LibraryFragment : Fragment() {
 
-    lateinit var binding: ActivityLibraryBinding
+    private var _binding: FragmentLibraryBinding? = null
+    private val binding get() = _binding!!
+
 
     private lateinit var fragmentList: List<Fragment>
     private lateinit var fragmentListTitles: List<String>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityLibraryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         fragmentListTitles = getTabsTitle()
         fragmentList = getFragmentList()
 
-        val toolbar = binding.tbLib
-        toolbar.setOnClickListener {
-            this.onBackPressedDispatcher.onBackPressed()
-        }
-
-        val adapter = PagerAdapter(this, fragmentList)
+        val adapter = PagerAdapter(requireActivity(), fragmentList)
         binding.pager.adapter = adapter
         TabLayoutMediator(binding.tlTab, binding.pager) { tab, pos ->
             tab.setText(fragmentListTitles[pos])
         }.attach()
+
     }
 
     fun getFragmentList(): List<Fragment> {
@@ -40,11 +48,17 @@ class LibraryActivity : AppCompatActivity() {
             PlaylistsFragment.newInstance()
         )
     }
+
     fun getTabsTitle(): List<String> {
         return listOf(
             this.getString(R.string.favorite_tracks_tab_title),
             this.getString(R.string.playlists_tab_title)
         )
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
 

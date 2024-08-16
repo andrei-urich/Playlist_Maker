@@ -20,11 +20,6 @@ class FavoriteTracksFragment : Fragment() {
     private var _binding: FragmentFavoriteTracksBinding? = null
     private val binding: FragmentFavoriteTracksBinding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

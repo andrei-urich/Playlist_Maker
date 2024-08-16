@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.library.LibraryActivity">
+    tools:context=".ui.library.LibraryFragment">
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbLib"
         style="@style/my_toolbar"
-        app:layout_constraintHorizontal_bias="0.0"
         app:title="@string/library_screen_title"
         app:titleTextAppearance="@style/my_toolbar"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints" />
 
-    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tlTab"
