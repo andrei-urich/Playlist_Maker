@@ -171,4 +171,9 @@
     </style>
 
 
+    <style name="BottomNavigationView" parent="Widget.Design.BottomNavigationView">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

@@ -38,7 +38,7 @@
         app:layout_constraintRight_toLeftOf="@id/swtch"
         app:layout_constraintTop_toBottomOf="@+id/tbSettings" />
 
-    <androidx.appcompat.widget.SwitchCompat
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/swtch"
         style="@style/Widget.App.Switch"
         android:layout_width="@dimen/settings_switch_width"
