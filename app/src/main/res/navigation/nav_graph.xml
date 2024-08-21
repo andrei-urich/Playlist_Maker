@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/libraryFragment"
-    >
+    app:startDestination="@id/libraryFragment">
 
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.example.playlistmaker.ui.library.LibraryFragment"
         android:label="fragment_library"
-        tools:layout="@layout/fragment_library" >
+        tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/action_libraryFragment_to_audioplayerActivity"
             app:destination="@id/audioplayerActivity" />
@@ -19,15 +18,20 @@
         android:id="@+id/audioplayerActivity"
         android:name="com.example.playlistmaker.ui.player.AudioplayerActivity"
         android:label="activity_audioplayer"
-        tools:layout="@layout/activity_audioplayer" />
+        tools:layout="@layout/activity_audioplayer">
+        <argument
+            android:name="track"
+            app:argType="com.example.playlistmaker.domain.model.Track"
+            app:nullable="false" />
+    </activity>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.ui.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_audioplayerActivity"
-            app:destination="@id/audioplayerActivity" />
+            app:destination="@id/audioplayerActivity"></action>
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

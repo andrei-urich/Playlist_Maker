@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.player
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,9 +11,9 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.navigation.navArgs
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
-import com.example.playlistmaker.utils.TRACK_INFO
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PAUSED
@@ -55,6 +54,7 @@ class AudioplayerActivity : AppCompatActivity() {
     private lateinit var countryGroup: Group
     private lateinit var handler: Handler
 
+    private val args: AudioplayerActivityArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,16 +81,10 @@ class AudioplayerActivity : AppCompatActivity() {
         handler = Handler(Looper.getMainLooper())
 
         toolbar.setOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
 
-        val intent = intent
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            track = intent.getParcelableExtra(TRACK_INFO, Track::class.java)!!
-        } else {
-            track = intent.getParcelableExtra<Track>(TRACK_INFO)!!
-        }
-
+        track = args.track
         putOnTrack(track)
 
         btnPlay.setOnClickListener {

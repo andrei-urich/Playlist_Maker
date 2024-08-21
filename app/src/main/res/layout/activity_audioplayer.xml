@@ -16,7 +16,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tbPlayer"
-            style="@style/my_toolbar"
+            style="@style/player_toolbar"
             app:layout_constraintHorizontal_bias="0.0"
             tools:ignore="MissingConstraints">
 

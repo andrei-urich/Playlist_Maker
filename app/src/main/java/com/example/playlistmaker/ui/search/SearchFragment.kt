@@ -17,23 +17,20 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.example.playlistmaker.presentation.search.TrackSearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SearchFragment : Fragment() {
-
-    companion object {
-        private const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val ERROR = "ERROR"
-        private const val LOADING = "LOADING"
-        private const val SHOW_RESULT = "SHOW_RESULT"
-    }
 
     private var searchText = EMPTY_STRING
     private var _viewBinding: FragmentSearchBinding? = null
@@ -42,10 +39,12 @@ class SearchFragment : Fragment() {
     private var tracks = mutableListOf<Track>()
     private var historyTracks = mutableListOf<Track>()
 
+
     private val viewModel: SearchViewModel by viewModel()
     lateinit var searchAdapter: SearchAdapter
     lateinit var searchHistoryAdapter: SearchHistoryAdapter
 
+    private val inputMethodManager by lazy { -> requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager }
     private lateinit var searchToolbar: Toolbar
     private lateinit var searchBar: EditText
     private lateinit var clearButton: ImageView
@@ -57,6 +56,7 @@ class SearchFragment : Fragment() {
     private lateinit var placeholderServerErrors: LinearLayout
     private lateinit var refreshButton: Button
     private lateinit var progressBar: ProgressBar
+    private lateinit var action: NavDirections
 
 
     override fun onCreateView(
@@ -122,9 +122,9 @@ class SearchFragment : Fragment() {
         }
 
 
-        //обработчик всплывающей клавиатуры
-        val inputMethodManager =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+//        //обработчик всплывающей клавиатуры
+//        inputMethodManager =
+//            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
 
 
         //обработчик нажатия на кнопку очистки строки поиска
@@ -132,6 +132,7 @@ class SearchFragment : Fragment() {
             searchBar.setText(EMPTY_STRING)
             clearPlaceholders()
             inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
+            hideBottomNavBar(false)
             viewModel.onClearButtonChangeListener(false)
             searchBar.clearFocus()
         }
@@ -149,6 +150,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                hideBottomNavBar(true)
                 searchText = s.toString()
                 clearButton.visibility = clearButtonVisibility(s)
                 if (searchBar.hasFocus() && s?.isEmpty() == true) viewModel.onSearchTextChanged(true) else viewModel.onSearchTextChanged(
@@ -188,15 +190,17 @@ class SearchFragment : Fragment() {
     }
 
     private fun playTrack(track: Track) {
-//        val playerIntent = Intent(this, AudioplayerActivity::class.java)
-//        playerIntent.putExtra(TRACK_INFO, track)
-//        startActivity(playerIntent)
+        action = SearchFragmentDirections.actionSearchFragmentToAudioplayerActivity(track)
+        findNavController().navigate(
+            action
+        )
     }
 
     private fun changeContentVisibility(showCase: String) {
         when (showCase) {
             ERROR -> {
                 progressBar.visibility = View.GONE
+                inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
                 showSearchError(2)
             }
 
@@ -256,10 +260,12 @@ class SearchFragment : Fragment() {
     // метод показа/скрытия истории поиска
     fun changeHistoryVisibility(flag: Boolean) {
         if (flag) {
+            hideBottomNavBar(flag)
             historyTracks.clear()
             historyTracks.addAll(viewModel.getHistoryList())
             recyclerView.adapter = searchHistoryAdapter
             searchHistoryAdapter.notifyDataSetChanged()
+
 
             if (historyTracks.isNotEmpty()) {
                 historyClearButton.visibility = View.VISIBLE
@@ -274,21 +280,22 @@ class SearchFragment : Fragment() {
         }
     }
 
-//    // методы для сохранения введеного значения в поисковой строке
-//    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-//        super.onSaveInstanceState(outState, outPersistentState)
-//        outState.putString(SEARCH_TEXT, searchText)
-//    }
-//
-//    override fun onRestoreInstanceState(
-//        savedInstanceState: Bundle?, persistentState: PersistableBundle?
-//    ) {
-//        super.onRestoreInstanceState(savedInstanceState, persistentState)
-//        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: EMPTY_STRING
-//    }
-
     override fun onDestroyView() {
         _viewBinding = null
         super.onDestroyView()
     }
+
+
+    private fun hideBottomNavBar(flag: Boolean) {
+        if (flag) requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
+            View.GONE else requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
+            View.VISIBLE
+    }
+
+    companion object {
+        private const val ERROR = "ERROR"
+        private const val LOADING = "LOADING"
+        private const val SHOW_RESULT = "SHOW_RESULT"
+    }
 }
+

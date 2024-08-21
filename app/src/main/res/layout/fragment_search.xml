@@ -7,17 +7,13 @@
     android:layout_height="match_parent"
     android:background="@color/primary"
     tools:context=".ui.search.SearchFragment">
-
-    <!-- Тулбар -->
-
+    <!--  Тулбар  -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbSearch"
         style="@style/my_toolbar"
         app:title="@string/search_head"
         app:titleTextAppearance="@style/my_toolbar"
-        tools:ignore="MissingConstraints">
-
-    </androidx.appcompat.widget.Toolbar>
+        tools:ignore="MissingConstraints"></androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/flSearch"
@@ -27,18 +23,13 @@
         android:layout_marginTop="@dimen/search_view_margin_top"
         android:background="@drawable/edittext_bg"
         app:layout_constraintTop_toBottomOf="@+id/tbSearch">
-
-
-        <!-- Поисковая строка -->
-
+        <!--  Поисковая строка  -->
         <EditText
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/search_edittext_right_margin"
-
             android:background="@null"
-
             android:drawableStart="@drawable/search_icon"
             android:drawablePadding="@dimen/btn_icon_padding"
             android:fontFamily="@font/ys_display_regular"
@@ -46,17 +37,13 @@
             android:imeOptions="actionDone"
             android:inputType="text"
             android:lines="1"
-
             android:paddingHorizontal="@dimen/search_view_padding_horizontal"
             android:paddingVertical="@dimen/search_view_padding_vertical"
             android:singleLine="true"
-
             android:textColor="@color/search_view_text"
             android:textColorHint="@color/search_view_hint"
             android:textCursorDrawable="@drawable/cursor_search"
-            android:textSize="@dimen/h2"
-
-            />
+            android:textSize="@dimen/h2" />
 
         <ImageView
             android:id="@+id/ivClearButton"
@@ -67,15 +54,10 @@
             android:paddingHorizontal="@dimen/search_clear_button_pudding_horizontal"
             android:paddingVertical="@dimen/search_clear_button_pudding_vertical"
             android:visibility="gone"
-            app:srcCompat="@drawable/clear_button"
-
-            />
-
-
+            app:srcCompat="@drawable/clear_button" />
     </FrameLayout>
 
-    <!-- Вывод истории и рез-в поиска списка -->
-
+    <!--  Вывод истории и рез-в поиска списка  -->
     <LinearLayout
         android:id="@+id/listLayout"
         android:layout_width="match_parent"
@@ -110,20 +92,14 @@
             android:layout_marginVertical="@dimen/clear_history_button_margin_top"
             android:text="@string/clear_history_btn_text"
             android:visibility="gone" />
-
-
     </LinearLayout>
-
-    <!-- Плейсхолдер под нулевой результат -->
-
+    <!--  Плейсхолдер под нулевой результат  -->
     <LinearLayout
         android:id="@+id/placeholderSearchError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
         android:visibility="gone"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/flSearch">
@@ -141,10 +117,7 @@
             android:layout_marginTop="@dimen/search_result_top_margin"
             android:text="@string/search_error_message" />
     </LinearLayout>
-
-
-    <!-- Плейсхолдер под ошибку сервера -->
-
+    <!--  Плейсхолдер под ошибку сервера  -->
     <LinearLayout
         android:id="@+id/placeholderServerErrors"
         android:layout_width="match_parent"
@@ -173,10 +146,8 @@
             style="@style/refresh_btn_style"
             android:layout_marginTop="@dimen/refresh_button_margin_top"
             android:text="@string/refresh_button_text" />
-
     </LinearLayout>
-
-    <!-- Прогресс-бар -->
+    <!--  Прогресс-бар  -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="@dimen/progress_bar_dim"
@@ -187,13 +158,8 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flSearch"
-
-        />
-
-
+        app:layout_constraintTop_toBottomOf="@id/flSearch" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 
