@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentLibraryBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 
 
@@ -41,6 +42,11 @@ class LibraryFragment : Fragment() {
         }.attach()
         binding.pager.currentItem = 1
 
+    }
+
+    override fun onResume() {
+        requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility=View.VISIBLE
+        super.onResume()
     }
 
     fun getFragmentList(): List<Fragment> {

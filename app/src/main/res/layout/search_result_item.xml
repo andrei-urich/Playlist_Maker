@@ -5,8 +5,8 @@
     android:id="@+id/searchScreen"
     android:layout_width="match_parent"
     android:layout_height="@dimen/search_result_card_height"
-    android:background="?android:selectableItemBackground">
-    <!-- ?>android:background="@color/primary" -->
+    android:background="?android:selectableItemBackground"
+    >
 
     <ImageView
         android:id="@+id/track_image"
@@ -35,10 +35,7 @@
         app:layout_constraintEnd_toStartOf="@id/trailing_icon"
         app:layout_constraintStart_toEndOf="@+id/track_image"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Название трека"
-
-
-        />
+        tools:text="Название трека" />
 
     <TextView
         android:id="@+id/artistName"
@@ -92,7 +89,7 @@
         style="@style/settings_option_image_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
+        android:clickable="false"
         android:src="@drawable/ic_arrow_frwrd"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

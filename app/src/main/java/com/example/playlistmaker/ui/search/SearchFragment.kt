@@ -39,12 +39,12 @@ class SearchFragment : Fragment() {
     private var tracks = mutableListOf<Track>()
     private var historyTracks = mutableListOf<Track>()
 
-
     private val viewModel: SearchViewModel by viewModel()
     lateinit var searchAdapter: SearchAdapter
     lateinit var searchHistoryAdapter: SearchHistoryAdapter
 
     private val inputMethodManager by lazy { -> requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager }
+
     private lateinit var searchToolbar: Toolbar
     private lateinit var searchBar: EditText
     private lateinit var clearButton: ImageView
@@ -57,7 +57,6 @@ class SearchFragment : Fragment() {
     private lateinit var refreshButton: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var action: NavDirections
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,7 +89,6 @@ class SearchFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-
         viewModel.getSearchStateLiveData().observe(viewLifecycleOwner) { searchState ->
             when (searchState) {
                 is TrackSearchState.Error -> {
@@ -120,12 +118,6 @@ class SearchFragment : Fragment() {
                 changeHistoryVisibility(flag = false)
             }
         }
-
-
-//        //обработчик всплывающей клавиатуры
-//        inputMethodManager =
-//            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-
 
         //обработчик нажатия на кнопку очистки строки поиска
         clearButton.setOnClickListener {
