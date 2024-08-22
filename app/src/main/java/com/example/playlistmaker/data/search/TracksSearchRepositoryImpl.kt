@@ -11,24 +11,22 @@ class TracksSearchRepositoryImpl(private val networkClient: NetworkClient) :
         val response = networkClient.doRequest(TracksSearchRequest(request))
         if (response is TracksResponse) {
             val list = checkTheTracksParamsToNull(response.results)
-            if (!list.isEmpty()) {
-                val tracks = list.map {
-                    Track(
-                        it.trackId,
-                        it.trackName,
-                        it.artistName,
-                        it.trackTime,
-                        it.artworkUrl100,
-                        it.trackTimeMillis,
-                        it.collectionName,
-                        it.releaseDate,
-                        it.primaryGenreName,
-                        it.country,
-                        it.previewUrl!!
-                    )
-                }
-                return Resource.Success(tracks)
-            } else return Resource.Error(400)
+            val tracks = list.map {
+                Track(
+                    it.trackId,
+                    it.trackName,
+                    it.artistName,
+                    it.trackTime,
+                    it.artworkUrl100,
+                    it.trackTimeMillis,
+                    it.collectionName,
+                    it.releaseDate,
+                    it.primaryGenreName,
+                    it.country,
+                    it.previewUrl!!
+                )
+            }
+            return Resource.Success(tracks)
         } else return Resource.Error(response.resultCode)
     }
 

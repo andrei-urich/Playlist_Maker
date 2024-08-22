@@ -193,7 +193,7 @@ class SearchFragment : Fragment() {
             ERROR -> {
                 progressBar.visibility = View.GONE
                 inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
-                showSearchError(2)
+                showSearchError(CONNECTION_ERROR)
             }
 
             LOADING -> {
@@ -212,7 +212,7 @@ class SearchFragment : Fragment() {
 
                 } else {
                     progressBar.visibility = View.GONE
-                    showSearchError(1)
+                    showSearchError(SEARCH_ERROR)
                 }
             }
         }
@@ -234,9 +234,9 @@ class SearchFragment : Fragment() {
     }
 
     // метод вывода плейсхолдеров при ошибках поиска
-    private fun showSearchError(codeError: Int) {
+    private fun showSearchError(codeError: String) {
         viewModel.showSearchErrorChangeChangeListener(false)
-        if (codeError == 1) {
+        if (codeError.equals(SEARCH_ERROR)) {
             placeholderSearchError.visibility = View.VISIBLE
             tracks.clear()
             searchAdapter.notifyDataSetChanged()
@@ -286,6 +286,8 @@ class SearchFragment : Fragment() {
 
     companion object {
         private const val ERROR = "ERROR"
+        private const val SEARCH_ERROR = "SEARCH_ERROR"
+        private const val CONNECTION_ERROR = "CONNECTION_ERROR"
         private const val LOADING = "LOADING"
         private const val SHOW_RESULT = "SHOW_RESULT"
     }
