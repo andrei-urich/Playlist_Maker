@@ -5,13 +5,14 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.search.ConsumerData
-import com.example.playlistmaker.domain.search.SearchConsumer
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.TrackSearchInteractor
 import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 import com.example.playlistmaker.utils.EMPTY_STRING
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val trackSearchInteractor: TrackSearchInteractor,
@@ -39,25 +40,26 @@ class SearchViewModel(
     fun request(request: String) {
         if (request.isNotEmpty()) {
             searchStateLiveData.postValue(TrackSearchState.Loading)
-            trackSearchInteractor.search(
-                request,
-                consumer = object : SearchConsumer<List<Track>> {
-                    override fun consume(data: ConsumerData<List<Track>>) {
-                        when (data) {
-                            is ConsumerData.Error -> searchStateLiveData.postValue(
-                                TrackSearchState.Error
-                            )
 
-                            is ConsumerData.Data -> {
-                                val tracks: List<Track> = data.value
-                                searchStateLiveData.postValue(TrackSearchState.Content(tracks))
-                            }
+            viewModelScope.launch {
+                trackSearchInteractor.search(
+                    request
+                ).collect { pair ->
+                    when (pair.first) {
+                        null -> searchStateLiveData.postValue(
+                            TrackSearchState.Error
+                        )
+
+                        else -> {
+                            val tracks: List<Track> = pair.first as List<Track>
+                            searchStateLiveData.postValue(TrackSearchState.Content(tracks))
                         }
                     }
                 }
-            )
+            }
         }
     }
+
 
     fun playTrack(track: Track) {
         if (clickDebounce()) {

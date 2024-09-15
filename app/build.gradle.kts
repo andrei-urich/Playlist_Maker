@@ -64,4 +64,5 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.recyclerview.selection)
     implementation (libs.koin)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }
