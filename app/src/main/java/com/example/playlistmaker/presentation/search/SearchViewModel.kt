@@ -1,17 +1,16 @@
 package com.example.playlistmaker.presentation.search
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.search.ConsumerData
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.TrackSearchInteractor
 import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 import com.example.playlistmaker.utils.EMPTY_STRING
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -20,9 +19,8 @@ class SearchViewModel(
 ) : ViewModel() {
 
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
     var searchText = EMPTY_STRING
-    private val searchRunnable = Runnable { request(searchText) }
+    private var searchJob: Job? = null
 
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
     private var searchHistoryStateLiveData = MutableLiveData<Boolean>()
@@ -34,7 +32,7 @@ class SearchViewModel(
 
     fun getSearchText(searchText: String) {
         this.searchText = searchText
-        searchDebounce()
+        searchDebounce(searchText)
     }
 
     fun request(request: String) {
@@ -85,22 +83,20 @@ class SearchViewModel(
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
 
-    // метод дебаунса запуска поиска
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
-
-    override fun onCleared() {
-        if (searchRunnable != null) {
-            handler.removeCallbacks(searchRunnable)
+    private fun searchDebounce(searchText: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            request(searchText)
         }
-        super.onCleared()
     }
 
     fun setSearchHistoryState(state: Boolean) {

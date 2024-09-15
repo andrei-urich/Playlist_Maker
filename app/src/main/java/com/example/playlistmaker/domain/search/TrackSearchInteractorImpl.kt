@@ -3,7 +3,6 @@ package com.example.playlistmaker.domain.search
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.concurrent.Executors
 
 class TrackSearchInteractorImpl(private val repository: TracksSearchRepository) :
     TrackSearchInteractor {
