@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary">
-
-    <!-- Тулбар -->
+    android:background="@color/primary"
+    tools:context=".ui.settings.SettingsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbSettings"
@@ -14,8 +13,6 @@
         app:title="@string/setup_head"
         app:titleTextAppearance="@style/my_toolbar"
         tools:ignore="MissingConstraints" />
-
-    <!-- первый пункт меню  -->
 
     <TextView
         android:id="@+id/tvOption1"
@@ -47,7 +44,7 @@
         android:layout_width="@dimen/settings_switch_width"
         android:layout_height="@dimen/setup_options_height"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/settings_switch_right_margin"
+        android:layout_marginStart="@dimen/settings_switch_right_margin"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvOption1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/spaceSettings1"
@@ -55,7 +52,6 @@
         app:trackTint="@color/trackTint"
         app:useMaterialThemeColors="false" />
 
-    <!-- второй пункт меню -->
 
     <TextView
         android:id="@+id/tv_option2"
@@ -84,8 +80,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/space_settings2"
         app:layout_constraintTop_toBottomOf="@+id/swtch" />
-
-    <!-- Третий пункт меню  -->
 
     <TextView
         android:id="@+id/tv_option3"
@@ -118,8 +112,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/space_settings3"
         app:layout_constraintTop_toBottomOf="@+id/ivOption2" />
-
-    <!-- Четвертый пункт меню -->
 
     <TextView
         android:id="@+id/tv_option4"

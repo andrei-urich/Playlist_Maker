@@ -60,4 +60,5 @@
     <dimen name="progress_bar_dim">44dp</dimen>
     <dimen name="progress_bar_margin_top">148dp</dimen>
     <dimen name="addPlaylist_button_margin_top">24dp</dimen>
+    <dimen name="screen_height">56dp</dimen>
 </resources>

@@ -4,28 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.library.LibraryActivity">
+    tools:context=".ui.library.LibraryFragment">
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbLib"
         style="@style/my_toolbar"
-        app:layout_constraintHorizontal_bias="0.0"
         app:title="@string/library_screen_title"
         app:titleTextAppearance="@style/my_toolbar"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints" />
 
-    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tlTab"
+        style="@style/tabLayout_text_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        style="@style/tabLayout_text_style"
+        app:layout_constraintTop_toBottomOf="@id/tbLib"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
         app:tabMode="fixed"
-        app:layout_constraintTop_toBottomOf="@id/tbLib">
+        app:tabIndicator="@drawable/ic_tab_indicator"
+        >
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"

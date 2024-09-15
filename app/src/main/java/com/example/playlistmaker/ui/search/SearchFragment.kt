@@ -1,12 +1,12 @@
 package com.example.playlistmaker.ui.search
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -15,30 +15,26 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.EMPTY_STRING
-import com.example.playlistmaker.utils.TRACK_INFO
 import com.example.playlistmaker.presentation.search.TrackSearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.ui.player.AudioplayerActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class SearchActivity : AppCompatActivity() {
-
-    companion object {
-        private const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val ERROR = "ERROR"
-        private const val LOADING = "LOADING"
-        private const val SHOW_RESULT = "SHOW_RESULT"
-    }
+class SearchFragment : Fragment() {
 
     private var searchText = EMPTY_STRING
-    private lateinit var viewBinding: ActivitySearchBinding
+    private var _viewBinding: FragmentSearchBinding? = null
+    private val viewBinding get() = _viewBinding!!
 
     private var tracks = mutableListOf<Track>()
     private var historyTracks = mutableListOf<Track>()
@@ -46,6 +42,8 @@ class SearchActivity : AppCompatActivity() {
     private val viewModel: SearchViewModel by viewModel()
     lateinit var searchAdapter: SearchAdapter
     lateinit var searchHistoryAdapter: SearchHistoryAdapter
+
+    private val inputMethodManager by lazy { -> requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager }
 
     private lateinit var searchToolbar: Toolbar
     private lateinit var searchBar: EditText
@@ -58,12 +56,19 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderServerErrors: LinearLayout
     private lateinit var refreshButton: Button
     private lateinit var progressBar: ProgressBar
+    private lateinit var action: NavDirections
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _viewBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        return viewBinding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewBinding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(viewBinding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         searchToolbar = viewBinding.tbSearch
         searchBar = viewBinding.searchBar
@@ -82,10 +87,9 @@ class SearchActivity : AppCompatActivity() {
         searchAdapter = SearchAdapter(tracks, viewModel::playTrack)
         searchHistoryAdapter = SearchHistoryAdapter(historyTracks, viewModel::playTrackFromHistory)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-
-        viewModel.getSearchStateLiveData().observe(this) { searchState ->
+        viewModel.getSearchStateLiveData().observe(viewLifecycleOwner) { searchState ->
             when (searchState) {
                 is TrackSearchState.Error -> {
                     changeContentVisibility(showCase = ERROR)
@@ -103,11 +107,11 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.getPlayTrackTrigger().observe(this) { track ->
+        viewModel.getPlayTrackTrigger().observe(viewLifecycleOwner) { track ->
             playTrack(track)
         }
 
-        viewModel.getSearchHistoryState().observe(this) { state ->
+        viewModel.getSearchHistoryState().observe(viewLifecycleOwner) { state ->
             if (state) {
                 changeHistoryVisibility(flag = true)
             } else {
@@ -115,21 +119,12 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-
-        //обработчик всплывающей клавиатуры
-        val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-
-        //возврат через кнопку тулбара на предыдущий экран
-        searchToolbar.setOnClickListener {
-            finish()
-        }
-
         //обработчик нажатия на кнопку очистки строки поиска
         clearButton.setOnClickListener {
             searchBar.setText(EMPTY_STRING)
             clearPlaceholders()
             inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
+            hideBottomNavBar(false)
             viewModel.onClearButtonChangeListener(false)
             searchBar.clearFocus()
         }
@@ -147,6 +142,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                hideBottomNavBar(true)
                 searchText = s.toString()
                 clearButton.visibility = clearButtonVisibility(s)
                 if (searchBar.hasFocus() && s?.isEmpty() == true) viewModel.onSearchTextChanged(true) else viewModel.onSearchTextChanged(
@@ -182,19 +178,22 @@ class SearchActivity : AppCompatActivity() {
             clearPlaceholders()
             viewModel.request(searchText)
         }
+
     }
 
     private fun playTrack(track: Track) {
-        val playerIntent = Intent(this, AudioplayerActivity::class.java)
-        playerIntent.putExtra(TRACK_INFO, track)
-        startActivity(playerIntent)
+        action = SearchFragmentDirections.actionSearchFragmentToAudioplayerActivity(track)
+        findNavController().navigate(
+            action
+        )
     }
 
     private fun changeContentVisibility(showCase: String) {
         when (showCase) {
             ERROR -> {
                 progressBar.visibility = View.GONE
-                showSearchError(2)
+                inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
+                showSearchError(CONNECTION_ERROR)
             }
 
             LOADING -> {
@@ -213,7 +212,7 @@ class SearchActivity : AppCompatActivity() {
 
                 } else {
                     progressBar.visibility = View.GONE
-                    showSearchError(1)
+                    showSearchError(SEARCH_ERROR)
                 }
             }
         }
@@ -235,9 +234,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     // метод вывода плейсхолдеров при ошибках поиска
-    private fun showSearchError(codeError: Int) {
+    private fun showSearchError(codeError: String) {
         viewModel.showSearchErrorChangeChangeListener(false)
-        if (codeError == 1) {
+        if (codeError.equals(SEARCH_ERROR)) {
             placeholderSearchError.visibility = View.VISIBLE
             tracks.clear()
             searchAdapter.notifyDataSetChanged()
@@ -253,10 +252,12 @@ class SearchActivity : AppCompatActivity() {
     // метод показа/скрытия истории поиска
     fun changeHistoryVisibility(flag: Boolean) {
         if (flag) {
+            hideBottomNavBar(flag)
             historyTracks.clear()
             historyTracks.addAll(viewModel.getHistoryList())
             recyclerView.adapter = searchHistoryAdapter
             searchHistoryAdapter.notifyDataSetChanged()
+
 
             if (historyTracks.isNotEmpty()) {
                 historyClearButton.visibility = View.VISIBLE
@@ -271,16 +272,24 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    // методы для сохранения введеного значения в поисковой строке
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        outState.putString(SEARCH_TEXT, searchText)
+    override fun onDestroyView() {
+        _viewBinding = null
+        super.onDestroyView()
     }
 
-    override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?, persistentState: PersistableBundle?
-    ) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-        searchText = savedInstanceState?.getString(SEARCH_TEXT) ?: EMPTY_STRING
+
+    private fun hideBottomNavBar(flag: Boolean) {
+        if (flag) requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
+            View.GONE else requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
+            View.VISIBLE
+    }
+
+    companion object {
+        private const val ERROR = "ERROR"
+        private const val SEARCH_ERROR = "SEARCH_ERROR"
+        private const val CONNECTION_ERROR = "CONNECTION_ERROR"
+        private const val LOADING = "LOADING"
+        private const val SHOW_RESULT = "SHOW_RESULT"
     }
 }
+

@@ -86,6 +86,20 @@
         <item name="layout_constraintTop_toTopOf">parent</item>
         <item name="android:background">@color/primary</item>
         <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/h1</item>
+    </style>
+
+    <!-- стиль Тулбара_экран Плейера -->
+    <style name="player_toolbar">
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
 
         <item name="android:fontFamily">@font/ys_display_medium</item>
@@ -170,6 +184,17 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">13sp</item>
+    </style>
+
+
+    <style name="BottomNavigationView" parent="Widget.Design.BottomNavigationView">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TabLayoutIndicators">
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
     </style>
 
 
