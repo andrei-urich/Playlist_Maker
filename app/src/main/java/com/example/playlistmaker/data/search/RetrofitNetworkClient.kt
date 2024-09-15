@@ -10,7 +10,7 @@ class RetrofitNetworkClient(private val iTunesService: PlaylistAPI) : NetworkCli
         try {
             if (dto is TracksSearchRequest) {
                 val response = withContext(Dispatchers.IO) { iTunesService.search(dto.request) }
-                return Response().apply {  resultCode =response.resultCode}
+                return response.apply { resultCode = 200 }
             } else {
                 return Response().apply { resultCode = 400 }
 

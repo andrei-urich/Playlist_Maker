@@ -160,7 +160,6 @@ class AudioplayerActivity : AppCompatActivity() {
                         viewModel.getCurrentPosition()
                     )
                 }
-
             }
 
             STATE_PREPARED -> {
