@@ -1,8 +1,6 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +9,7 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
@@ -24,6 +23,9 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.presentation.player.AudioplayerViewModel
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -34,7 +36,6 @@ class AudioplayerActivity : AppCompatActivity() {
     private val viewModel: AudioplayerViewModel by viewModel() {
         parametersOf(track)
     }
-
     private lateinit var viewBinding: ActivityAudioplayerBinding
     private lateinit var trackImage: ImageView
     private lateinit var trackName: TextView
@@ -52,7 +53,7 @@ class AudioplayerActivity : AppCompatActivity() {
     private lateinit var releaseDateGroup: Group
     private lateinit var primaryGenreNameGroup: Group
     private lateinit var countryGroup: Group
-    private lateinit var handler: Handler
+    private var timerJob: Job? = null
 
     private val args: AudioplayerActivityArgs by navArgs()
 
@@ -78,7 +79,6 @@ class AudioplayerActivity : AppCompatActivity() {
         releaseDateGroup = viewBinding.releaseDateGroup
         primaryGenreNameGroup = viewBinding.primaryGenreNameGroup
         countryGroup = viewBinding.countryGroup
-        handler = Handler(Looper.getMainLooper())
 
         toolbar.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -143,22 +143,18 @@ class AudioplayerActivity : AppCompatActivity() {
     private fun showTrackPlayedTime() {
         when (playerState) {
             STATE_PLAYING -> {
-                handler.postDelayed(
-                    object : Runnable {
-                        override fun run() {
-                            trackProgress.setText(
-                                viewModel.getCurrentPosition()
-                            )
-                            if (playerState == STATE_PLAYING) {
-                                handler.postDelayed(this, PLAY_DEBOUNCE_DELAY)
-                            }
-                        }
-                    }, PLAY_DEBOUNCE_DELAY
-                )
+                timerJob = lifecycleScope.launch {
+                    while (playerState == STATE_PLAYING) {
+                        delay(PLAY_DEBOUNCE_DELAY)
+                        trackProgress.setText(
+                            viewModel.getCurrentPosition()
+                        )
+                    }
+                }
             }
 
             STATE_PAUSED -> {
-                handler.removeCallbacksAndMessages(null)
+                timerJob?.cancel()
                 if (!viewModel.getCurrentPosition().equals(R.string.blankTimer)) {
                     trackProgress.setText(
                         viewModel.getCurrentPosition()
@@ -168,11 +164,11 @@ class AudioplayerActivity : AppCompatActivity() {
             }
 
             STATE_PREPARED -> {
-                handler.removeCallbacksAndMessages(null)
+                timerJob?.cancel()
             }
 
             STATE_COMPLETE -> {
-                handler.removeCallbacksAndMessages(null)
+                timerJob?.cancel()
                 trackProgress.setText(R.string.blankTimer)
             }
         }
@@ -230,10 +226,5 @@ class AudioplayerActivity : AppCompatActivity() {
         if (isChangingConfigurations) {
             onRetainNonConfigurationInstance()
         }
-    }
-
-    override fun onDestroy() {
-        handler.removeCallbacksAndMessages(null)
-        super.onDestroy()
     }
 }
