@@ -16,6 +16,9 @@ data class Track (
     val country: String?,
     val previewUrl: String
 ) : Parcelable {
+
+    var isFavorite: Boolean = false
+
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString().toString(),

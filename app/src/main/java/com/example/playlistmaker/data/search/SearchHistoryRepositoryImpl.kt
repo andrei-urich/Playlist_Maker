@@ -39,6 +39,7 @@ class SearchHistoryRepositoryImpl(
     override fun getHistoryList(): MutableList<Track> {
         historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
         if (!historyList.isNullOrBlank()) {
+
             return trackTransfer.getTrackList(historyList!!)
         }
         return emptyList<Track>().toMutableList()

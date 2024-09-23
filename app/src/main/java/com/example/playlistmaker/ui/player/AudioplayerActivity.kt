@@ -143,6 +143,7 @@ class AudioplayerActivity : AppCompatActivity() {
     private fun showTrackPlayedTime() {
         when (playerState) {
             STATE_PLAYING -> {
+                timerJob?.cancel()
                 timerJob = lifecycleScope.launch {
                     while (playerState == STATE_PLAYING) {
                         delay(PLAY_DEBOUNCE_DELAY)
