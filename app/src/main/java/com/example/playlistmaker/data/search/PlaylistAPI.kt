@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface PlaylistAPI {
     @GET("search?entity=song")
-    fun search(
+    suspend fun search(
         @Query("term") text: String
-    ): Call<TracksResponse>
+    ): TracksResponse
 }

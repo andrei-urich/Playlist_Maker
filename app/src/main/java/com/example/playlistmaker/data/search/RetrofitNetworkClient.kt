@@ -1,15 +1,16 @@
 package com.example.playlistmaker.data.search
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 class RetrofitNetworkClient(private val iTunesService: PlaylistAPI) : NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
+
         try {
             if (dto is TracksSearchRequest) {
-                val resp = iTunesService.search(dto.request).execute()
-
-                val body = resp.body() ?: Response()
-
-                return body.apply { resultCode = resp.code() }
+                val response = withContext(Dispatchers.IO) { iTunesService.search(dto.request) }
+                return response.apply { resultCode = 200 }
             } else {
                 return Response().apply { resultCode = 400 }
 
