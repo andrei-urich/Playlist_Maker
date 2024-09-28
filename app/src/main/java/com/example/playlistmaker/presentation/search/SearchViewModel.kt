@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.library.FavoriteTracksInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.TrackSearchInteractor
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val trackSearchInteractor: TrackSearchInteractor,
-    private val searchHistoryInteractor: SearchHistoryInteractor
+    private val searchHistoryInteractor: SearchHistoryInteractor,
 ) : ViewModel() {
 
     private var isClickAllowed = true
@@ -25,6 +26,7 @@ class SearchViewModel(
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
     private var searchHistoryStateLiveData = MutableLiveData<Boolean>()
     private var playTrackTrigger = SingleEventLiveData<Track>()
+
 
     fun getSearchStateLiveData(): LiveData<TrackSearchState> = searchStateLiveData
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger

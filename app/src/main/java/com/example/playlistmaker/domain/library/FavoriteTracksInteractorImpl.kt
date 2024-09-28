@@ -15,7 +15,16 @@ class FavoriteTracksInteractorImpl(
         repository.removeTrackFromFavorite(track)
     }
 
-    override fun getFavoriteTracksList(): Flow<List<Track>> {
-        return repository.getFavoriteTracksList().map { it.reversed() }
+    override suspend fun getFavoriteTracksList(): List<Track> {
+        return repository.getFavoriteTracksList().reversed()
+    }
+
+//    override fun getFavoriteTracksList(): Flow<List<Track>> {
+//        return repository.getFavoriteTracksList().map { it.reversed() }
+//    }
+
+
+    override suspend fun checkInFavorite(track: Track): Boolean {
+        return repository.checkInFavorite(track)
     }
 }

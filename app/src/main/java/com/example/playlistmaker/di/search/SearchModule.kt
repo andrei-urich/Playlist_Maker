@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 val searchModule = module {
 
     single<TracksSearchRepository> {
-        TracksSearchRepositoryImpl(get())
+        TracksSearchRepositoryImpl(get(), get())
     }
     single<PlaylistAPI> {
         Retrofit.Builder()
@@ -48,8 +48,8 @@ val searchModule = module {
         SearchHistoryInteractorImpl(get())
     }
 
-    single <TrackTransferRepository> {
-        TrackTransferRepositoryImpl ()
+    single<TrackTransferRepository> {
+        TrackTransferRepositoryImpl()
     }
 
     single<NetworkClient> {

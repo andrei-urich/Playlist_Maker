@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
@@ -26,10 +27,11 @@ import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class AudioplayerActivity : AppCompatActivity() {
+class AudioplayerActivity () : AppCompatActivity() {
 
     private var playerState = "STATE_DEFAULT"
     private lateinit var track: Track
@@ -89,6 +91,32 @@ class AudioplayerActivity : AppCompatActivity() {
 
         btnPlay.setOnClickListener {
             viewModel.getAction()
+        }
+
+        viewBinding.btnLike.setOnClickListener {
+            viewModel.onFavoriteClicked(track)
+        }
+
+        viewModel.getFavoriteStateLiveData().observe(this) { state ->
+            when (state) {
+                true -> {
+                    viewBinding.btnLike.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            this,
+                            R.drawable.btn_like_on
+                        )
+                    )
+                }
+
+                else -> {
+                    viewBinding.btnLike.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            this,
+                            R.drawable.btn_like_off
+                        )
+                    )
+                }
+            }
         }
 
         viewModel.getPlayStatusLiveData().observe(this) { state ->
@@ -214,6 +242,8 @@ class AudioplayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(8))
             .dontAnimate()
             .into(trackImage)
+
+        viewModel.checkInFavorite(track)
     }
 
     override fun onPause() {

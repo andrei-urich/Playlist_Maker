@@ -1,25 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/placeholderEmptyFavoriteTracks"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/primary"
-    android:orientation="vertical"
-    android:visibility="visible"
     tools:context=".ui.library.FavoriteTracksFragment">
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/library_placeholder_image_margin_top"
-        android:src="@drawable/placeholder_search_error" />
+        android:background="@color/primary"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        style="@style/search_screen_placeholder_text_style"
-        android:layout_gravity="center_horizontal"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/library_placeholder_image_margin_top"
+            android:src="@drawable/placeholder_search_error" />
+
+        <TextView
+            style="@style/search_screen_placeholder_text_style"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/search_result_top_margin"
+            android:text="@string/favorite_tracks_empty_placeholder_text" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/search_result_top_margin"
-        android:text="@string/favorite_tracks_empty_placeholder_text" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_bar_dim"
+        android:layout_height="@dimen/progress_bar_dim"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/progress_bar_margin_top"
+        android:indeterminateTint="@color/search_cursor_color"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

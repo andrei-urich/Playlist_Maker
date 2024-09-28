@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="btn_play" />
-                            <entry key="sourceFile" value="C:\Study_android\PlayMaker\ButtonPlay.svg" />
+                            <entry key="outputName" value="btn_like_off" />
+                            <entry key="sourceFile" value="C:\Study_android\PlayMaker\btnLike_off.svg" />
                           </map>
                         </option>
                       </PersistentState>

@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/player_buttons_margin_horizontal"
             android:clickable="true"
-            android:src="@drawable/btn_like"
+            android:src="@drawable/btn_like_off"
             app:layout_constraintBottom_toBottomOf="@+id/btnPlay"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btnPlay"
