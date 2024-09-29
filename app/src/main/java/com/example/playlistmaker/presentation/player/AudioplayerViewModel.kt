@@ -85,7 +85,7 @@ class AudioplayerViewModel(
             track.isFavorite = false
             favoriteStateLiveData.postValue(false)
             viewModelScope.launch {
-                favoriteTracksInteractor.removeTrackFromFavorite(track)
+                favoriteTracksInteractor.deleteTrackById(track.trackId)
             }
         } else {
             track.isFavorite = true

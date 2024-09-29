@@ -21,6 +21,10 @@ class FavoriteTracksRepositoryImpl(
         database.getTrackDao().deleteTrack(converter.map(track))
     }
 
+    override suspend fun deleteTrackById(trackId: Int) {
+        database.getTrackDao().deleteById(trackId)
+    }
+
     override fun getFavoriteTracksList(): Flow<List<Track>> = flow {
         val tracksEntities = database.getTrackDao().getTracks()
         emit(convertToTracks(tracksEntities))
