@@ -33,6 +33,7 @@ class TracksSearchRepositoryImpl(
                             it.primaryGenreName,
                             it.country,
                             it.previewUrl!!,
+                            false
                         )
                     }
                     val tracks =
@@ -54,7 +55,7 @@ class TracksSearchRepositoryImpl(
     }
 
     private fun checkFavoriteList(track: Track, listOfFavoritesIds: List<Int>): Track {
-        track.isFavorite = track.trackId in listOfFavoritesIds
+        if (track.trackId in listOfFavoritesIds) track.isFavorite = true
         return track
     }
 }

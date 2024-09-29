@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
@@ -26,7 +27,6 @@ import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -247,6 +247,7 @@ class AudioplayerActivity() : AppCompatActivity() {
                 )
             }
         }
+        Toast.makeText(this, "In favorite = $isFavorite", Toast.LENGTH_SHORT).show()
     }
 
     override fun onPause() {
