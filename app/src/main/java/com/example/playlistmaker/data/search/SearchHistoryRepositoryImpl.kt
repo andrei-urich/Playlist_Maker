@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.search
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.repository.TrackTransferRepository
@@ -10,7 +11,7 @@ import org.koin.core.parameter.parametersOf
 
 
 class SearchHistoryRepositoryImpl(
-    private val trackTransfer: TrackTransferRepository
+    private val trackTransfer: TrackTransferRepository,
 ) : SearchHistoryRepository, KoinComponent {
     companion object {
         const val SEARCH_HISTORY = "search_history"

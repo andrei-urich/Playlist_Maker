@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.domain.library.FavoriteTracksInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
@@ -15,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
+    private val database: AppDatabase,
     private val trackSearchInteractor: TrackSearchInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor,
 ) : ViewModel() {
@@ -133,6 +135,11 @@ class SearchViewModel(
         setSearchHistoryState(state)
     }
 
+    private suspend fun checkInFavorite(list: List<Track>): List<Track> {
+        val favTracksIds = database.getTrackDao().getTracksIds()
+        val checkedList = list.map { if (it.trackId in favTracksIds) it.isFavorite = true }
+        return checkedList as List<Track>
+    }
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
