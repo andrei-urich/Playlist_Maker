@@ -15,20 +15,16 @@ class FavoriteTracksViewModel(
 ) : ViewModel() {
 
     private val stateLiveData = MutableLiveData<List<Track>>()
-    private var favoriteTracksList = emptyList<Track>()
     private var playTrackTrigger = SingleEventLiveData<Track>()
     private var isClickAllowed = true
     fun getLiveData(): LiveData<List<Track>> = stateLiveData
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
 
-   init {
+    init {
         viewModelScope.launch {
-
-//            favoriteTracksInteractor.getFavoriteTracksList().collect {
-//                favoriteTracksList
-//            }
-            var list = favoriteTracksInteractor.getFavoriteTracksList()
-            stateLiveData.postValue(list)
+            favoriteTracksInteractor.getFavoriteTracksList().collect {
+                stateLiveData.postValue(it.reversed())
+            }
         }
     }
 
