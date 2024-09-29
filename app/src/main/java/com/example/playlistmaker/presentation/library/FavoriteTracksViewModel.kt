@@ -21,11 +21,7 @@ class FavoriteTracksViewModel(
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
 
     init {
-        viewModelScope.launch {
-            favoriteTracksInteractor.getFavoriteTracksList().collect {
-                stateLiveData.postValue(it.reversed())
-            }
-        }
+    getFavoriteList()
     }
 
     fun playTrack(track: Track) {
@@ -44,6 +40,14 @@ class FavoriteTracksViewModel(
             }
         }
         return current
+    }
+
+    fun getFavoriteList() {
+        viewModelScope.launch {
+            favoriteTracksInteractor.getFavoriteTracksList().collect {
+                stateLiveData.postValue(it.reversed())
+            }
+        }
     }
 
     companion object {

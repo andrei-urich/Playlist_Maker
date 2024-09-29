@@ -40,7 +40,7 @@ class LibraryFragment : Fragment() {
         TabLayoutMediator(binding.tlTab, binding.pager) { tab, pos ->
             tab.setText(fragmentListTitles[pos])
         }.attach()
-        binding.pager.currentItem = 1
+        binding.pager.currentItem = 0
 
     }
 

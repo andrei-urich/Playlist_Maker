@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,9 +64,13 @@ class FavoriteTracksFragment : Fragment() {
     private fun render(list: List<Track>) {
         binding.progressBar.visibility = View.GONE
         if (list.isNullOrEmpty()) {
+            tracks.clear()
+            recyclerView.visibility = View.GONE
             showPlaceholders(true)
+
         } else {
             showPlaceholders(false)
+            tracks.clear()
             tracks = list.toMutableList()
             adapter = SearchAdapter(tracks, viewModel::playTrack)
             recyclerView.adapter = adapter
@@ -83,6 +85,12 @@ class FavoriteTracksFragment : Fragment() {
         } else {
             binding.placeholder.visibility = View.GONE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.progressBar.visibility = View.VISIBLE
+        viewModel.getFavoriteList()
     }
 
     override fun onDestroyView() {

@@ -21,7 +21,6 @@ class AudioplayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val favoriteTracksInteractor: FavoriteTracksInteractor
 ) : ViewModel() {
-    var isInFavorite = false
     private val playStatusLiveData = MutableLiveData<AudioplayerPlayState>()
     private var favoriteStateLiveData = MutableLiveData<Boolean>()
 
@@ -84,25 +83,19 @@ class AudioplayerViewModel(
     fun onFavoriteClicked(track: Track) {
         if (track.isFavorite) {
             track.isFavorite = false
+            favoriteStateLiveData.postValue(false)
             viewModelScope.launch {
                 favoriteTracksInteractor.removeTrackFromFavorite(track)
             }
         } else {
             track.isFavorite = true
+            favoriteStateLiveData.postValue(true)
             viewModelScope.launch {
                 favoriteTracksInteractor.addTrackToFavorite(track)
             }
         }
-        favoriteStateLiveData.postValue(track.isFavorite)
     }
 
-
-    fun checkInFavorite(track: Track) {
-        viewModelScope.launch {
-            isInFavorite = favoriteTracksInteractor.checkInFavorite(track)
-        }
-        favoriteStateLiveData.postValue(isInFavorite)
-    }
     override fun onCleared() {
         playerInteractor.release()
     }
