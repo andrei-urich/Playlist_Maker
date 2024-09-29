@@ -1,10 +1,11 @@
 package com.example.playlistmaker.data.search
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.repository.TrackTransferRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
@@ -22,14 +23,17 @@ class SearchHistoryRepositoryImpl(
     }
     private var historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
     private var searchHistoryTracks: MutableList<Track>
+    private lateinit var currentHistoryList: MutableList<Track>
 
     init {
-        searchHistoryTracks = getHistoryList()
+        if (!historyList.isNullOrBlank()) searchHistoryTracks =
+            trackTransfer.getTrackList(historyList!!)
+        else searchHistoryTracks =
+            emptyList<Track>().toMutableList()
     }
 
-    override fun addToHistory(track: Track) {
-        var currentHistoryList = this.getHistoryList()
-        currentHistoryList = checkDuplicates(track, currentHistoryList)
+    override suspend fun addToHistory(track: Track) {
+        currentHistoryList = checkDuplicates(track, searchHistoryTracks)
         currentHistoryList.add(0, track)
         if (currentHistoryList.size > 10) currentHistoryList.removeLast()
         historyList = trackTransfer.sendTrackList(currentHistoryList)
@@ -37,13 +41,9 @@ class SearchHistoryRepositoryImpl(
     }
 
 
-    override fun getHistoryList(): MutableList<Track> {
+    override fun getHistoryList(): Flow<List<Track>> = flow {
         historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
-        if (!historyList.isNullOrBlank()) {
-
-            return trackTransfer.getTrackList(historyList!!)
-        }
-        return emptyList<Track>().toMutableList()
+        emit(trackTransfer.getTrackList(historyList.toString()))
     }
 
     override fun clearHistory() {

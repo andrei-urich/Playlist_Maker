@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.domain.library.FavoriteTracksInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
@@ -16,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val database: AppDatabase,
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
     private val trackSearchInteractor: TrackSearchInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor,
 ) : ViewModel() {
@@ -27,12 +26,14 @@ class SearchViewModel(
 
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
     private var searchHistoryStateLiveData = MutableLiveData<Boolean>()
+    private var searchHistoryListData = MutableLiveData<List<Track>>()
     private var playTrackTrigger = SingleEventLiveData<Track>()
 
 
     fun getSearchStateLiveData(): LiveData<TrackSearchState> = searchStateLiveData
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
     fun getSearchHistoryState(): LiveData<Boolean> = searchHistoryStateLiveData
+    fun getSearchHistoryListData(): LiveData<List<Track>> = searchHistoryListData
 
     fun getSearchText(searchText: String) {
         this.searchText = searchText
@@ -65,8 +66,10 @@ class SearchViewModel(
 
     fun playTrack(track: Track) {
         if (clickDebounce()) {
-            searchHistoryInteractor.addToHistory(track)
-            playTrackTrigger.postValue(track)
+            viewModelScope.launch {
+                searchHistoryInteractor.addToHistory(track)
+                playTrackTrigger.postValue(track)
+            }
         }
     }
 
@@ -74,8 +77,12 @@ class SearchViewModel(
         playTrackTrigger.postValue(track)
     }
 
-    fun getHistoryList(): List<Track> {
-        return searchHistoryInteractor.getHistoryList()
+    fun getHistoryList() {
+        viewModelScope.launch {
+            searchHistoryInteractor.getHistoryList().collect {
+                searchHistoryListData.postValue(it)
+            }
+        }
     }
 
     fun clearHistory() {
@@ -106,6 +113,7 @@ class SearchViewModel(
     fun setSearchHistoryState(state: Boolean) {
         when (state) {
             true -> {
+                getHistoryList()
                 searchHistoryStateLiveData.postValue(true)
             }
 
@@ -133,12 +141,6 @@ class SearchViewModel(
 
     fun showSearchErrorChangeChangeListener(state: Boolean) {
         setSearchHistoryState(state)
-    }
-
-    private suspend fun checkInFavorite(list: List<Track>): List<Track> {
-        val favTracksIds = database.getTrackDao().getTracksIds()
-        val checkedList = list.map { if (it.trackId in favTracksIds) it.isFavorite = true }
-        return checkedList as List<Track>
     }
 
     companion object {

@@ -85,7 +85,6 @@ class SearchFragment : Fragment() {
         searchBar.setText(searchText)
 
         searchAdapter = SearchAdapter(tracks, viewModel::playTrack)
-        searchHistoryAdapter = SearchHistoryAdapter(historyTracks, viewModel::playTrackFromHistory)
 
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
@@ -105,6 +104,15 @@ class SearchFragment : Fragment() {
                     changeContentVisibility(showCase = LOADING)
                 }
             }
+        }
+
+        viewModel.getSearchHistoryListData().observe(viewLifecycleOwner) {
+            historyTracks.clear()
+            historyTracks = it.toMutableList()
+            searchHistoryAdapter =
+                SearchHistoryAdapter(historyTracks, viewModel::playTrackFromHistory)
+            recyclerView.adapter = searchHistoryAdapter
+            searchHistoryAdapter.notifyDataSetChanged()
         }
 
         viewModel.getPlayTrackTrigger().observe(viewLifecycleOwner) { track ->
@@ -253,11 +261,6 @@ class SearchFragment : Fragment() {
     fun changeHistoryVisibility(flag: Boolean) {
         if (flag) {
             hideBottomNavBar(flag)
-            historyTracks.clear()
-            historyTracks.addAll(viewModel.getHistoryList())
-            recyclerView.adapter = searchHistoryAdapter
-            searchHistoryAdapter.notifyDataSetChanged()
-
 
             if (historyTracks.isNotEmpty()) {
                 historyClearButton.visibility = View.VISIBLE

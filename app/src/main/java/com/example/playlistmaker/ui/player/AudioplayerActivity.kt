@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
@@ -247,7 +246,6 @@ class AudioplayerActivity() : AppCompatActivity() {
                 )
             }
         }
-        Toast.makeText(this, "In favorite = $isFavorite", Toast.LENGTH_SHORT).show()
     }
 
     override fun onPause() {
