@@ -26,14 +26,12 @@ class SearchViewModel(
 
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
     private var searchHistoryStateLiveData = MutableLiveData<Boolean>()
-    private var searchHistoryListData = MutableLiveData<List<Track>>()
     private var playTrackTrigger = SingleEventLiveData<Track>()
 
 
     fun getSearchStateLiveData(): LiveData<TrackSearchState> = searchStateLiveData
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
     fun getSearchHistoryState(): LiveData<Boolean> = searchHistoryStateLiveData
-    fun getSearchHistoryListData(): LiveData<List<Track>> = searchHistoryListData
 
     fun getSearchText(searchText: String) {
         this.searchText = searchText
@@ -68,14 +66,19 @@ class SearchViewModel(
         if (clickDebounce()) {
             viewModelScope.launch {
                 searchHistoryInteractor.addToHistory(track)
+                if (favoriteTracksInteractor.checkInFavorite(track)) track.isFavorite = true
                 playTrackTrigger.postValue(track)
             }
         }
     }
 
     fun playTrackFromHistory(track: Track) {
-        playTrackTrigger.postValue(track)
+        viewModelScope.launch {
+            if (favoriteTracksInteractor.checkInFavorite(track)) track.isFavorite = true
+            playTrackTrigger.postValue(track)
+        }
     }
+
 
     fun getHistoryList(): List<Track> {
         return searchHistoryInteractor.getHistoryList()
