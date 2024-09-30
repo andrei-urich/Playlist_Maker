@@ -66,7 +66,7 @@ class SearchViewModel(
         if (clickDebounce()) {
             viewModelScope.launch {
                 searchHistoryInteractor.addToHistory(track)
-                if (favoriteTracksInteractor.checkInFavorite(track)) track.isFavorite = true
+                if (favoriteTracksInteractor.checkInFavorite(track)) track.isFavorite = true else track.isFavorite = false
                 playTrackTrigger.postValue(track)
             }
         }
@@ -74,7 +74,7 @@ class SearchViewModel(
 
     fun playTrackFromHistory(track: Track) {
         viewModelScope.launch {
-            if (favoriteTracksInteractor.checkInFavorite(track)) track.isFavorite = true
+            if (favoriteTracksInteractor.checkInFavorite(track)) track.isFavorite = true else track.isFavorite = false
             playTrackTrigger.postValue(track)
         }
     }
