@@ -20,12 +20,7 @@ class TrackTransferRepositoryImpl : TrackTransferRepository {
     }
 
     override fun getTrackList(trackInfo: String): MutableList<Track> {
-        try {
-            val typeToken = object : TypeToken<MutableList<Track>>() {}.type
-            return Gson().fromJson<MutableList<Track>>(trackInfo, typeToken).toMutableList()
-
-        } catch (e: Exception) {
-            return emptyList<Track>().toMutableList()
-        }
+        val typeToken = object : TypeToken<MutableList<Track>>() {}.type
+        return Gson().fromJson<MutableList<Track>>(trackInfo, typeToken).toMutableList()
     }
 }

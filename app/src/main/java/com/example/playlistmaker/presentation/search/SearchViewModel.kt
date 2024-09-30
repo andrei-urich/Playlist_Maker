@@ -77,13 +77,10 @@ class SearchViewModel(
         playTrackTrigger.postValue(track)
     }
 
-    fun getHistoryList() {
-        viewModelScope.launch {
-            searchHistoryInteractor.getHistoryList().collect {
-                searchHistoryListData.postValue(it)
-            }
-        }
+    fun getHistoryList(): List<Track> {
+        return searchHistoryInteractor.getHistoryList()
     }
+
 
     fun clearHistory() {
         searchHistoryInteractor.clearHistory()

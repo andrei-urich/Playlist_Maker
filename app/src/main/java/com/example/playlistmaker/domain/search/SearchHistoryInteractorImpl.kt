@@ -10,7 +10,7 @@ class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepositor
         repository.addToHistory(track)
     }
 
-    override fun getHistoryList(): Flow<List<Track>> {
+    override fun getHistoryList(): List<Track> {
         return repository.getHistoryList()
     }
 
