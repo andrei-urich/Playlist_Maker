@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.utils
 
+import android.util.Log
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.repository.TrackTransferRepository
 import com.google.gson.Gson
@@ -19,7 +20,12 @@ class TrackTransferRepositoryImpl : TrackTransferRepository {
     }
 
     override fun getTrackList(trackInfo: String): MutableList<Track> {
-        val typeToken = object : TypeToken<MutableList<Track>>() {}.type
-        return Gson().fromJson<MutableList<Track>>(trackInfo, typeToken).toMutableList()
+        try {
+            val typeToken = object : TypeToken<MutableList<Track>>() {}.type
+            return Gson().fromJson<MutableList<Track>>(trackInfo, typeToken).toMutableList()
+
+        } catch (e: Exception) {
+            return emptyList<Track>().toMutableList()
+        }
     }
 }

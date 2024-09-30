@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.search
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.repository.TrackTransferRepository
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.flow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
+import kotlin.math.log
 
 
 class SearchHistoryRepositoryImpl(
@@ -26,8 +28,9 @@ class SearchHistoryRepositoryImpl(
     private lateinit var currentHistoryList: MutableList<Track>
 
     init {
-        if (!historyList.isNullOrBlank()) searchHistoryTracks =
-            trackTransfer.getTrackList(historyList!!)
+        if (!historyList.isNullOrBlank())
+        { Log.d("my", "$historyList")
+            searchHistoryTracks = trackTransfer.getTrackList(historyList!!)}
         else searchHistoryTracks =
             emptyList<Track>().toMutableList()
     }
@@ -43,6 +46,7 @@ class SearchHistoryRepositoryImpl(
 
     override fun getHistoryList(): Flow<List<Track>> = flow {
         historyList = sharedPrefs.getString(SEARCH_HISTORY, null)
+        Log.d("my", "historyList = $historyList")
         emit(trackTransfer.getTrackList(historyList.toString()))
     }
 
