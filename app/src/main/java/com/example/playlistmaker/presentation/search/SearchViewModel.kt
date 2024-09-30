@@ -11,6 +11,7 @@ import com.example.playlistmaker.domain.search.TrackSearchInteractor
 import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 import com.example.playlistmaker.utils.EMPTY_STRING
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -66,7 +67,9 @@ class SearchViewModel(
         if (clickDebounce()) {
             viewModelScope.launch {
                 searchHistoryInteractor.addToHistory(track)
-                if (favoriteTracksInteractor.checkInFavorite(track)) track.isFavorite = true else track.isFavorite = false
+                val checkFavorite = async { favoriteTracksInteractor.checkInFavorite(track)}
+                val isInFavorite = checkFavorite.await()
+                track.isFavorite = isInFavorite
                 playTrackTrigger.postValue(track)
             }
         }
@@ -74,7 +77,9 @@ class SearchViewModel(
 
     fun playTrackFromHistory(track: Track) {
         viewModelScope.launch {
-            if (favoriteTracksInteractor.checkInFavorite(track)) track.isFavorite = true else track.isFavorite = false
+            val checkFavorite = async { favoriteTracksInteractor.checkInFavorite(track)}
+            val isInFavorite = checkFavorite.await()
+            track.isFavorite = isInFavorite
             playTrackTrigger.postValue(track)
         }
     }
