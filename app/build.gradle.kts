@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.recyclerview.selection)
     implementation(libs.koin)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation ("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3")
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
