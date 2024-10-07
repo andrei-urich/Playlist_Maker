@@ -43,4 +43,7 @@
     <string name="bottom_nav_menu_item_1_title">Поиск</string>
     <string name="bottom_nav_menu_item_2_title">Медиатека</string>
     <string name="bottom_nav_menu_item_3_title">Настройки</string>
+    <string name="createPlaylistFragmentHeader">Новый плейлист</string>
+    <string name="new_playlist_name">Название*</string>
+    <string name="new_playlist_description">Описание</string>
 </resources>
