@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class AudioplayerActivity : AppCompatActivity() {
+class AudioplayerActivity() : AppCompatActivity() {
 
     private var playerState = "STATE_DEFAULT"
     private lateinit var track: Track
@@ -91,6 +91,14 @@ class AudioplayerActivity : AppCompatActivity() {
             viewModel.getAction()
         }
 
+        viewBinding.btnLike.setOnClickListener {
+            viewModel.onFavoriteClicked(track)
+        }
+
+        viewModel.getFavoriteStateLiveData().observe(this) {
+            btnLikeSwitcher(it)
+        }
+
         viewModel.getPlayStatusLiveData().observe(this) { state ->
             when (state) {
                 is AudioplayerPlayState.Prepared -> {
@@ -143,6 +151,7 @@ class AudioplayerActivity : AppCompatActivity() {
     private fun showTrackPlayedTime() {
         when (playerState) {
             STATE_PLAYING -> {
+                timerJob?.cancel()
                 timerJob = lifecycleScope.launch {
                     while (playerState == STATE_PLAYING) {
                         delay(PLAY_DEBOUNCE_DELAY)
@@ -176,9 +185,11 @@ class AudioplayerActivity : AppCompatActivity() {
     private fun putOnTrack(track: Track) {
         trackName.setText(track.trackName)
         artistName.setText(track.artistName)
+        btnLikeSwitcher(track.isFavorite)
         trackTimeValue.setText(
             TrackTimeFormatter.formatTime(track.trackTimeMillis)
         )
+
 
         if (!track.collectionName.isNullOrBlank()) {
             collectionNameValue.setText(
@@ -213,6 +224,28 @@ class AudioplayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(8))
             .dontAnimate()
             .into(trackImage)
+    }
+
+    private fun btnLikeSwitcher(isFavorite: Boolean) {
+        when (isFavorite) {
+            true -> {
+                viewBinding.btnLike.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        this,
+                        R.drawable.btn_like_on
+                    )
+                )
+            }
+
+            else -> {
+                viewBinding.btnLike.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        this,
+                        R.drawable.btn_like_off
+                    )
+                )
+            }
+        }
     }
 
     override fun onPause() {

@@ -3,6 +3,8 @@ package com.example.playlistmaker.presentation.player
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.library.FavoriteTracksInteractor
 import com.example.playlistmaker.domain.player.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
@@ -11,17 +13,21 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_PLAYING
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerInteractor
+import kotlinx.coroutines.launch
+
 
 class AudioplayerViewModel(
     private val track: Track,
-    private val playerInteractor: PlayerInteractor
+    private val playerInteractor: PlayerInteractor,
+    private val favoriteTracksInteractor: FavoriteTracksInteractor
 ) : ViewModel() {
-
     private val playStatusLiveData = MutableLiveData<AudioplayerPlayState>()
+    private var favoriteStateLiveData = MutableLiveData<Boolean>()
 
     fun getPlayStatusLiveData(): LiveData<AudioplayerPlayState> = playStatusLiveData
+    fun getFavoriteStateLiveData(): LiveData<Boolean> = favoriteStateLiveData
 
-   init {
+    init {
         preparePlayer()
     }
 
@@ -72,6 +78,22 @@ class AudioplayerViewModel(
     fun getCurrentPosition(): String {
         return playerInteractor.getCurrentPosition()
 
+    }
+
+    fun onFavoriteClicked(track: Track) {
+        if (track.isFavorite) {
+            track.isFavorite = false
+            favoriteStateLiveData.postValue(false)
+            viewModelScope.launch {
+                favoriteTracksInteractor.deleteTrackById(track.trackId)
+            }
+        } else {
+            track.isFavorite = true
+            favoriteStateLiveData.postValue(true)
+            viewModelScope.launch {
+                favoriteTracksInteractor.addTrackToFavorite(track)
+            }
+        }
     }
 
     override fun onCleared() {

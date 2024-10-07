@@ -22,15 +22,17 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.example.playlistmaker.presentation.search.TrackSearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.playlistmaker.ui.main.BottomNavigationListener
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 class SearchFragment : Fragment() {
+
+    private var bottomNavigationListener: BottomNavigationListener? = null
 
     private var searchText = EMPTY_STRING
     private var _viewBinding: FragmentSearchBinding? = null
@@ -69,6 +71,23 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+        KeyboardVisibilityEvent.setEventListener(
+            activity = requireActivity(),
+            lifecycleOwner = viewLifecycleOwner
+        ) { isVisible ->
+            if (isVisible) {
+                onKeyboardVisibilityChanged(true)
+            } else {
+                onKeyboardVisibilityChanged(false)
+            }
+        }
+
+
+
+
 
         searchToolbar = viewBinding.tbSearch
         searchBar = viewBinding.searchBar
@@ -124,7 +143,6 @@ class SearchFragment : Fragment() {
             searchBar.setText(EMPTY_STRING)
             clearPlaceholders()
             inputMethodManager?.hideSoftInputFromWindow(searchScreen.windowToken, 0)
-            hideBottomNavBar(false)
             viewModel.onClearButtonChangeListener(false)
             searchBar.clearFocus()
         }
@@ -142,7 +160,6 @@ class SearchFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                hideBottomNavBar(true)
                 searchText = s.toString()
                 clearButton.visibility = clearButtonVisibility(s)
                 if (searchBar.hasFocus() && s?.isEmpty() == true) viewModel.onSearchTextChanged(true) else viewModel.onSearchTextChanged(
@@ -252,7 +269,6 @@ class SearchFragment : Fragment() {
     // метод показа/скрытия истории поиска
     fun changeHistoryVisibility(flag: Boolean) {
         if (flag) {
-            hideBottomNavBar(flag)
             historyTracks.clear()
             historyTracks.addAll(viewModel.getHistoryList())
             recyclerView.adapter = searchHistoryAdapter
@@ -272,16 +288,29 @@ class SearchFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        _viewBinding = null
-        super.onDestroyView()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is BottomNavigationListener) {
+            bottomNavigationListener = context
+        }
+    }
+    override fun onDetach() {
+        super.onDetach()
+        bottomNavigationListener = null
+    }
+
+    private fun onKeyboardVisibilityChanged(isVisible: Boolean) {
+        if (isVisible) {
+            bottomNavigationListener?.changeBottomNavBarVisibility(false)
+        } else {
+            bottomNavigationListener?.changeBottomNavBarVisibility(true)
+        }
     }
 
 
-    private fun hideBottomNavBar(flag: Boolean) {
-        if (flag) requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
-            View.GONE else requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
-            View.VISIBLE
+    override fun onDestroyView() {
+        _viewBinding = null
+        super.onDestroyView()
     }
 
     companion object {

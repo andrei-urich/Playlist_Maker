@@ -3,7 +3,7 @@ package com.example.playlistmaker.domain.model
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Track (
+data class Track(
     val trackId: Int,
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
@@ -14,8 +14,10 @@ data class Track (
     val releaseDate: String?,
     val primaryGenreName: String?,
     val country: String?,
-    val previewUrl: String
+    val previewUrl: String,
+    var isFavorite: Boolean
 ) : Parcelable {
+
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString().toString(),
@@ -27,7 +29,9 @@ data class Track (
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString().toString()
+        parcel.readString().toString(),
+        parcel.readBoolean()
+
     ) {
     }
 
@@ -43,6 +47,7 @@ data class Track (
         parcel.writeString(primaryGenreName)
         parcel.writeString(country)
         parcel.writeString(previewUrl)
+        parcel.writeBoolean(isFavorite)
     }
 
     override fun describeContents(): Int {

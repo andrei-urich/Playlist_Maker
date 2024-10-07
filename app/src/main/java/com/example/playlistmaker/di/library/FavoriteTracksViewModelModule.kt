@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val favoriteTracksViewModelModule = module {
     viewModel {
-        FavoriteTracksViewModel()
+        FavoriteTracksViewModel(get())
     }
 }

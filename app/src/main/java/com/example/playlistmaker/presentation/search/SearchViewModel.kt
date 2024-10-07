@@ -4,18 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.library.FavoriteTracksInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.TrackSearchInteractor
 import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 import com.example.playlistmaker.utils.EMPTY_STRING
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
     private val trackSearchInteractor: TrackSearchInteractor,
-    private val searchHistoryInteractor: SearchHistoryInteractor
+    private val searchHistoryInteractor: SearchHistoryInteractor,
 ) : ViewModel() {
 
     private var isClickAllowed = true
@@ -25,6 +28,7 @@ class SearchViewModel(
     private var searchStateLiveData = MutableLiveData<TrackSearchState>()
     private var searchHistoryStateLiveData = MutableLiveData<Boolean>()
     private var playTrackTrigger = SingleEventLiveData<Track>()
+
 
     fun getSearchStateLiveData(): LiveData<TrackSearchState> = searchStateLiveData
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
@@ -61,18 +65,30 @@ class SearchViewModel(
 
     fun playTrack(track: Track) {
         if (clickDebounce()) {
-            searchHistoryInteractor.addToHistory(track)
-            playTrackTrigger.postValue(track)
+            viewModelScope.launch {
+                searchHistoryInteractor.addToHistory(track)
+                val checkFavorite = async { favoriteTracksInteractor.checkInFavorite(track)}
+                val isInFavorite = checkFavorite.await()
+                track.isFavorite = isInFavorite
+                playTrackTrigger.postValue(track)
+            }
         }
     }
 
     fun playTrackFromHistory(track: Track) {
-        playTrackTrigger.postValue(track)
+        viewModelScope.launch {
+            val checkFavorite = async { favoriteTracksInteractor.checkInFavorite(track)}
+            val isInFavorite = checkFavorite.await()
+            track.isFavorite = isInFavorite
+            playTrackTrigger.postValue(track)
+        }
     }
+
 
     fun getHistoryList(): List<Track> {
         return searchHistoryInteractor.getHistoryList()
     }
+
 
     fun clearHistory() {
         searchHistoryInteractor.clearHistory()
@@ -102,6 +118,7 @@ class SearchViewModel(
     fun setSearchHistoryState(state: Boolean) {
         when (state) {
             true -> {
+                getHistoryList()
                 searchHistoryStateLiveData.postValue(true)
             }
 
@@ -130,7 +147,6 @@ class SearchViewModel(
     fun showSearchErrorChangeChangeListener(state: Boolean) {
         setSearchHistoryState(state)
     }
-
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
