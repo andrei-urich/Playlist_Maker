@@ -11,7 +11,7 @@ class PlaylistsViewModel : ViewModel() {
     private val createPlaylistsTrigger = SingleEventLiveData<Boolean>()
 
     fun getLiveData(): LiveData<Int> = stateLiveData
-    fun getCreaatePlaylistTrigger(): LiveData<Boolean> = createPlaylistsTrigger
+    fun getCreatePlaylistTrigger(): LiveData<Boolean> = createPlaylistsTrigger
 
     fun createPlaylist() {
         createPlaylistsTrigger.postValue(true)

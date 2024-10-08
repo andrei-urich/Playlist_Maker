@@ -11,6 +11,7 @@ import androidx.viewbinding.ViewBinding
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.presentation.library.CreatePlaylistViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CreatePlaylistFragment : Fragment() {
 
@@ -32,9 +33,13 @@ class CreatePlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
+            View.GONE
         toolbar = binding.tbCreatePlaylist
 
         toolbar.setOnClickListener {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
+                View.VISIBLE
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 

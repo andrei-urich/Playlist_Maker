@@ -27,10 +27,6 @@ class PlaylistsFragment : Fragment() {
     private lateinit var action: NavDirections
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,7 +46,7 @@ class PlaylistsFragment : Fragment() {
         viewModel.getLiveData().observe(viewLifecycleOwner) {
         }
 
-        viewModel.getCreaatePlaylistTrigger().observe(viewLifecycleOwner) {
+        viewModel.getCreatePlaylistTrigger().observe(viewLifecycleOwner) {
             if (it) {
                 action = LibraryFragmentDirections.actionLibraryFragmentToCreatePlaylistFragment()
                 findNavController().navigate(action)
