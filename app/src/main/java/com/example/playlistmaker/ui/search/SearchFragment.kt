@@ -72,8 +72,6 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         KeyboardVisibilityEvent.setEventListener(
             activity = requireActivity(),
             lifecycleOwner = viewLifecycleOwner
@@ -84,10 +82,6 @@ class SearchFragment : Fragment() {
                 onKeyboardVisibilityChanged(false)
             }
         }
-
-
-
-
 
         searchToolbar = viewBinding.tbSearch
         searchBar = viewBinding.searchBar
