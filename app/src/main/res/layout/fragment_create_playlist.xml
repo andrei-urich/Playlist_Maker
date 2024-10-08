@@ -30,14 +30,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/etvNamePlaylist"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:textColorHint="@color/text_primary"
-
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="32dp"
+        style="@style/new_playlist_TextInput_style"
+        android:layout_marginTop="@dimen/new_playlist_edittext_margin_top"
         android:hint="@string/new_playlist_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/playlistImage">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -48,13 +45,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/etvDescriptionPlaylist"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:textColorHint="@color/text_primary"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
+        style="@style/new_playlist_TextInput_style"
+        android:layout_marginTop="@dimen/new_playlist_edittext_margin_between"
         android:hint="@string/new_playlist_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etvNamePlaylist">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -66,12 +61,12 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCreatePlaylist"
 
-        style="@style/playlist_btn_style"
+        style="@style/new_playlist_btn_style"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginHorizontal="17dp"
-        android:layout_marginBottom="32dp"
-        android:text="Создать"
+        android:layout_height="@dimen/new_playlist_button_height"
+        android:layout_marginHorizontal="@dimen/new_playlist_button_horizontal_margin"
+        android:layout_marginBottom="@dimen/new_playlist_margin_bottom"
+        android:text="@string/create_playlist_button"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

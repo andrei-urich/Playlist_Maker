@@ -46,4 +46,5 @@
     <string name="createPlaylistFragmentHeader">Новый плейлист</string>
     <string name="new_playlist_name">Название*</string>
     <string name="new_playlist_description">Описание</string>
+    <string name="create_playlist_button">Создать</string>
 </resources>

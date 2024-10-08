@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.presentation.library.PlaylistsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,6 +22,10 @@ class PlaylistsFragment : Fragment() {
 
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var button: Button
+    private lateinit var action: NavDirections
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +42,22 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getLiveData().observe(viewLifecycleOwner) {
-
+        button = binding.bnAddPlaylist
+        button.setOnClickListener {
+            viewModel.createPlaylist()
         }
+
+        viewModel.getLiveData().observe(viewLifecycleOwner) {
+        }
+
+        viewModel.getCreaatePlaylistTrigger().observe(viewLifecycleOwner) {
+            if (it) {
+                action = LibraryFragmentDirections.actionLibraryFragmentToCreatePlaylistFragment()
+                findNavController().navigate(action)
+            }
+        }
+
+
     }
 
     override fun onDestroyView() {

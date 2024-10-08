@@ -61,4 +61,11 @@
     <dimen name="progress_bar_margin_top">148dp</dimen>
     <dimen name="addPlaylist_button_margin_top">24dp</dimen>
     <dimen name="screen_height">56dp</dimen>
+    <dimen name="new_playlist_edittext_height">56dp</dimen>
+    <dimen name="new_playlist_edittext_horizontal_margin">16dp</dimen>
+    <dimen name="new_playlist_edittext_margin_top">32dp</dimen>
+    <dimen name="new_playlist_edittext_margin_between">16dp</dimen>
+    <dimen name="new_playlist_button_height">44dp</dimen>
+    <dimen name="new_playlist_button_horizontal_margin">17dp</dimen>
+    <dimen name="new_playlist_margin_bottom">32dp</dimen>
 </resources>
