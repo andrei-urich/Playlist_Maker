@@ -13,6 +13,10 @@ import androidx.appcompat.widget.Toolbar
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel
+import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.ADD_OK
+import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.GO
+import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.GO_OR_STAY
+import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.STAY
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
@@ -54,9 +58,14 @@ class AddPlaylistFragment : Fragment() {
 
 
         toolbar.setOnClickListener {
-            requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
-                View.VISIBLE
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            viewModel.goOrStay()
+        }
+
+        viewModel.getToggleButtonLiveData().observe(viewLifecycleOwner) { flag ->
+            toggleButton(flag)
+        }
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) { it ->
+            renderState(it)
         }
 
         val nameInputTextWatcher = object : TextWatcher {
@@ -65,7 +74,7 @@ class AddPlaylistFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 nameText = s.toString()
-                viewModel.getNameInput(nameText)
+                viewModel.setName(nameText)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -78,7 +87,7 @@ class AddPlaylistFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 descriptionText = s.toString()
-                viewModel.getDescriptionInput(descriptionText)
+                viewModel.setDescription(descriptionText)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -90,4 +99,34 @@ class AddPlaylistFragment : Fragment() {
 
     }
 
+    private fun renderState(string: String) {
+        when (string) {
+            GO_OR_STAY -> {}
+            STAY -> {}
+            GO -> {
+                closeScreen()
+            }
+
+            ADD_OK -> {}
+        }
+    }
+
+    private fun closeScreen() {
+        requireActivity().onBackPressedDispatcher.onBackPressed()
+    }
+
+    private fun toggleButton(flag: Boolean) {
+        if (flag) {
+            addButton.isClickable = true
+            addButton.setBackgroundColor(requireActivity().getColor(R.color.active_item_color))
+        }
+    }
+
+    private fun showMessageOK() {
+
+    }
+
+    private fun showDialogGoOrStay() {
+
+    }
 }

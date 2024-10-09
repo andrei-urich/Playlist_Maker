@@ -86,6 +86,7 @@
             android:layout_marginHorizontal="@dimen/new_playlist_button_horizontal_margin"
             android:layout_marginVertical="@dimen/new_playlist_margin_bottom"
             android:text="@string/create_playlist_button"
+            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/space" />
     </androidx.constraintlayout.widget.ConstraintLayout>
