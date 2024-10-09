@@ -9,7 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
+import androidx.core.net.toUri
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel
@@ -35,6 +39,7 @@ class AddPlaylistFragment : Fragment() {
     private lateinit var descriptionInput: TextInputEditText
     private lateinit var playlistCover: ImageView
     private lateinit var addButton: MaterialButton
+    private lateinit var pickImage: ActivityResultLauncher<PickVisualMediaRequest>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,9 +61,22 @@ class AddPlaylistFragment : Fragment() {
         playlistCover = binding.playlistImage
         addButton = binding.btnCreatePlaylist
 
+        pickImage =
+            requireActivity().registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                if (uri != null) {
+                    viewModel.setCoverImage(uri.toString())
+                }
+            }
 
         toolbar.setOnClickListener {
             viewModel.goOrStay()
+        }
+        addButton.setOnClickListener {
+            viewModel.addPlaylist()
+        }
+
+        playlistCover.setOnClickListener {
+            pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         viewModel.getToggleButtonLiveData().observe(viewLifecycleOwner) { flag ->
@@ -66,6 +84,10 @@ class AddPlaylistFragment : Fragment() {
         }
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { it ->
             renderState(it)
+        }
+
+        viewModel.getCoverLiveData().observe(viewLifecycleOwner) { it ->
+            setCover(it)
         }
 
         val nameInputTextWatcher = object : TextWatcher {
@@ -96,7 +118,10 @@ class AddPlaylistFragment : Fragment() {
         nameInput.addTextChangedListener(nameInputTextWatcher)
         descriptionInput.addTextChangedListener(descriptionInputTextWatcher)
 
+    }
 
+    private fun setCover(string: String) {
+        playlistCover.setImageURI(string.toUri())
     }
 
     private fun renderState(string: String) {
@@ -128,5 +153,10 @@ class AddPlaylistFragment : Fragment() {
 
     private fun showDialogGoOrStay() {
 
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

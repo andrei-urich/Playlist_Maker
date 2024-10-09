@@ -20,4 +20,8 @@ class PlaylistInteractorImpl (
     override fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylists()
     }
+
+    override suspend fun saveImageToExternalStorage(playlist: Playlist) {
+        repository.saveImageToExternalStorage(playlist)
+    }
 }

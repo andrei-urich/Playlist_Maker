@@ -25,17 +25,17 @@ class AddPlaylistViewModel(
     fun getCoverLiveData(): LiveData<String> = coverLiveData
 
     fun setName(string: String) {
-        name = string
+        name = string.trim()
         toggleButtonLiveData.postValue(name.isNotBlank())
     }
 
     fun setDescription(string: String) {
-        description = string
+        description = string.trim()
     }
 
-    fun setCoverImage() {
-        viewModelScope.launch {
-        }
+    fun setCoverImage(string: String) {
+        cover = string
+        coverLiveData.postValue(cover)
     }
 
     fun addPlaylist() {
@@ -43,11 +43,13 @@ class AddPlaylistViewModel(
             viewModelScope.launch {
                 val playlist = Playlist(name, description, cover, EMPTY_STRING, 0)
                 interactor.addPlaylist(playlist)
+                if (cover.isNotBlank()) {
+                    interactor.saveImageToExternalStorage(playlist)
+                }
             }
-        } else {
-
         }
     }
+
 
     fun goOrStay() {
         stateLiveData.postValue(GO_OR_STAY)

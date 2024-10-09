@@ -10,6 +10,8 @@ import com.example.playlistmaker.di.library.favoriteTracksInteractorModule
 import com.example.playlistmaker.di.library.favoriteTracksViewModelModule
 import com.example.playlistmaker.di.library.libraryRepositoryModule
 import com.example.playlistmaker.di.library.libraryViewModelModule
+import com.example.playlistmaker.di.library.playlistInteractorModule
+import com.example.playlistmaker.di.library.playlistRepositoryModule
 import com.example.playlistmaker.di.library.playlistsViewModelModule
 import com.example.playlistmaker.di.player.audioplayerViewModelModule
 import com.example.playlistmaker.di.player.playerModule
@@ -42,7 +44,9 @@ class MyApp : Application() {
                 playlistsViewModelModule,
                 dataModule,
                 libraryRepositoryModule,
-                favoriteTracksInteractorModule
+                favoriteTracksInteractorModule,
+                playlistRepositoryModule,
+                playlistInteractorModule
             )
         }
 

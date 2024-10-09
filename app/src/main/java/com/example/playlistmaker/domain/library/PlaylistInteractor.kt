@@ -8,4 +8,5 @@ interface PlaylistInteractor {
     suspend fun deletePlaylist(playlist: Playlist)
     suspend fun addTrackToPlaylist(trackId: Int, playlist: Playlist)
     fun getPlaylists(): Flow<List<Playlist>>
+    suspend fun saveImageToExternalStorage(playlist: Playlist)
 }
