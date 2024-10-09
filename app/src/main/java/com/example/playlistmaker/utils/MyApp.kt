@@ -19,6 +19,7 @@ import com.example.playlistmaker.di.search.searchModule
 import com.example.playlistmaker.di.search.searchViewModelModule
 import com.example.playlistmaker.di.settings.settingsModule
 import com.example.playlistmaker.di.settings.settingsViewModelModule
+import com.markodevcic.peko.PermissionRequester
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -49,6 +50,8 @@ class MyApp : Application() {
                 playlistInteractorModule
             )
         }
+
+        PermissionRequester.initialize(applicationContext)
 
         val sharedPrefs: SharedPreferences by inject() {
             parametersOf(PLAYLIST_MAKER_PREFERENCES)

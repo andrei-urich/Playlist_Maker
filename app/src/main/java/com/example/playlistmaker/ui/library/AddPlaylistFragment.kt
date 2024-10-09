@@ -25,6 +25,7 @@ import com.example.playlistmaker.utils.EMPTY_STRING
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.markodevcic.peko.PermissionResult
 
 class AddPlaylistFragment : Fragment() {
 
@@ -88,6 +89,15 @@ class AddPlaylistFragment : Fragment() {
 
         viewModel.getCoverLiveData().observe(viewLifecycleOwner) { it ->
             setCover(it)
+        }
+
+        viewModel.getPermissionLiveData().observe(viewLifecycleOwner) { it ->
+            when (it) {
+                is PermissionResult.Granted -> return@observe
+                is PermissionResult.Denied.NeedsRationale -> TODO()
+                is PermissionResult.Denied.DeniedPermanently -> TODO()
+                PermissionResult.Cancelled -> TODO()
+            }
         }
 
         val nameInputTextWatcher = object : TextWatcher {
@@ -154,6 +164,7 @@ class AddPlaylistFragment : Fragment() {
     private fun showDialogGoOrStay() {
 
     }
+
 
     override fun onDestroyView() {
         _binding = null

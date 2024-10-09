@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.library.PlaylistInteractor
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.utils.EMPTY_STRING
+import com.markodevcic.peko.PermissionRequester
+import com.markodevcic.peko.PermissionResult
 import kotlinx.coroutines.launch
 
 class AddPlaylistViewModel(
@@ -17,12 +19,16 @@ class AddPlaylistViewModel(
     private var description = EMPTY_STRING
     private var cover = EMPTY_STRING
 
+    private val requester = PermissionRequester.instance()
+
     private val coverLiveData = MutableLiveData<String>()
     private val toggleButtonLiveData = MutableLiveData<Boolean>()
     private val stateLiveData = MutableLiveData<String>()
+    private val permissionLiveData = MutableLiveData<PermissionResult>()
     fun getToggleButtonLiveData(): LiveData<Boolean> = toggleButtonLiveData
     fun getStateLiveData(): LiveData<String> = stateLiveData
     fun getCoverLiveData(): LiveData<String> = coverLiveData
+    fun getPermissionLiveData(): LiveData<PermissionResult> = permissionLiveData
 
     fun setName(string: String) {
         name = string.trim()
@@ -44,12 +50,27 @@ class AddPlaylistViewModel(
                 val playlist = Playlist(name, description, cover, EMPTY_STRING, 0)
                 interactor.addPlaylist(playlist)
                 if (cover.isNotBlank()) {
-                    interactor.saveImageToExternalStorage(playlist)
+                    checkPermisson(playlist)
                 }
             }
         }
     }
 
+    private fun checkPermisson(playlist: Playlist) {
+        viewModelScope.launch {
+            requester.request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .collect { result ->
+                    when (result) {
+                        is PermissionResult.Granted -> {
+                            interactor.saveImageToExternalStorage(playlist)
+                        }
+                        else -> {
+                            permissionLiveData.postValue(result)
+                        }
+                    }
+                }
+        }
+    }
 
     fun goOrStay() {
         stateLiveData.postValue(GO_OR_STAY)
