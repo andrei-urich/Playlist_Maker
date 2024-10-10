@@ -47,4 +47,5 @@
     <string name="new_playlist_name">Название*</string>
     <string name="new_playlist_description">Описание</string>
     <string name="create_playlist_button">Создать</string>
+    <string name="permission_WRITE_EXTRNAL_STORAGE_rationale">Разрешение на доступ к внутренней памяти телефона необходимо для хранения обложек ваших плейлистов</string>
 </resources>

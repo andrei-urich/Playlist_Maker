@@ -64,6 +64,7 @@ class AddPlaylistViewModel(
                         is PermissionResult.Granted -> {
                             interactor.saveImageToExternalStorage(playlist)
                         }
+
                         else -> {
                             permissionLiveData.postValue(result)
                         }
@@ -82,6 +83,11 @@ class AddPlaylistViewModel(
 
     fun stay() {
         stateLiveData.postValue(STAY)
+    }
+
+    fun setEditedName(editedName: String) {
+        name = editedName.trim()
+        toggleButtonLiveData.postValue(name.isNotBlank())
     }
 
 

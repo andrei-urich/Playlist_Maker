@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.library
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -17,6 +19,8 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel
@@ -39,6 +43,7 @@ class AddPlaylistFragment : Fragment() {
     private val viewModel: AddPlaylistViewModel by viewModel()
     private lateinit var toolbar: Toolbar
     private var nameText = EMPTY_STRING
+    private var editedName = EMPTY_STRING
     private var descriptionText = EMPTY_STRING
     private lateinit var nameInput: TextInputEditText
     private lateinit var descriptionInput: TextInputEditText
@@ -50,6 +55,7 @@ class AddPlaylistFragment : Fragment() {
                 viewModel.setCoverImage(uri.toString())
             }
         }
+    private val inputMethodManager by lazy { -> requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,7 +109,7 @@ class AddPlaylistFragment : Fragment() {
                 is PermissionResult.Denied.NeedsRationale -> {
                     Toast.makeText(
                         requireContext(),
-                        "Разрешение на доступ к внутренней памяти телефона необходимо для хранения обложек ваших плейлистов",
+                        context?.getString(R.string.permission_WRITE_EXTRNAL_STORAGE_rationale),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -129,6 +135,9 @@ class AddPlaylistFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
+                editedName = s.toString()
+                viewModel.setEditedName(editedName)
+
             }
         }
 
@@ -150,7 +159,15 @@ class AddPlaylistFragment : Fragment() {
     }
 
     private fun setCover(string: String) {
-        playlistCover.setImageURI(string.toUri())
+        playlistCover.setImageURI(null)
+        val coverUri = string.toUri()
+        Glide.with(playlistCover.context)
+            .load(coverUri)
+            .fitCenter()
+            .transform(RoundedCorners(8))
+            .dontAnimate()
+            .into(playlistCover)
+
     }
 
     private fun renderState(string: String) {
@@ -173,6 +190,9 @@ class AddPlaylistFragment : Fragment() {
         if (flag) {
             addButton.isClickable = true
             addButton.setBackgroundColor(requireActivity().getColor(R.color.active_item_color))
+        } else {
+            addButton.isClickable = false
+            addButton.setBackgroundColor(requireActivity().getColor(R.color.add_playlist_button))
         }
     }
 

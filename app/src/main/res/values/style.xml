@@ -42,6 +42,14 @@
         <item name="android:letterSpacing">0</item>
     </style>
 
+    <style name="edit_text_add_playlist_style">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textSelectHandle">@color/active_item_color</item>
+        <item name="android:textSize">@dimen/h2</item>
+    </style>
+
     <style name="new_playlist_TextInput_style" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:textColorHint">@color/text_primary</item>
         <item name="android:layout_width">match_parent</item>
@@ -50,7 +58,10 @@
             @dimen/new_playlist_edittext_horizontal_margin
         </item>
         <item name="boxStrokeColor">@color/box_stroke_selector</item>
+        <item name="hintTextColor">@color/box_stroke_selector</item>
         <item name="cursorColor">@color/active_item_color</item>
+
+
     </style>
 
     <!-- стиль горизонтальных блоков меню настроек -->

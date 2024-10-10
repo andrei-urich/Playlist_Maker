@@ -2,6 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="@color/active_item_color" android:state_focused="true"/>
     <item android:color="@color/active_item_color" android:state_hovered="true"/>
-    <item android:color="@color/search_view_hint" android:state_enabled="false"/>
-    <item android:color="@color/search_view_hint"/>
+    <item android:color="@color/add_playlist_button" android:state_enabled="false"/>
+    <item android:color="@color/add_playlist_button"/>
 </selector>
