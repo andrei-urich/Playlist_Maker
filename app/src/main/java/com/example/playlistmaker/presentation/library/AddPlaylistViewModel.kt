@@ -74,15 +74,13 @@ class AddPlaylistViewModel(
     }
 
     fun goOrStay() {
-        stateLiveData.postValue(GO_OR_STAY)
+        if (name.isNotBlank() || description.isNotBlank() || cover.isNotBlank()) {
+            stateLiveData.postValue(GO_OR_STAY)
+        } else go()
     }
 
-    fun go() {
+    private fun go() {
         stateLiveData.postValue(GO)
-    }
-
-    fun stay() {
-        stateLiveData.postValue(STAY)
     }
 
     fun setEditedName(editedName: String) {
@@ -94,8 +92,6 @@ class AddPlaylistViewModel(
     companion object {
         const val GO_OR_STAY = "GO_OR_STAY"
         const val GO = "GO"
-        const val STAY = "STAY"
-        const val ADD_OK = "ADD_OK"
     }
 
 }

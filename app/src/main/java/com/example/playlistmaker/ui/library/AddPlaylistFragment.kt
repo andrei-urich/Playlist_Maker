@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,13 +25,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel
-import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.ADD_OK
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.GO
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.GO_OR_STAY
-import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.STAY
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.markodevcic.peko.PermissionResult
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,6 +55,7 @@ class AddPlaylistFragment : Fragment() {
                 viewModel.setCoverImage(uri.toString())
             }
         }
+    lateinit var onExitDialog: MaterialAlertDialogBuilder
     private val inputMethodManager by lazy { -> requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager }
 
     override fun onCreateView(
@@ -77,10 +78,27 @@ class AddPlaylistFragment : Fragment() {
         playlistCover = binding.playlistImage
         addButton = binding.btnCreatePlaylist
 
+        onExitDialog = MaterialAlertDialogBuilder(requireActivity())
+            .setTitle("Завершить создание плейлиста?")
+            .setNeutralButton("Отмена") { dialog, which ->
+
+            }.setPositiveButton("Завершить") { dialog, which ->
+                closeScreen()
+            }
 
         toolbar.setOnClickListener {
             viewModel.goOrStay()
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.goOrStay()
+            }
+        })
+
+
+
+
         addButton.setOnClickListener {
             viewModel.addPlaylist()
         }
@@ -172,19 +190,21 @@ class AddPlaylistFragment : Fragment() {
 
     private fun renderState(string: String) {
         when (string) {
-            GO_OR_STAY -> {}
-            STAY -> {}
+            GO_OR_STAY -> {
+                onExitDialog.show()
+            }
+
             GO -> {
                 closeScreen()
             }
-
-            ADD_OK -> {}
         }
     }
 
     private fun closeScreen() {
-        requireActivity().onBackPressedDispatcher.onBackPressed()
+        //       requireActivity().onBackPressedDispatcher.onBackPressed()
+        requireActivity().supportFragmentManager.popBackStack()
     }
+
 
     private fun toggleButton(flag: Boolean) {
         if (flag) {
@@ -194,14 +214,6 @@ class AddPlaylistFragment : Fragment() {
             addButton.isClickable = false
             addButton.setBackgroundColor(requireActivity().getColor(R.color.add_playlist_button))
         }
-    }
-
-    private fun showMessageOK() {
-
-    }
-
-    private fun showDialogGoOrStay() {
-
     }
 
     override fun onDestroyView() {
