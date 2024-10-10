@@ -79,10 +79,11 @@ class AddPlaylistFragment : Fragment() {
         addButton = binding.btnCreatePlaylist
 
         onExitDialog = MaterialAlertDialogBuilder(requireActivity())
-            .setTitle("Завершить создание плейлиста?")
-            .setNeutralButton("Отмена") { dialog, which ->
+            .setTitle(context?.getString(R.string.on_exit_add_playlist_screen_dialog_title))
+            .setNeutralButton(context?.getString(R.string.on_exit_add_playlist_screen_dialog_neutralButton)) { dialog, which ->
 
-            }.setPositiveButton("Завершить") { dialog, which ->
+            }
+            .setPositiveButton(context?.getString(R.string.on_exit_add_playlist_screen_dialog_positiveButton)) { dialog, which ->
                 closeScreen()
             }
 
@@ -95,9 +96,6 @@ class AddPlaylistFragment : Fragment() {
                 viewModel.goOrStay()
             }
         })
-
-
-
 
         addButton.setOnClickListener {
             viewModel.addPlaylist()
@@ -201,10 +199,8 @@ class AddPlaylistFragment : Fragment() {
     }
 
     private fun closeScreen() {
-        //       requireActivity().onBackPressedDispatcher.onBackPressed()
         requireActivity().supportFragmentManager.popBackStack()
     }
-
 
     private fun toggleButton(flag: Boolean) {
         if (flag) {

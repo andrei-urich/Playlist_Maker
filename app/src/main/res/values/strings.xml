@@ -48,4 +48,8 @@
     <string name="new_playlist_description">Описание</string>
     <string name="create_playlist_button">Создать</string>
     <string name="permission_WRITE_EXTRNAL_STORAGE_rationale">Разрешение на доступ к внутренней памяти телефона необходимо для хранения обложек ваших плейлистов</string>
+    <string name="on_exit_add_playlist_screen_dialog_title">Завершить создание плейлиста?</string>
+    <string name="on_exit_add_playlist_screen_dialog_neutralButton">Отмена</string>
+    <string name="on_exit_add_playlist_screen_dialog_positiveButton">Завершить</string>
+
 </resources>
