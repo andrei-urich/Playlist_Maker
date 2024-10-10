@@ -80,6 +80,7 @@ class AddPlaylistFragment : Fragment() {
 
         onExitDialog = MaterialAlertDialogBuilder(requireActivity())
             .setTitle(context?.getString(R.string.on_exit_add_playlist_screen_dialog_title))
+            .setMessage(context?.getString(R.string.on_exit_add_playlist_screen_dialog_message))
             .setNeutralButton(context?.getString(R.string.on_exit_add_playlist_screen_dialog_neutralButton)) { dialog, which ->
 
             }
