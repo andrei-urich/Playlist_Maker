@@ -50,13 +50,13 @@ class AddPlaylistViewModel(
                 val playlist = Playlist(name, description, cover, EMPTY_STRING, 0)
                 interactor.addPlaylist(playlist)
                 if (cover.isNotBlank()) {
-                    checkPermisson(playlist)
+                    checkPermission(playlist)
                 }
             }
         }
     }
 
-    private fun checkPermisson(playlist: Playlist) {
+    fun checkPermission(playlist: Playlist) {
         viewModelScope.launch {
             requester.request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .collect { result ->

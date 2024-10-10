@@ -1,7 +1,9 @@
 package com.example.playlistmaker.ui.library
 
-import androidx.fragment.app.viewModels
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
@@ -9,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,13 +29,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.markodevcic.peko.PermissionResult
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddPlaylistFragment : Fragment() {
 
     private var _binding: FragmentAddPlaylistBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AddPlaylistViewModel by viewModels()
+    private val viewModel: AddPlaylistViewModel by viewModel()
     private lateinit var toolbar: Toolbar
     private var nameText = EMPTY_STRING
     private var descriptionText = EMPTY_STRING
@@ -40,7 +44,12 @@ class AddPlaylistFragment : Fragment() {
     private lateinit var descriptionInput: TextInputEditText
     private lateinit var playlistCover: ImageView
     private lateinit var addButton: MaterialButton
-    private lateinit var pickImage: ActivityResultLauncher<PickVisualMediaRequest>
+    private val pickImage: ActivityResultLauncher<PickVisualMediaRequest> =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                viewModel.setCoverImage(uri.toString())
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,12 +71,6 @@ class AddPlaylistFragment : Fragment() {
         playlistCover = binding.playlistImage
         addButton = binding.btnCreatePlaylist
 
-        pickImage =
-            requireActivity().registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                if (uri != null) {
-                    viewModel.setCoverImage(uri.toString())
-                }
-            }
 
         toolbar.setOnClickListener {
             viewModel.goOrStay()
@@ -93,10 +96,26 @@ class AddPlaylistFragment : Fragment() {
 
         viewModel.getPermissionLiveData().observe(viewLifecycleOwner) { it ->
             when (it) {
-                is PermissionResult.Granted -> return@observe
-                is PermissionResult.Denied.NeedsRationale -> TODO()
-                is PermissionResult.Denied.DeniedPermanently -> TODO()
-                PermissionResult.Cancelled -> TODO()
+                is PermissionResult.Granted -> {
+                    return@observe
+                }
+
+                is PermissionResult.Denied.NeedsRationale -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Разрешение на доступ к внутренней памяти телефона необходимо для хранения обложек ваших плейлистов",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                is PermissionResult.Denied.DeniedPermanently -> {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.data = Uri.fromParts("package", context?.packageName, null)
+                    context?.startActivity(intent)
+                }
+
+                PermissionResult.Cancelled -> return@observe
             }
         }
 
@@ -164,7 +183,6 @@ class AddPlaylistFragment : Fragment() {
     private fun showDialogGoOrStay() {
 
     }
-
 
     override fun onDestroyView() {
         _binding = null

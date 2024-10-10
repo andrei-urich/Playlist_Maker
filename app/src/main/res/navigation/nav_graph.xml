@@ -14,7 +14,7 @@
             android:id="@+id/action_libraryFragment_to_audioplayerActivity"
             app:destination="@id/audioplayerActivity" />
         <action
-            android:id="@+id/action_libraryFragment_to_createPlaylistFragment"
+            android:id="@+id/action_libraryFragment_to_addPlaylistFragment"
             app:destination="@id/addPlaylistFragment" />
     </fragment>
     <activity

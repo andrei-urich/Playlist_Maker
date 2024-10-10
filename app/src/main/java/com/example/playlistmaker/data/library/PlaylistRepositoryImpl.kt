@@ -20,7 +20,7 @@ import java.io.FileOutputStream
 class PlaylistRepositoryImpl(
     private val database: PlaylistsDatabase,
     private val converter: PlaylistDbConvertor,
-    val context: Context,
+    val context: Context
 ) : PlaylistRepository {
     override suspend fun addPlaylist(playlist: Playlist) {
         database.getPlaylistDao().insertPlaylist(converter.map(playlist))

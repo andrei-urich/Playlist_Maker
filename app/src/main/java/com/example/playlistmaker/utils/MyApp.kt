@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.library.addPlaylistViewModelModule
 import com.example.playlistmaker.di.library.dataModule
 import com.example.playlistmaker.di.library.favoriteTracksInteractorModule
 import com.example.playlistmaker.di.library.favoriteTracksViewModelModule
@@ -47,7 +48,8 @@ class MyApp : Application() {
                 libraryRepositoryModule,
                 favoriteTracksInteractorModule,
                 playlistRepositoryModule,
-                playlistInteractorModule
+                playlistInteractorModule,
+                addPlaylistViewModelModule
             )
         }
 

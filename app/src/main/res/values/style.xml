@@ -46,7 +46,11 @@
         <item name="android:textColorHint">@color/text_primary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/new_playlist_edittext_height</item>
-        <item name="android:layout_marginHorizontal">@dimen/new_playlist_edittext_horizontal_margin</item>
+        <item name="android:layout_marginHorizontal">
+            @dimen/new_playlist_edittext_horizontal_margin
+        </item>
+        <item name="boxStrokeColor">@color/box_stroke_selector</item>
+        <item name="cursorColor">@color/active_item_color</item>
     </style>
 
     <!-- стиль горизонтальных блоков меню настроек -->
