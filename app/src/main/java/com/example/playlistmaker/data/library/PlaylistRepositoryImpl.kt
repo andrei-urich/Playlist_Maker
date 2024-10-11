@@ -59,6 +59,10 @@ class PlaylistRepositoryImpl(
         }
     }
 
+    override suspend fun clear() {
+        database.getPlaylistDao().clear()
+    }
+
 
     private fun convertToPlaylist(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { entity -> converter.map(entity) }

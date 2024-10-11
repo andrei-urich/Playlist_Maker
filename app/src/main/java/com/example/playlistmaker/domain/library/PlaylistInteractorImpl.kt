@@ -24,4 +24,8 @@ class PlaylistInteractorImpl (
     override suspend fun saveImageToExternalStorage(playlist: Playlist) {
         repository.saveImageToExternalStorage(playlist)
     }
+
+    override suspend fun clear() {
+        repository.clear()
+    }
 }

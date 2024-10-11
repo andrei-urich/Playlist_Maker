@@ -9,4 +9,5 @@ interface PlaylistRepository {
     suspend fun addTrackToPlaylist(trackId: Int, playlist: Playlist)
     fun getPlaylists(): Flow<List<Playlist>>
     suspend fun saveImageToExternalStorage(playlist: Playlist)
+    suspend fun clear()
 }

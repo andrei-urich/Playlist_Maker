@@ -57,6 +57,13 @@ class PlaylistsFragment : Fragment() {
             viewModel.createPlaylist()
         }
 
+
+        val clearBtn = binding.bnDellaylist
+        clearBtn.setOnClickListener {
+            viewModel.clearPlaylists()
+            viewModel.getPlaylistList()
+        }
+
         viewModel.getLiveData().observe(viewLifecycleOwner) { list ->
             binding.progressBar.visibility = View.GONE
             showPlaceholder(list.isNullOrEmpty())
