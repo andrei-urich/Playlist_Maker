@@ -58,6 +58,7 @@ class PlaylistsFragment : Fragment() {
         }
 
         viewModel.getLiveData().observe(viewLifecycleOwner) { list ->
+            binding.progressBar.visibility = View.GONE
             showPlaceholder(list.isNullOrEmpty())
             showPlaylists(list)
         }
@@ -83,6 +84,12 @@ class PlaylistsFragment : Fragment() {
 
     private fun showPlaceholder(flag: Boolean) {
         if (flag) placeholder.visibility = View.VISIBLE else placeholder.visibility = View.GONE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.progressBar.visibility = View.VISIBLE
+        viewModel.getPlaylistList()
     }
 
     override fun onDestroyView() {
