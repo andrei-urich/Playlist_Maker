@@ -50,13 +50,14 @@ class AddPlaylistViewModel(
                 val playlist = Playlist(name, description, cover, EMPTY_STRING, 0)
                 interactor.addPlaylist(playlist)
                 if (cover.isNotBlank()) {
-                    checkPermission(playlist)
+                    tryToSaveCover(playlist)
                 }
+                exit()
             }
         }
     }
 
-    fun checkPermission(playlist: Playlist) {
+    fun tryToSaveCover(playlist: Playlist) {
         viewModelScope.launch {
             requester.request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .collect { result ->
@@ -75,12 +76,12 @@ class AddPlaylistViewModel(
 
     fun goOrStay() {
         if (name.isNotBlank() || description.isNotBlank() || cover.isNotBlank()) {
-            stateLiveData.postValue(GO_OR_STAY)
-        } else go()
+            stateLiveData.postValue(EXIT_OR_STAY)
+        } else exit()
     }
 
-    private fun go() {
-        stateLiveData.postValue(GO)
+    private fun exit() {
+        stateLiveData.postValue(EXIT)
     }
 
     fun setEditedName(editedName: String) {
@@ -90,8 +91,8 @@ class AddPlaylistViewModel(
 
 
     companion object {
-        const val GO_OR_STAY = "GO_OR_STAY"
-        const val GO = "GO"
+        const val EXIT_OR_STAY = "EXIT_OR_STAY"
+        const val EXIT = "EXIT"
     }
 
 }

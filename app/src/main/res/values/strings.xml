@@ -52,5 +52,6 @@
     <string name="on_exit_add_playlist_screen_dialog_neutralButton">Отмена</string>
     <string name="on_exit_add_playlist_screen_dialog_positiveButton">Завершить</string>
     <string name="on_exit_add_playlist_screen_dialog_message">Все несохраненные данные будут потеряны</string>
-
+    <string name="toast_playlist_created_message_part1">Плейлист </string>
+    <string name="toast_playlist_created_message_part2"> создан</string>
 </resources>

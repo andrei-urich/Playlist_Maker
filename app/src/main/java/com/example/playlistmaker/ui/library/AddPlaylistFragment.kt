@@ -1,18 +1,17 @@
 package com.example.playlistmaker.ui.library
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -20,13 +19,14 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel
-import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.GO
-import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.GO_OR_STAY
+import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.EXIT
+import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.EXIT_OR_STAY
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
@@ -34,6 +34,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.markodevcic.peko.PermissionResult
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class AddPlaylistFragment : Fragment() {
 
@@ -56,7 +57,6 @@ class AddPlaylistFragment : Fragment() {
             }
         }
     lateinit var onExitDialog: MaterialAlertDialogBuilder
-    private val inputMethodManager by lazy { -> requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -189,11 +189,12 @@ class AddPlaylistFragment : Fragment() {
 
     private fun renderState(string: String) {
         when (string) {
-            GO_OR_STAY -> {
+            EXIT_OR_STAY -> {
                 onExitDialog.show()
             }
 
-            GO -> {
+            EXIT -> {
+                showMessage(editedName)
                 closeScreen()
             }
         }
@@ -216,5 +217,20 @@ class AddPlaylistFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun showMessage(string: String) {
+        val message = requireActivity().layoutInflater.inflate(R.layout.custom_toast_layout, null)
+        val view = message.findViewById<TextView>(R.id.tvToast)
+        val text =
+            context?.getString(R.string.toast_playlist_created_message_part1) + string + context?.getString(
+                R.string.toast_playlist_created_message_part2
+            )
+        view.text = text
+        val toast = Toast(requireActivity())
+        toast.view = message
+        toast.duration = Toast.LENGTH_LONG
+        toast.setGravity(Gravity.BOTTOM, 8, 16)
+        toast.show()
     }
 }
