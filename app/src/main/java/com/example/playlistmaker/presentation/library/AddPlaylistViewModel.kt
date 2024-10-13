@@ -74,7 +74,7 @@ class AddPlaylistViewModel(
         }
     }
 
-    fun goOrStay() {
+    fun exitOrStay() {
         if (name.isNotBlank() || description.isNotBlank() || cover.isNotBlank()) {
             stateLiveData.postValue(EXIT_OR_STAY)
         } else exit()

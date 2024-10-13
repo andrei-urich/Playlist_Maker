@@ -56,11 +56,12 @@ class AddPlaylistFragment : Fragment() {
                 viewModel.setCoverImage(uri.toString())
             }
         }
-    lateinit var onExitDialog: MaterialAlertDialogBuilder
+    private lateinit var onExitDialog: MaterialAlertDialogBuilder
+    private lateinit var callback: OnBackPressedCallback
+
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         super.onCreate(savedInstanceState)
         _binding = FragmentAddPlaylistBinding.inflate(inflater, container, false)
@@ -70,33 +71,33 @@ class AddPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility =
-            View.GONE
+        requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility = View.GONE
         toolbar = binding.tbCreatePlaylist
         nameInput = binding.etNamePlaylist
         descriptionInput = binding.etDescriptionPlaylist
         playlistCover = binding.playlistImage
         addButton = binding.btnCreatePlaylist
 
-        onExitDialog = MaterialAlertDialogBuilder(requireActivity())
-            .setTitle(context?.getString(R.string.on_exit_add_playlist_screen_dialog_title))
-            .setMessage(context?.getString(R.string.on_exit_add_playlist_screen_dialog_message))
-            .setNeutralButton(context?.getString(R.string.on_exit_add_playlist_screen_dialog_neutralButton)) { dialog, which ->
+        onExitDialog =
+            MaterialAlertDialogBuilder(requireActivity()).setTitle(context?.getString(R.string.on_exit_add_playlist_screen_dialog_title))
+                .setMessage(context?.getString(R.string.on_exit_add_playlist_screen_dialog_message))
+                .setNeutralButton(context?.getString(R.string.on_exit_add_playlist_screen_dialog_neutralButton)) { dialog, which ->
 
-            }
-            .setPositiveButton(context?.getString(R.string.on_exit_add_playlist_screen_dialog_positiveButton)) { dialog, which ->
-                closeScreen()
-            }
+                }
+                .setPositiveButton(context?.getString(R.string.on_exit_add_playlist_screen_dialog_positiveButton)) { dialog, which ->
+                    closeScreen()
+                }
 
         toolbar.setOnClickListener {
-            viewModel.goOrStay()
+            viewModel.exitOrStay()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                viewModel.goOrStay()
+                viewModel.exitOrStay()
             }
-        })
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(callback)
 
         addButton.setOnClickListener {
             viewModel.addPlaylist()
@@ -178,12 +179,8 @@ class AddPlaylistFragment : Fragment() {
     private fun setCover(string: String) {
         playlistCover.setImageURI(null)
         val coverUri = string.toUri()
-        Glide.with(playlistCover.context)
-            .load(coverUri)
-            .fitCenter()
-            .transform(RoundedCorners(8))
-            .dontAnimate()
-            .into(playlistCover)
+        Glide.with(playlistCover.context).load(coverUri).fitCenter().transform(RoundedCorners(8))
+            .dontAnimate().into(playlistCover)
 
     }
 
@@ -194,14 +191,15 @@ class AddPlaylistFragment : Fragment() {
             }
 
             EXIT -> {
-                showMessage(editedName)
+                if (editedName.isNotBlank()) showMessage(editedName)
                 closeScreen()
             }
         }
     }
 
     private fun closeScreen() {
-        requireActivity().supportFragmentManager.popBackStack()
+        callback.isEnabled = false
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
     private fun toggleButton(flag: Boolean) {
