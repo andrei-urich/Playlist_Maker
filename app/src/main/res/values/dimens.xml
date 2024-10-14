@@ -71,4 +71,10 @@
     <dimen name="create_playlist_padding_bottom">16dp</dimen>
     <dimen name="my_toast_height">48dp</dimen>
     <dimen name="radius_corner_bottom_sheet">12dp</dimen>
+    <dimen name="bottom_sheet_max_height">505dp</dimen>
+    <dimen name="bottom_sheet_divider_margin_top">8dp</dimen>
+    <dimen name="bottom_sheet_title_margin_top">42dp</dimen>
+    <dimen name="bottom_sheet_add_button_margin_top">28dp</dimen>
+    <dimen name="bottom_sheet_recicler_margin_top">24dp</dimen>
+    <dimen name="bottom_sheet_item_text_margin_end">44dp</dimen>
 </resources>

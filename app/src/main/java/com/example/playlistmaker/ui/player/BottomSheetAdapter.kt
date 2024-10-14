@@ -25,6 +25,7 @@ class BottomSheetAdapter(
         }
     }
 
+
     override fun onBindViewHolder(holder: BottomSheetViewHolder, position: Int) {
         list.getOrNull(position)?.let<Playlist, Unit> { playlist ->
             holder.bind(playlist)

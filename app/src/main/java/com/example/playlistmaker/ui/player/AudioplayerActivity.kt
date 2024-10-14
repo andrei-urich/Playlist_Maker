@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -10,8 +11,11 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Constraints
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
@@ -61,6 +65,7 @@ class AudioplayerActivity() : AppCompatActivity() {
     private lateinit var bottomSheetAdapter: BottomSheetAdapter
     private lateinit var bottomSheetRecyclerView: RecyclerView
     private lateinit var btnAddPlaylist: Button
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     private val args: AudioplayerActivityArgs by navArgs()
 
@@ -88,15 +93,14 @@ class AudioplayerActivity() : AppCompatActivity() {
         countryGroup = viewBinding.countryGroup
 
 
-
-
         bottomSheetRecyclerView = viewBinding.bottomSheetRv
+        bottomSheetRecyclerView.layoutManager = LinearLayoutManager(this)
         btnAddPlaylist = viewBinding.bnAddPlaylist
 
         val bottomSheetContainer = viewBinding.playlistsBottomSheet
         val overlay = viewBinding.overlay
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -192,11 +196,14 @@ class AudioplayerActivity() : AppCompatActivity() {
 
         btnAddToPlaylist.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            viewModel.getPlaylistsList()
         }
+
     }
 
     private fun renderPlaylistState(list: List<Playlist>?) {
         if (!list.isNullOrEmpty()) {
+            bottomSheetRecyclerView.visibility = View.VISIBLE
             bottomSheetAdapter = BottomSheetAdapter(list, this::addTrackToPlaylist)
             bottomSheetRecyclerView.adapter = bottomSheetAdapter
             bottomSheetAdapter.notifyDataSetChanged()

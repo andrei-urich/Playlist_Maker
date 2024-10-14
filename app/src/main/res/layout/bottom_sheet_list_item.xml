@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/search_result_card_height"
-    android:background="?android:selectableItemBackground">
+    android:background="@color/primary">
 
     <ImageView
         android:id="@+id/playlistCover"
@@ -13,17 +13,17 @@
         android:layout_marginHorizontal="@dimen/search_result_track_image_margin_left"
         android:layout_marginVertical="@dimen/search_result_track_image_margin_vertical"
         android:scaleType="fitCenter"
+        android:src="@drawable/placeholder"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/placeholder" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/playlistName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/search_result_track_name_margin_left"
-        android:layout_marginEnd="44dp"
         android:layout_marginTop="@dimen/search_result_track_name_margin_top"
+        android:layout_marginEnd="@dimen/bottom_sheet_item_text_margin_end"
         android:ellipsize="end"
         android:fontFamily="@font/ys_display_regular"
         android:maxLines="1"
@@ -40,7 +40,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/search_result_track_name_margin_left"
-        android:layout_marginEnd="44dp"
+        android:layout_marginEnd="@dimen/bottom_sheet_item_text_margin_end"
         android:ellipsize="end"
         android:fontFamily="@font/ys_display_regular"
         android:maxWidth="@dimen/search_result_artist_name_max_width"
@@ -48,10 +48,8 @@
 
         android:textColor="@color/track_information"
         android:textSize="@dimen/h4"
-
-
-        app:layout_constraintStart_toEndOf="@id/playlistCover"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playlistCover"
         app:layout_constraintTop_toBottomOf="@id/playlistName"
 
 

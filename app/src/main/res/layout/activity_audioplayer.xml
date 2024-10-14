@@ -304,7 +304,7 @@
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#99000000"
+        android:background="@color/overlay_bottom_sheet_background"
         android:visibility="gone" />
 
 
@@ -313,9 +313,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_drawable"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="240dp"
+        app:behavior_peekHeight="@dimen/bottom_sheet_max_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView
@@ -323,7 +323,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/bottom_sheet_divider_margin_top"
             android:src="@drawable/divider_bottom_sheet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -334,7 +334,7 @@
             style="@style/player_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="42dp"
+            android:layout_marginTop="@dimen/bottom_sheet_title_margin_top"
             android:text="@string/bottom_sheet_title_add_to_playlist"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -344,7 +344,7 @@
         <Button
             android:id="@+id/bnAddPlaylist"
             style="@style/refresh_btn_style"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="@dimen/bottom_sheet_add_button_margin_top"
             android:text="@string/playlists_button_addPlaylist"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -353,8 +353,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/bottomSheetRv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="24dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bottom_sheet_recicler_margin_top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bnAddPlaylist" />

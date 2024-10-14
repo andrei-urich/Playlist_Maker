@@ -19,4 +19,5 @@
     <color name="trackDetails">#AEAFB4</color>
     <color name="active_item_color">#3772E7</color>
     <color name="add_playlist_button">#AEAFB4</color>
+    <color name="overlay_bottom_sheet_background">#99000000</color>
 </resources>
