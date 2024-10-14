@@ -19,6 +19,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -31,6 +32,7 @@ import com.example.playlistmaker.utils.EMPTY_STRING
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.markodevcic.peko.PermissionResult
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -218,17 +220,23 @@ class AddPlaylistFragment : Fragment() {
     }
 
     private fun showMessage(string: String) {
-        val message = requireActivity().layoutInflater.inflate(R.layout.custom_toast_layout, null)
-        val view = message.findViewById<TextView>(R.id.tvToast)
         val text =
-            context?.getString(R.string.toast_playlist_created_message_part1) + string + context?.getString(
+            context?.getString(R.string.toast_playlist_created_message_part1) + " " + string + " " + context?.getString(
                 R.string.toast_playlist_created_message_part2
             )
-        view.text = text
-        val toast = Toast(requireActivity())
-        toast.view = message
-        toast.duration = Toast.LENGTH_LONG
-        toast.setGravity(Gravity.BOTTOM, 8, 16)
-        toast.show()
+        val snackbar = Snackbar.make(
+            binding.root, text,
+            Snackbar.LENGTH_LONG
+        )
+        val snackbarView = snackbar.view
+        context?.getColor(R.color.text_primary)?.let { snackbarView.setBackgroundColor(it) }
+        val textView =
+            snackbarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+        context?.getColor(R.color.primary)?.let { textView.setTextColor(it) }
+        textView.setTextAppearance(R.style.snake_text_style)
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
+        textView.setGravity(Gravity.CENTER)
+        snackbar.show()
     }
+
 }

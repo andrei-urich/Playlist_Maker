@@ -4,9 +4,8 @@
     android:id="@+id/toastLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="@dimen/h2"
-    android:paddingHorizontal="8dp"
-    >
+    android:paddingHorizontal="@dimen/btn_icon_padding"
+    android:paddingVertical="@dimen/h2">
 
     <TextView
         android:id="@+id/tvToast"
@@ -18,6 +17,5 @@
         android:textAllCaps="false"
         android:textColor="@color/primary"
         android:textSize="@dimen/h3"
-        tools:text="Toast"
-        />
+        tools:text="Toast" />
 </LinearLayout>

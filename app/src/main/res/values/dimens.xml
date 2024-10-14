@@ -77,4 +77,5 @@
     <dimen name="bottom_sheet_add_button_margin_top">28dp</dimen>
     <dimen name="bottom_sheet_recicler_margin_top">24dp</dimen>
     <dimen name="bottom_sheet_item_text_margin_end">44dp</dimen>
+    <dimen name="bottom_sheet_margin_top">295dp</dimen>
 </resources>
