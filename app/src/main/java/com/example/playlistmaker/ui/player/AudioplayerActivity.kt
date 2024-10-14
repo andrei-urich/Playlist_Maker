@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,9 +12,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PAUSED
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PLAYING
@@ -23,6 +26,7 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.presentation.player.AudioplayerViewModel
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -54,6 +58,9 @@ class AudioplayerActivity() : AppCompatActivity() {
     private lateinit var primaryGenreNameGroup: Group
     private lateinit var countryGroup: Group
     private var timerJob: Job? = null
+    private lateinit var bottomSheetAdapter: BottomSheetAdapter
+    private lateinit var bottomSheetRecyclerView: RecyclerView
+    private lateinit var btnAddPlaylist: Button
 
     private val args: AudioplayerActivityArgs by navArgs()
 
@@ -80,6 +87,19 @@ class AudioplayerActivity() : AppCompatActivity() {
         primaryGenreNameGroup = viewBinding.primaryGenreNameGroup
         countryGroup = viewBinding.countryGroup
 
+
+
+
+        bottomSheetRecyclerView = viewBinding.bottomSheetRv
+        btnAddPlaylist = viewBinding.bnAddPlaylist
+
+        val bottomSheetContainer = viewBinding.playlistsBottomSheet
+        val overlay = viewBinding.overlay
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
         toolbar.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -97,6 +117,10 @@ class AudioplayerActivity() : AppCompatActivity() {
 
         viewModel.getFavoriteStateLiveData().observe(this) {
             btnLikeSwitcher(it)
+        }
+
+        viewModel.getPlaylistLiveData().observe(this) {
+            renderPlaylistState(it)
         }
 
         viewModel.getPlayStatusLiveData().observe(this) { state ->
@@ -146,6 +170,42 @@ class AudioplayerActivity() : AppCompatActivity() {
                 }
             }
         }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        overlay.visibility = View.GONE
+                    }
+
+                    else -> {
+                        overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+
+        btnAddToPlaylist.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
+    private fun renderPlaylistState(list: List<Playlist>?) {
+        if (!list.isNullOrEmpty()) {
+            bottomSheetAdapter = BottomSheetAdapter(list, this::addTrackToPlaylist)
+            bottomSheetRecyclerView.adapter = bottomSheetAdapter
+            bottomSheetAdapter.notifyDataSetChanged()
+        }
+    }
+
+
+    private fun addTrackToPlaylist(playlist: Playlist) {
+        viewModel.addTrackToPlaylist(playlist, track)
     }
 
     private fun showTrackPlayedTime() {

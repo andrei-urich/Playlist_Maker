@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.library.FavoriteTracksInteractor
+import com.example.playlistmaker.domain.library.PlaylistInteractor
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.player.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
@@ -19,13 +21,17 @@ import kotlinx.coroutines.launch
 class AudioplayerViewModel(
     private val track: Track,
     private val playerInteractor: PlayerInteractor,
-    private val favoriteTracksInteractor: FavoriteTracksInteractor
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
+
     private val playStatusLiveData = MutableLiveData<AudioplayerPlayState>()
     private var favoriteStateLiveData = MutableLiveData<Boolean>()
+    private var playlistLiveData = MutableLiveData<List<Playlist>>()
 
     fun getPlayStatusLiveData(): LiveData<AudioplayerPlayState> = playStatusLiveData
     fun getFavoriteStateLiveData(): LiveData<Boolean> = favoriteStateLiveData
+    fun getPlaylistLiveData(): LiveData<List<Playlist>> = playlistLiveData
 
     init {
         preparePlayer()
@@ -95,6 +101,19 @@ class AudioplayerViewModel(
             }
         }
     }
+
+    fun getPlaylistsList() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists().collect {
+                playlistLiveData.postValue(it)
+            }
+        }
+    }
+
+    fun addTrackToPlaylist (playlist: Playlist, track: Track) {
+
+    }
+
 
     override fun onCleared() {
         playerInteractor.release()

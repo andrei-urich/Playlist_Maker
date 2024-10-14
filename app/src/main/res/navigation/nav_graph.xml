@@ -34,22 +34,13 @@
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_audioplayerActivity"
-            app:destination="@id/audioplayerActivity"></action>
+            app:destination="@id/audioplayerActivity" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.ui.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
-    <fragment
-        android:id="@+id/favoriteTracksFragment"
-        android:name="com.example.playlistmaker.ui.library.FavoriteTracksFragment"
-        android:label="fragment_favorite_tracks"
-        tools:layout="@layout/fragment_favorite_tracks">
-        <action
-            android:id="@+id/action_favoriteTracksFragment_to_audioplayerActivity"
-            app:destination="@id/audioplayerActivity" />
-    </fragment>
     <fragment
         android:id="@+id/addPlaylistFragment"
         android:name="com.example.playlistmaker.ui.library.AddPlaylistFragment"

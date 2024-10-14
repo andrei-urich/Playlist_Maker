@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.library.PlaylistInteractor
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.presentation.utils.SingleEventLiveData
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel(

@@ -70,4 +70,5 @@
     <dimen name="new_playlist_margin_bottom">32dp</dimen>
     <dimen name="create_playlist_padding_bottom">16dp</dimen>
     <dimen name="my_toast_height">48dp</dimen>
+    <dimen name="radius_corner_bottom_sheet">12dp</dimen>
 </resources>
