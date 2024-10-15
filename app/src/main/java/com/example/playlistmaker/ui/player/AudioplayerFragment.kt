@@ -1,23 +1,25 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.navArgs
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
+import com.example.playlistmaker.databinding.FragmentAudioplayerBinding
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PAUSED
@@ -26,9 +28,9 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.presentation.player.AudioplayerViewModel
-import com.example.playlistmaker.ui.library.AddPlaylistFragment
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -36,14 +38,16 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
+class AudioplayerFragment() : Fragment() {
 
     private var playerState = "STATE_DEFAULT"
     private lateinit var track: Track
     private val viewModel: AudioplayerViewModel by viewModel() {
         parametersOf(track)
     }
-    private lateinit var viewBinding: ActivityAudioplayerBinding
+
+    private var _binding: FragmentAudioplayerBinding? = null
+    private val binding get() = _binding!!
     private lateinit var trackImage: ImageView
     private lateinit var trackName: TextView
     private lateinit var artistName: TextView
@@ -66,72 +70,82 @@ class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
     private lateinit var btnAddPlaylist: Button
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    private val args: AudioplayerActivityArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewBinding = ActivityAudioplayerBinding.inflate(this.layoutInflater)
-        setContentView(viewBinding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-        val toolbar = viewBinding.tbPlayer
-        trackImage = viewBinding.trackImage
-        trackName = viewBinding.trackName
-        artistName = viewBinding.artistName
-        btnAddToPlaylist = viewBinding.btnAddToPlaylist
-        btnPlay = viewBinding.btnPlay
-        btnLike = viewBinding.btnLike
-        trackProgress = viewBinding.trackProgress
-        trackTimeValue = viewBinding.trackTimeValue
-        collectionNameValue = viewBinding.collectionNameValue
-        releaseDateValue = viewBinding.releaseDateValue
-        primaryGenreNameValue = viewBinding.primaryGenreNameValue
-        countryValue = viewBinding.countryValue
-        collectionGroup = viewBinding.collectionGroup
-        releaseDateGroup = viewBinding.releaseDateGroup
-        primaryGenreNameGroup = viewBinding.primaryGenreNameGroup
-        countryGroup = viewBinding.countryGroup
+        _binding = FragmentAudioplayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
 
-        bottomSheetRecyclerView = viewBinding.bottomSheetRv
-        bottomSheetRecyclerView.layoutManager = LinearLayoutManager(this)
-        btnAddPlaylist = viewBinding.bnAddPlaylist
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val bottomSheetContainer = viewBinding.playlistsBottomSheet
-        val overlay = viewBinding.overlay
+        val toolbar = binding.tbPlayer
+        trackImage = binding.trackImage
+        trackName = binding.trackName
+        artistName = binding.artistName
+        btnAddToPlaylist = binding.btnAddToPlaylist
+        btnPlay = binding.btnPlay
+        btnLike = binding.btnLike
+        trackProgress = binding.trackProgress
+        trackTimeValue = binding.trackTimeValue
+        collectionNameValue = binding.collectionNameValue
+        releaseDateValue = binding.releaseDateValue
+        primaryGenreNameValue = binding.primaryGenreNameValue
+        countryValue = binding.countryValue
+        collectionGroup = binding.collectionGroup
+        releaseDateGroup = binding.releaseDateGroup
+        primaryGenreNameGroup = binding.primaryGenreNameGroup
+        countryGroup = binding.countryGroup
+
+        if (requireActivity().findViewById<BottomNavigationView>(R.id.bnView) != null) {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility = View.GONE
+        }
+
+        bottomSheetRecyclerView = binding.bottomSheetRv
+        bottomSheetRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        btnAddPlaylist = binding.bnAddPlaylist
+
+        val bottomSheetContainer = binding.playlistsBottomSheet
+        val overlay = binding.overlay
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         toolbar.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        track = args.track
         putOnTrack(track)
 
         btnPlay.setOnClickListener {
             viewModel.getAction()
         }
 
-        viewBinding.btnLike.setOnClickListener {
+        binding.btnLike.setOnClickListener {
             viewModel.onFavoriteClicked(track)
         }
 
-        viewModel.getFavoriteStateLiveData().observe(this) {
+        viewModel.getFavoriteStateLiveData().observe(viewLifecycleOwner) {
             btnLikeSwitcher(it)
         }
 
-        viewModel.getPlaylistLiveData().observe(this) {
+        viewModel.getPlaylistLiveData().observe(viewLifecycleOwner) {
             renderPlaylistState(it)
         }
 
-        viewModel.getPlayStatusLiveData().observe(this) { state ->
+        viewModel.getPlayStatusLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AudioplayerPlayState.Prepared -> {
                     btnPlay.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this,
+                            requireActivity(),
                             R.drawable.btn_play
                         )
                     )
@@ -142,7 +156,7 @@ class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
                 is AudioplayerPlayState.Playing -> {
                     btnPlay.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this,
+                            requireActivity(),
                             R.drawable.btn_pause
                         )
                     )
@@ -153,7 +167,7 @@ class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
                 is AudioplayerPlayState.Paused -> {
                     btnPlay.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this,
+                            requireActivity(),
                             R.drawable.btn_play
                         )
                     )
@@ -164,7 +178,7 @@ class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
                 is AudioplayerPlayState.Complete -> {
                     btnPlay.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this,
+                            requireActivity(),
                             R.drawable.btn_play
                         )
                     )
@@ -199,11 +213,9 @@ class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
         }
 
         btnAddPlaylist.setOnClickListener {
-            contentVisibility(false)
-            supportFragmentManager.beginTransaction()
-                .add(R.id.apContainer, AddPlaylistFragment.newInstance(track.trackId))
-                .addToBackStack(null)
-                .commit()
+            val action =
+                AudioplayerFragmentDirections.actionAudioplayerFragmentToAddPlaylistFragment(track.trackId)
+            findNavController().navigate(action)
         }
 
     }
@@ -304,18 +316,18 @@ class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
     private fun btnLikeSwitcher(isFavorite: Boolean) {
         when (isFavorite) {
             true -> {
-                viewBinding.btnLike.setImageDrawable(
+                binding.btnLike.setImageDrawable(
                     AppCompatResources.getDrawable(
-                        this,
+                        requireActivity(),
                         R.drawable.btn_like_on
                     )
                 )
             }
 
             else -> {
-                viewBinding.btnLike.setImageDrawable(
+                binding.btnLike.setImageDrawable(
                     AppCompatResources.getDrawable(
-                        this,
+                        requireActivity(),
                         R.drawable.btn_like_off
                     )
                 )
@@ -328,33 +340,9 @@ class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
         viewModel.pause()
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (isChangingConfigurations) {
-            onRetainNonConfigurationInstance()
-        }
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
-    private fun contentVisibility(flag: Boolean) {
-        if (flag) {
-
-            viewBinding.audioplayerMain.visibility = View.VISIBLE
-            viewBinding.playlistsBottomSheet.visibility = View.VISIBLE
-
-        } else {
-
-            viewBinding.overlay.visibility = View.GONE
-            viewBinding.audioplayerMain.visibility = View.GONE
-            viewBinding.playlistsBottomSheet.visibility = View.GONE
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        contentVisibility(true)
-    }
-
-    override fun getTrackId(): Int {
-        return track.trackId
-    }
 }

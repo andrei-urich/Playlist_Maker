@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.library
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -20,7 +19,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -29,7 +27,6 @@ import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.EXIT
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.EXIT_OR_STAY
-import com.example.playlistmaker.ui.player.TrackIdProvider
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
@@ -44,7 +41,6 @@ class AddPlaylistFragment : Fragment() {
 
     private var _binding: FragmentAddPlaylistBinding? = null
     private val binding get() = _binding!!
-    private var contextIsTrackIdProvider = false
     private var trackId: Int = 0
     private val viewModel: AddPlaylistViewModel by viewModel()
     private lateinit var toolbar: Toolbar
@@ -63,13 +59,6 @@ class AddPlaylistFragment : Fragment() {
         }
     private lateinit var onExitDialog: MaterialAlertDialogBuilder
     private lateinit var callback: OnBackPressedCallback
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is TrackIdProvider) {
-            contextIsTrackIdProvider = true
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -90,9 +79,9 @@ class AddPlaylistFragment : Fragment() {
         descriptionInput = binding.etDescriptionPlaylist
         playlistCover = binding.playlistImage
         addButton = binding.btnCreatePlaylist
-        if (contextIsTrackIdProvider) {
-            trackId = requireArguments().getInt(TRACK_ID_KEY)
-        }
+//        if (contextIsTrackIdProvider) {
+//            trackId = requireArguments().getInt(TRACK_ID_KEY)
+//        }
 
         onExitDialog =
             MaterialAlertDialogBuilder(requireActivity()).setTitle(context?.getString(R.string.on_exit_add_playlist_screen_dialog_title))
@@ -215,9 +204,7 @@ class AddPlaylistFragment : Fragment() {
 
     private fun closeScreen() {
         callback.isEnabled = false
-        if (contextIsTrackIdProvider) {
-            fragmentManager?.popBackStack()
-        } else requireActivity().onBackPressedDispatcher.onBackPressed()
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
     private fun toggleButton(flag: Boolean) {
@@ -255,13 +242,13 @@ class AddPlaylistFragment : Fragment() {
         snackbar.show()
     }
 
-    companion object {
-        private const val TRACK_ID_KEY = "TRACK_ID_KEY"
-
-        fun newInstance(trackID: Int = 0): AddPlaylistFragment = AddPlaylistFragment().apply {
-            arguments = bundleOf(TRACK_ID_KEY to trackID)
-        }
-
-    }
+//    companion object {
+//        private const val TRACK_ID_KEY = "TRACK_ID_KEY"
+//
+//        fun newInstance(trackID: Int = 0): AddPlaylistFragment = AddPlaylistFragment().apply {
+//            arguments = bundleOf(TRACK_ID_KEY to trackID)
+//        }
+//
+//    }
 }
 

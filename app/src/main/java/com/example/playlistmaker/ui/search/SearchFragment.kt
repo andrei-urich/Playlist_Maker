@@ -193,7 +193,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun playTrack(track: Track) {
-        action = SearchFragmentDirections.actionSearchFragmentToAudioplayerActivity(track)
+        action = SearchFragmentDirections.actionSearchFragmentToAudioplayerFragment(track)
         findNavController().navigate(
             action
         )

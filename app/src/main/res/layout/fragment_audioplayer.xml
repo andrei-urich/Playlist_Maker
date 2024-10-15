@@ -5,17 +5,12 @@
     android:background="@color/primary"
     android:orientation="vertical">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/apContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <ScrollView xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/audioplayer_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/primary"
-        tools:context=".ui.player.AudioplayerActivity">
+        tools:context=".ui.player.AudioplayerFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

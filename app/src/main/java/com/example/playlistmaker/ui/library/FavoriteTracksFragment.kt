@@ -51,7 +51,7 @@ class FavoriteTracksFragment : Fragment() {
 
     private fun playTrack(track: Track) {
         action =
-            LibraryFragmentDirections.actionLibraryFragmentToAudioplayerActivity(track)
+            LibraryFragmentDirections.actionLibraryFragmentToAudioplayerFragment(track)
         findNavController().navigate(
             action
         )

@@ -72,7 +72,7 @@ class PlaylistsFragment : Fragment() {
 
         viewModel.getCreatePlaylistTrigger().observe(viewLifecycleOwner) {
             if (it) {
-                action = LibraryFragmentDirections.actionLibraryFragmentToAddPlaylistFragment()
+                action = LibraryFragmentDirections.actionLibraryFragmentToAddPlaylistFragment(null)
                 findNavController().navigate(action)
             }
         }
