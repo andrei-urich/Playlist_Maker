@@ -50,8 +50,8 @@
         android:label="fragment_add_playlist"
         tools:layout="@layout/fragment_add_playlist">
         <argument
-            android:name="trackId"
-            app:argType="com.example.playlistmaker.domain.model.Track.trackId"
+            android:name="track"
+            app:argType="com.example.playlistmaker.domain.model.Track"
             app:nullable="true" />
     </fragment>
 </navigation>

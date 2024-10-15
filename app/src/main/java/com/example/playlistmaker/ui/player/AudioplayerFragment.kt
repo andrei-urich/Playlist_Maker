@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
@@ -70,6 +71,7 @@ class AudioplayerFragment() : Fragment() {
     private lateinit var btnAddPlaylist: Button
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
+    private val args: AudioplayerFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -122,6 +124,7 @@ class AudioplayerFragment() : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
+        track = args.track
         putOnTrack(track)
 
         btnPlay.setOnClickListener {
@@ -214,7 +217,7 @@ class AudioplayerFragment() : Fragment() {
 
         btnAddPlaylist.setOnClickListener {
             val action =
-                AudioplayerFragmentDirections.actionAudioplayerFragmentToAddPlaylistFragment(track.trackId)
+                AudioplayerFragmentDirections.actionAudioplayerFragmentToAddPlaylistFragment(track)
             findNavController().navigate(action)
         }
 
