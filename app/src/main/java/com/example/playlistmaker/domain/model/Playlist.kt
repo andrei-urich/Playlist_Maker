@@ -7,8 +7,8 @@ data class Playlist(
     val name: String,
     val description: String?,
     val cover: String?,
-    val trackIds: String?,
-    val tracksCount: Int
+    var trackIds: String?,
+    var tracksCount: Int
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),

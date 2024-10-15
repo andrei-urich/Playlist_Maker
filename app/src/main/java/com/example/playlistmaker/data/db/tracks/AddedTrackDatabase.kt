@@ -5,5 +5,5 @@ import androidx.room.RoomDatabase
 
 @Database(version = 1, entities = [AddedTrackEntity::class])
 abstract class AddedTrackDatabase : RoomDatabase() {
-    abstract fun getTrackDao(): AddedTrackDao
+    abstract fun getAddedTrackDao(): AddedTrackDao
 }

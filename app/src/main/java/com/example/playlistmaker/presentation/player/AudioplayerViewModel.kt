@@ -28,10 +28,12 @@ class AudioplayerViewModel(
     private val playStatusLiveData = MutableLiveData<AudioplayerPlayState>()
     private var favoriteStateLiveData = MutableLiveData<Boolean>()
     private var playlistLiveData = MutableLiveData<List<Playlist>>()
+    private var trackToPlaylistLiveData = MutableLiveData<Boolean>()
 
     fun getPlayStatusLiveData(): LiveData<AudioplayerPlayState> = playStatusLiveData
     fun getFavoriteStateLiveData(): LiveData<Boolean> = favoriteStateLiveData
     fun getPlaylistLiveData(): LiveData<List<Playlist>> = playlistLiveData
+    fun getTrackToPlaylistLiveData(): LiveData<Boolean> = trackToPlaylistLiveData
 
     init {
         preparePlayer()
@@ -110,10 +112,21 @@ class AudioplayerViewModel(
         }
     }
 
-    fun addTrackToPlaylist (playlist: Playlist, track: Track) {
-
+    fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        val trackIdList = playlistInteractor.getTrackIdListAsInt(playlist)
+        if (track.trackId in trackIdList) {
+            trackToPlaylistLiveData.postValue(false)
+        } else {
+            trackIdList.add(track.trackId)
+            playlist.trackIds = playlistInteractor.getTrackIdListAsString(trackIdList)
+            playlist.tracksCount = trackIdList.size
+            viewModelScope.launch {
+                playlistInteractor.updatePlaylist(playlist)
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+            }
+            trackToPlaylistLiveData.postValue(true)
+        }
     }
-
 
     override fun onCleared() {
         playerInteractor.release()

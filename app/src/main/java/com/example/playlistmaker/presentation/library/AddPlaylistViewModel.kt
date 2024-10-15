@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.library.PlaylistInteractor
 import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
@@ -25,10 +26,13 @@ class AddPlaylistViewModel(
     private val toggleButtonLiveData = MutableLiveData<Boolean>()
     private val stateLiveData = MutableLiveData<String>()
     private val permissionLiveData = MutableLiveData<PermissionResult>()
+    private var trackToPlaylistLiveData = MutableLiveData<Boolean>()
+
     fun getToggleButtonLiveData(): LiveData<Boolean> = toggleButtonLiveData
     fun getStateLiveData(): LiveData<String> = stateLiveData
     fun getCoverLiveData(): LiveData<String> = coverLiveData
     fun getPermissionLiveData(): LiveData<PermissionResult> = permissionLiveData
+    fun getTrackToPlaylistLiveData(): LiveData<Boolean> = trackToPlaylistLiveData
 
     fun setName(string: String) {
         name = string.trim()
@@ -89,6 +93,17 @@ class AddPlaylistViewModel(
         toggleButtonLiveData.postValue(name.isNotBlank())
     }
 
+    fun addTrackToPlaylist(track: Track, playlist: Playlist) {
+        val trackIdList = mutableListOf<Int>()
+        trackIdList.add(track.trackId)
+        playlist.trackIds = interactor.getTrackIdListAsString(trackIdList)
+        playlist.tracksCount = trackIdList.size
+        viewModelScope.launch {
+            interactor.updatePlaylist(playlist)
+            interactor.addTrackToPlaylist(track, playlist)
+        }
+        trackToPlaylistLiveData.postValue(true)
+    }
 
     companion object {
         const val EXIT_OR_STAY = "EXIT_OR_STAY"

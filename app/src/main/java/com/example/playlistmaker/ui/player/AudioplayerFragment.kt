@@ -143,6 +143,10 @@ class AudioplayerFragment() : Fragment() {
             renderPlaylistState(it)
         }
 
+        viewModel.getTrackToPlaylistLiveData().observe(viewLifecycleOwner){
+            TODO()
+        }
+
         viewModel.getPlayStatusLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AudioplayerPlayState.Prepared -> {

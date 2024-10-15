@@ -7,9 +7,13 @@ import android.os.Environment
 import androidx.core.net.toUri
 import com.example.playlistmaker.data.db.playlist.PlaylistEntity
 import com.example.playlistmaker.data.db.playlist.PlaylistsDatabase
+import com.example.playlistmaker.data.db.tracks.AddedTrackDatabase
+import com.example.playlistmaker.data.utils.AddedTrackDbConverter
 import com.example.playlistmaker.data.utils.PlaylistDbConvertor
+import com.example.playlistmaker.data.utils.TrackTransferRepositoryImpl
 import com.example.playlistmaker.domain.library.PlaylistRepository
 import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,7 +23,10 @@ import java.io.FileOutputStream
 
 class PlaylistRepositoryImpl(
     private val database: PlaylistsDatabase,
+    private val addedTrackDatabase: AddedTrackDatabase,
     private val converter: PlaylistDbConvertor,
+    private val addedTrackDbConverter: AddedTrackDbConverter,
+    private val trackTransfer: TrackTransferRepositoryImpl,
     val context: Context
 ) : PlaylistRepository {
     override suspend fun addPlaylist(playlist: Playlist) {
@@ -28,10 +35,6 @@ class PlaylistRepositoryImpl(
 
     override suspend fun deletePlaylist(playlist: Playlist) {
         database.getPlaylistDao().deletePlaylist(converter.map(playlist))
-    }
-
-    override suspend fun addTrackToPlaylist(trackId: Int, playlist: Playlist) {
-        TODO("Not yet implemented")
     }
 
     override fun getPlaylists(): Flow<List<Playlist>> = flow {
@@ -59,6 +62,23 @@ class PlaylistRepositoryImpl(
         }
     }
 
+    override fun getTrackIdListAsInt(playlist: Playlist): MutableList<Int> {
+        return trackTransfer.getTrackIdList(playlist)
+    }
+
+    override fun getTrackIdListAsString(trackIdList: MutableList<Int>): String {
+        return trackTransfer.setTrackIdList(trackIdList)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        database.getPlaylistDao().updatePlaylist(converter.map(playlist))
+    }
+
+    override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
+        addedTrackDatabase.getAddedTrackDao().insertTrack(addedTrackDbConverter.map(track))
+
+    }
+
     override suspend fun clear() {
         database.getPlaylistDao().clear()
     }
@@ -67,5 +87,4 @@ class PlaylistRepositoryImpl(
     private fun convertToPlaylist(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { entity -> converter.map(entity) }
     }
-
 }
