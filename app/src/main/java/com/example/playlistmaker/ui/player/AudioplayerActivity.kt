@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -12,7 +11,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.Constraints
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +26,7 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.presentation.player.AudioplayerViewModel
+import com.example.playlistmaker.ui.library.AddPlaylistFragment
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -37,7 +36,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class AudioplayerActivity() : AppCompatActivity() {
+class AudioplayerActivity() : AppCompatActivity(), TrackIdProvider {
 
     private var playerState = "STATE_DEFAULT"
     private lateinit var track: Track
@@ -199,7 +198,16 @@ class AudioplayerActivity() : AppCompatActivity() {
             viewModel.getPlaylistsList()
         }
 
+        btnAddPlaylist.setOnClickListener {
+            contentVisibility(false)
+            supportFragmentManager.beginTransaction()
+                .add(R.id.apContainer, AddPlaylistFragment.newInstance(track.trackId))
+                .addToBackStack(null)
+                .commit()
+        }
+
     }
+
 
     private fun renderPlaylistState(list: List<Playlist>?) {
         if (!list.isNullOrEmpty()) {
@@ -325,5 +333,28 @@ class AudioplayerActivity() : AppCompatActivity() {
         if (isChangingConfigurations) {
             onRetainNonConfigurationInstance()
         }
+    }
+
+    private fun contentVisibility(flag: Boolean) {
+        if (flag) {
+
+            viewBinding.audioplayerMain.visibility = View.VISIBLE
+            viewBinding.playlistsBottomSheet.visibility = View.VISIBLE
+
+        } else {
+
+            viewBinding.overlay.visibility = View.GONE
+            viewBinding.audioplayerMain.visibility = View.GONE
+            viewBinding.playlistsBottomSheet.visibility = View.GONE
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        contentVisibility(true)
+    }
+
+    override fun getTrackId(): Int {
+        return track.trackId
     }
 }

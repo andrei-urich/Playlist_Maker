@@ -5,8 +5,12 @@
     android:background="@color/primary"
     android:orientation="vertical">
 
-    <ScrollView
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/apContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ScrollView xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/audioplayer_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -312,9 +316,9 @@
         android:id="@+id/playlists_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/bottom_sheet_margin_top"
         android:background="@drawable/bottom_sheet_drawable"
         app:behavior_hideable="true"
-        android:layout_marginTop="@dimen/bottom_sheet_margin_top"
         app:behavior_peekHeight="@dimen/bottom_sheet_max_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -360,4 +364,5 @@
             app:layout_constraintTop_toBottomOf="@id/bnAddPlaylist" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
