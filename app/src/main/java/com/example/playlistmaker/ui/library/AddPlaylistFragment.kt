@@ -247,7 +247,7 @@ class AddPlaylistFragment : Fragment() {
         val snackbarView = snackbar.view
         context?.getColor(R.color.text_primary)?.let { snackbarView.setBackgroundColor(it) }
         val textView: TextView =
-            snackbarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+            snackbarView.findViewById(com.google.android.material.R.id.snackbar_text)
         context?.getColor(R.color.primary)?.let { textView.setTextColor(it) }
         textView.setTextAppearance(R.style.snake_text_style)
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
