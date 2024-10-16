@@ -7,6 +7,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistItemBinding
 import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.ui.Formatter
 
 class PlaylistViewHolder(
     private val binding: PlaylistItemBinding
@@ -18,7 +19,10 @@ class PlaylistViewHolder(
 
     fun bind(playlist: Playlist) {
         name.text = playlist.name
-        description.text = playlist.tracksCount.toString()
+        val descriptionText =
+            playlist.tracksCount.toString() + " " + Formatter.formatRu(playlist.tracksCount)
+        description.text = descriptionText
+
         val coverUri = playlist.cover?.toUri()
 
         Glide.with(binding.cover)

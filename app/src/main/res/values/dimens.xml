@@ -78,4 +78,7 @@
     <dimen name="bottom_sheet_recicler_margin_top">24dp</dimen>
     <dimen name="bottom_sheet_item_text_margin_end">44dp</dimen>
     <dimen name="bottom_sheet_margin_top">295dp</dimen>
+    <dimen name="card_view_layout_margin">8dp</dimen>
+    <dimen name="card_view_media_height">160dp</dimen>
+    <dimen name="card_view_title_margin_top">4dp</dimen>
 </resources>

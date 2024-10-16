@@ -7,11 +7,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.BottomSheetListItemBinding
 import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.ui.Formatter
 
 
 class BottomSheetViewHolder(
-    private val binding: BottomSheetListItemBinding,
-    onItemClick: (position: Int) -> Unit
+    private val binding: BottomSheetListItemBinding, onItemClick: (position: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
@@ -22,16 +22,13 @@ class BottomSheetViewHolder(
 
     fun bind(playlist: Playlist) {
         binding.playlistName.text = playlist.name
-        binding.playlistDescription.text = playlist.tracksCount.toString()
+        val descriptionText =
+            playlist.tracksCount.toString() + " " + Formatter.formatRu(playlist.tracksCount)
+        binding.playlistDescription.text = descriptionText
 
         val coverUri = playlist.cover?.toUri()
 
-        Glide.with(binding.playlistCover)
-            .load(coverUri)
-            .placeholder(R.drawable.placeholder)
-            .fitCenter()
-            .transform(RoundedCorners(8))
-            .dontAnimate()
-            .into(binding.playlistCover)
+        Glide.with(binding.playlistCover).load(coverUri).placeholder(R.drawable.placeholder)
+            .fitCenter().transform(RoundedCorners(8)).dontAnimate().into(binding.playlistCover)
     }
 }

@@ -236,19 +236,26 @@
 
     <style name="MyCardViewStyle" parent="Theme.AppCompat.Light">
         <item name="cardBackgroundColor">@color/primary</item>
-        <item name="cardCornerRadius">12dp</item>
+        <item name="cardCornerRadius">0dp</item>
         <item name="contentPaddingBottom">0dp</item>
         <item name="contentPaddingTop">0dp</item>
         <item name="contentPaddingLeft">0dp</item>
         <item name="contentPaddingRight">0dp</item>
+        <item name="android:textSize">12sp</item>
         <item name="elevation">0dp</item>
 
     </style>
 
+    <style name="ShapeAppearanceOverlay.App.Card.Media" parent="">
+        <item name="cornerSizeBottomLeft">08dp</item>
+        <item name="cornerSizeBottomRight">8dp</item>
+    </style>
+
     <!-- стиль текста в карточках плейлистов -->
-    <style name="card_view_text_style">
+    <style name="card_view_text_style" parent="TextAppearance.Material3.ActionBar.Title">
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">12sp</item>
     </style>
