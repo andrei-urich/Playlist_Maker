@@ -56,7 +56,7 @@ class AddPlaylistViewModel(
             trackId = track.trackId.toString()
             trackCount = 1
         }
-        playlist = Playlist(name, description, cover, trackId, trackCount)
+        playlist = Playlist(0,name, description, cover, trackId, trackCount)
         viewModelScope.launch {
             interactor.addPlaylist(playlist)
             if (cover.isNotBlank()) {

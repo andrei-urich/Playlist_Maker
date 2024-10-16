@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Playlist(
+    val base_id: Int,
     val name: String,
     val description: String?,
     val cover: String?,
@@ -11,6 +12,7 @@ data class Playlist(
     var tracksCount: Int
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readInt(),
         parcel.readString().toString(),
         parcel.readString(),
         parcel.readString(),
@@ -20,6 +22,7 @@ data class Playlist(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(base_id)
         parcel.writeString(name)
         parcel.writeString(description)
         parcel.writeString(cover)
