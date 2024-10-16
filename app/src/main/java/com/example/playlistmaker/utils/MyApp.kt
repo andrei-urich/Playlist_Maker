@@ -20,6 +20,7 @@ import com.example.playlistmaker.di.search.searchModule
 import com.example.playlistmaker.di.search.searchViewModelModule
 import com.example.playlistmaker.di.settings.settingsModule
 import com.example.playlistmaker.di.settings.settingsViewModelModule
+import com.example.playlistmaker.di.trackTransferRepositoryModule
 import com.markodevcic.peko.PermissionRequester
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -49,7 +50,8 @@ class MyApp : Application() {
                 favoriteTracksInteractorModule,
                 playlistRepositoryModule,
                 playlistInteractorModule,
-                addPlaylistViewModelModule
+                addPlaylistViewModelModule,
+                trackTransferRepositoryModule
             )
         }
 

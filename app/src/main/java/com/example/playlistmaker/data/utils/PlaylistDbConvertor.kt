@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.utils
 
 import com.example.playlistmaker.data.db.playlist.PlaylistEntity
 import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.utils.EMPTY_STRING
 
 class PlaylistDbConvertor {
     fun map(playlist: Playlist): PlaylistEntity {
@@ -9,14 +10,12 @@ class PlaylistDbConvertor {
             base_id = 0,
             name = playlist.name,
             description = if (playlist.description.isNullOrBlank()) {
-                ""
+                EMPTY_STRING
             } else playlist.description,
             cover = if (playlist.cover.isNullOrBlank()) {
-                ""
+                EMPTY_STRING
             } else playlist.cover,
-            trackIds = if (playlist.trackIds.isNullOrBlank()) {
-                ""
-            } else playlist.trackIds,
+            trackIds = playlist.trackIds ?: EMPTY_STRING,
             tracksCount = playlist.tracksCount
         )
     }

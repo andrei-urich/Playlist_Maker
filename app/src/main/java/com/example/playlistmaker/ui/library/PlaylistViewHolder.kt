@@ -18,7 +18,7 @@ class PlaylistViewHolder(
 
     fun bind(playlist: Playlist) {
         name.text = playlist.name
-        description.text = playlist.description
+        description.text = playlist.tracksCount.toString()
         val coverUri = playlist.cover?.toUri()
 
         Glide.with(binding.cover)

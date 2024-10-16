@@ -26,6 +26,7 @@ val searchModule = module {
     single<TracksSearchRepository> {
         TracksSearchRepositoryImpl(get(), get())
     }
+
     single<PlaylistAPI> {
         Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")

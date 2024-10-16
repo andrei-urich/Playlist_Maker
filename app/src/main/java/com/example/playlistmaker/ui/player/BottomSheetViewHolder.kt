@@ -22,7 +22,7 @@ class BottomSheetViewHolder(
 
     fun bind(playlist: Playlist) {
         binding.playlistName.text = playlist.name
-        binding.playlistDescription.text = playlist.description
+        binding.playlistDescription.text = playlist.tracksCount.toString()
 
         val coverUri = playlist.cover?.toUri()
 

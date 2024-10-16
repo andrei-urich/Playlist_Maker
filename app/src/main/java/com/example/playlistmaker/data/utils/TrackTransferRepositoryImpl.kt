@@ -7,13 +7,17 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class TrackTransferRepositoryImpl : TrackTransferRepository {
+
     override fun getTrack(trackInfo: String): Track {
         return Gson().fromJson(trackInfo, Track::class.java)
     }
 
     override fun getTrackIdList(playlist: Playlist): MutableList<Int> {
         val typeToken = object : TypeToken<MutableList<Int>>() {}.type
-        return Gson().fromJson<MutableList<Int>>(playlist.trackIds, typeToken).toMutableList()
+        if (playlist.trackIds.isNullOrBlank()) return mutableListOf<Int>() else return Gson().fromJson<MutableList<Int>>(
+            playlist.trackIds,
+            typeToken
+        ).toMutableList()
     }
 
     override fun setTrackIdList(trackList: MutableList<Int>): String {

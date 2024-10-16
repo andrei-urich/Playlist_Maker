@@ -10,10 +10,10 @@ import com.example.playlistmaker.data.db.playlist.PlaylistsDatabase
 import com.example.playlistmaker.data.db.tracks.AddedTrackDatabase
 import com.example.playlistmaker.data.utils.AddedTrackDbConverter
 import com.example.playlistmaker.data.utils.PlaylistDbConvertor
-import com.example.playlistmaker.data.utils.TrackTransferRepositoryImpl
 import com.example.playlistmaker.domain.library.PlaylistRepository
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.repository.TrackTransferRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,7 +26,7 @@ class PlaylistRepositoryImpl(
     private val addedTrackDatabase: AddedTrackDatabase,
     private val converter: PlaylistDbConvertor,
     private val addedTrackDbConverter: AddedTrackDbConverter,
-    private val trackTransfer: TrackTransferRepositoryImpl,
+    private val trackTransfer: TrackTransferRepository,
     val context: Context
 ) : PlaylistRepository {
     override suspend fun addPlaylist(playlist: Playlist) {

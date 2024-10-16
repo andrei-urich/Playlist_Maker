@@ -152,6 +152,7 @@ class AudioplayerFragment() : Fragment() {
 
         viewModel.getTrackToPlaylistLiveData().observe(viewLifecycleOwner) { it ->
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            overlay.visibility=View.GONE
             showMessage(it)
         }
 
