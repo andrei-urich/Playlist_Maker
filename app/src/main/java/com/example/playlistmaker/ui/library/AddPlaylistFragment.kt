@@ -22,6 +22,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
@@ -186,9 +187,13 @@ class AddPlaylistFragment : Fragment() {
     private fun setCover(string: String) {
         playlistCover.setImageURI(null)
         val coverUri = string.toUri()
-        Glide.with(playlistCover.context).load(coverUri).fitCenter().transform(RoundedCorners(8))
-            .dontAnimate().into(playlistCover)
 
+        Glide.with(playlistCover.context)
+            .load(coverUri)
+            .transform(
+                CenterCrop(), RoundedCorners(8)
+            )
+            .dontAnimate().into(playlistCover)
     }
 
     private fun renderState(string: String) {

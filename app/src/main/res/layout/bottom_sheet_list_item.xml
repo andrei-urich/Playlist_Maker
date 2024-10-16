@@ -12,7 +12,7 @@
         android:layout_height="@dimen/search_result_track_image_height"
         android:layout_marginHorizontal="@dimen/search_result_track_image_margin_left"
         android:layout_marginVertical="@dimen/search_result_track_image_margin_vertical"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/placeholder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

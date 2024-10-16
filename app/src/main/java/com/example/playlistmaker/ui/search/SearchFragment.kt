@@ -22,12 +22,14 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.example.playlistmaker.presentation.search.TrackSearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.main.BottomNavigationListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 class SearchFragment : Fragment() {
@@ -288,6 +290,7 @@ class SearchFragment : Fragment() {
             bottomNavigationListener = context
         }
     }
+
     override fun onDetach() {
         super.onDetach()
         bottomNavigationListener = null
@@ -301,6 +304,10 @@ class SearchFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility = View.VISIBLE
+    }
 
     override fun onDestroyView() {
         _viewBinding = null

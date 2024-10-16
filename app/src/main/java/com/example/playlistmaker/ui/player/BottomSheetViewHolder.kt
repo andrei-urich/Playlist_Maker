@@ -28,7 +28,11 @@ class BottomSheetViewHolder(
 
         val coverUri = playlist.cover?.toUri()
 
-        Glide.with(binding.playlistCover).load(coverUri).placeholder(R.drawable.placeholder)
-            .fitCenter().transform(RoundedCorners(8)).dontAnimate().into(binding.playlistCover)
+        Glide.with(binding.playlistCover)
+            .load(coverUri)
+            .placeholder(R.drawable.placeholder)
+            .transform(RoundedCorners(8)
+            )
+            .dontAnimate().into(binding.playlistCover)
     }
 }
