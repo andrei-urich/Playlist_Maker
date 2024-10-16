@@ -341,7 +341,7 @@
             app:layout_constraintTop_toBottomOf="@+id/div" />
 
         <Button
-            android:id="@+id/bnAddPlaylist"
+            android:id="@+id/bnNewPlaylist"
             style="@style/refresh_btn_style"
             android:layout_marginTop="@dimen/bottom_sheet_add_button_margin_top"
             android:text="@string/playlists_button_addPlaylist"
@@ -356,7 +356,7 @@
             android:layout_marginTop="@dimen/bottom_sheet_recicler_margin_top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bnAddPlaylist" />
+            app:layout_constraintTop_toBottomOf="@id/bnNewPlaylist" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

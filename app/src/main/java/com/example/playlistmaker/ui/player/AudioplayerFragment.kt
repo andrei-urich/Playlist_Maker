@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import android.view.Gravity
+import androidx.navigation.fragment.findNavController
 
 class AudioplayerFragment() : Fragment() {
 
@@ -69,7 +70,7 @@ class AudioplayerFragment() : Fragment() {
     private var timerJob: Job? = null
     private lateinit var bottomSheetAdapter: BottomSheetAdapter
     private lateinit var bottomSheetRecyclerView: RecyclerView
-    private lateinit var btnAddPlaylist: Button
+    private lateinit var btnNewPlaylist: Button
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     private val args: AudioplayerFragmentArgs by navArgs()
@@ -112,7 +113,7 @@ class AudioplayerFragment() : Fragment() {
 
         bottomSheetRecyclerView = binding.bottomSheetRv
         bottomSheetRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        btnAddPlaylist = binding.bnAddPlaylist
+        btnNewPlaylist = binding.bnNewPlaylist
 
         val bottomSheetContainer = binding.playlistsBottomSheet
         val overlay = binding.overlay
@@ -141,6 +142,12 @@ class AudioplayerFragment() : Fragment() {
             viewModel.getPlaylistsList()
         }
 
+        btnNewPlaylist.setOnClickListener {
+            val action =
+                AudioplayerFragmentDirections.actionAudioplayerFragmentToAddPlaylistFragment(track)
+            findNavController().navigate(action)
+        }
+
 
         viewModel.getFavoriteStateLiveData().observe(viewLifecycleOwner) {
             btnLikeSwitcher(it)
@@ -152,7 +159,7 @@ class AudioplayerFragment() : Fragment() {
 
         viewModel.getTrackToPlaylistLiveData().observe(viewLifecycleOwner) { it ->
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            overlay.visibility=View.GONE
+            overlay.visibility = View.GONE
             showMessage(it)
         }
 
