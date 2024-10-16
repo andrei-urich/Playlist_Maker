@@ -19,6 +19,7 @@ class AddPlaylistViewModel(
     private var name = EMPTY_STRING
     private var description = EMPTY_STRING
     private var cover = EMPTY_STRING
+    lateinit var playlist: Playlist
 
     private val requester = PermissionRequester.instance()
 
@@ -26,13 +27,11 @@ class AddPlaylistViewModel(
     private val toggleButtonLiveData = MutableLiveData<Boolean>()
     private val stateLiveData = MutableLiveData<String>()
     private val permissionLiveData = MutableLiveData<PermissionResult>()
-    private var trackToPlaylistLiveData = MutableLiveData<Boolean>()
 
     fun getToggleButtonLiveData(): LiveData<Boolean> = toggleButtonLiveData
     fun getStateLiveData(): LiveData<String> = stateLiveData
     fun getCoverLiveData(): LiveData<String> = coverLiveData
     fun getPermissionLiveData(): LiveData<PermissionResult> = permissionLiveData
-    fun getTrackToPlaylistLiveData(): LiveData<Boolean> = trackToPlaylistLiveData
 
     fun setName(string: String) {
         name = string.trim()
@@ -48,17 +47,26 @@ class AddPlaylistViewModel(
         coverLiveData.postValue(cover)
     }
 
-    fun addPlaylist() {
-        if (name.isNotBlank()) {
-            viewModelScope.launch {
-                val playlist = Playlist(name, description, cover, EMPTY_STRING, 0)
-                interactor.addPlaylist(playlist)
-                if (cover.isNotBlank()) {
-                    tryToSaveCover(playlist)
-                }
-                exit()
+    fun addPlaylist(track: Track?) {
+        var trackId = EMPTY_STRING
+        var trackCount = 0
+        var isTrackAdded = false
+        if (track != null) {
+            isTrackAdded = true
+            trackId = track.trackId.toString()
+            trackCount = 1
+        }
+        playlist = Playlist(name, description, cover, trackId, trackCount)
+        viewModelScope.launch {
+            interactor.addPlaylist(playlist)
+            if (cover.isNotBlank()) {
+                tryToSaveCover(playlist)
+            }
+            if (track != null) {
+                interactor.addTrackToPlaylist(track, playlist)
             }
         }
+        exit(isTrackAdded)
     }
 
     fun tryToSaveCover(playlist: Playlist) {
@@ -81,11 +89,12 @@ class AddPlaylistViewModel(
     fun exitOrStay() {
         if (name.isNotBlank() || description.isNotBlank() || cover.isNotBlank()) {
             stateLiveData.postValue(EXIT_OR_STAY)
-        } else exit()
+        } else exit(false)
     }
 
-    private fun exit() {
-        stateLiveData.postValue(EXIT)
+    private fun exit(flag: Boolean) {
+        if (flag) stateLiveData.postValue(EXIT_TRACK_ADDED) else stateLiveData.postValue(EXIT)
+
     }
 
     fun setEditedName(editedName: String) {
@@ -93,21 +102,10 @@ class AddPlaylistViewModel(
         toggleButtonLiveData.postValue(name.isNotBlank())
     }
 
-    fun addTrackToPlaylist(track: Track, playlist: Playlist) {
-        val trackIdList = mutableListOf<Int>()
-        trackIdList.add(track.trackId)
-        playlist.trackIds = interactor.getTrackIdListAsString(trackIdList)
-        playlist.tracksCount = trackIdList.size
-        viewModelScope.launch {
-            interactor.updatePlaylist(playlist)
-            interactor.addTrackToPlaylist(track, playlist)
-        }
-        trackToPlaylistLiveData.postValue(true)
-    }
-
     companion object {
         const val EXIT_OR_STAY = "EXIT_OR_STAY"
         const val EXIT = "EXIT"
+        const val EXIT_TRACK_ADDED = "EXIT_TRACK_ADDED"
     }
 
 }

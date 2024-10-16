@@ -14,7 +14,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,11 +32,13 @@ import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import android.view.Gravity
 
 class AudioplayerFragment() : Fragment() {
 
@@ -135,6 +136,12 @@ class AudioplayerFragment() : Fragment() {
             viewModel.onFavoriteClicked(track)
         }
 
+        btnAddToPlaylist.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            viewModel.getPlaylistsList()
+        }
+
+
         viewModel.getFavoriteStateLiveData().observe(viewLifecycleOwner) {
             btnLikeSwitcher(it)
         }
@@ -143,8 +150,9 @@ class AudioplayerFragment() : Fragment() {
             renderPlaylistState(it)
         }
 
-        viewModel.getTrackToPlaylistLiveData().observe(viewLifecycleOwner){
-            TODO()
+        viewModel.getTrackToPlaylistLiveData().observe(viewLifecycleOwner) { it ->
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            showMessage(it)
         }
 
         viewModel.getPlayStatusLiveData().observe(viewLifecycleOwner) { state ->
@@ -213,17 +221,6 @@ class AudioplayerFragment() : Fragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
-
-        btnAddToPlaylist.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            viewModel.getPlaylistsList()
-        }
-
-        btnAddPlaylist.setOnClickListener {
-            val action =
-                AudioplayerFragmentDirections.actionAudioplayerFragmentToAddPlaylistFragment(track)
-            findNavController().navigate(action)
-        }
 
     }
 
@@ -341,6 +338,32 @@ class AudioplayerFragment() : Fragment() {
             }
         }
     }
+
+    private fun showMessage(it: Pair<Boolean, String>) {
+        var messageText = ""
+        if (it.first) {
+            messageText =
+                context?.getString(R.string.audioplayer_add_to_playlist_message_true) + " " + it.second
+        } else {
+            messageText =
+                context?.getString(R.string.audioplayer_add_to_playlist_message_false) + " " + it.second
+        }
+
+        val snackbar = Snackbar.make(
+            binding.root, messageText,
+            Snackbar.LENGTH_LONG
+        )
+        val snackbarView = snackbar.view
+        context?.getColor(R.color.text_primary)?.let { snackbarView.setBackgroundColor(it) }
+        val textView: TextView =
+            snackbarView.findViewById(com.google.android.material.R.id.snackbar_text)
+        context?.getColor(R.color.primary)?.let { textView.setTextColor(it) }
+        textView.setTextAppearance(R.style.snake_text_style)
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
+        textView.setGravity(Gravity.CENTER)
+        snackbar.show()
+    }
+
 
     override fun onPause() {
         super.onPause()

@@ -20,13 +20,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.EXIT
 import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.EXIT_OR_STAY
+import com.example.playlistmaker.presentation.library.AddPlaylistViewModel.Companion.EXIT_TRACK_ADDED
 import com.example.playlistmaker.utils.EMPTY_STRING
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
@@ -41,7 +44,7 @@ class AddPlaylistFragment : Fragment() {
 
     private var _binding: FragmentAddPlaylistBinding? = null
     private val binding get() = _binding!!
-    private var trackId: Int = 0
+    private var track: Track? = null
     private val viewModel: AddPlaylistViewModel by viewModel()
     private lateinit var toolbar: Toolbar
     private var nameText = EMPTY_STRING
@@ -59,6 +62,7 @@ class AddPlaylistFragment : Fragment() {
         }
     private lateinit var onExitDialog: MaterialAlertDialogBuilder
     private lateinit var callback: OnBackPressedCallback
+    private val args: AddPlaylistFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -79,9 +83,7 @@ class AddPlaylistFragment : Fragment() {
         descriptionInput = binding.etDescriptionPlaylist
         playlistCover = binding.playlistImage
         addButton = binding.btnCreatePlaylist
-//        if (contextIsTrackIdProvider) {
-//            trackId = requireArguments().getInt(TRACK_ID_KEY)
-//        }
+        track = args.track
 
         onExitDialog =
             MaterialAlertDialogBuilder(requireActivity()).setTitle(context?.getString(R.string.on_exit_add_playlist_screen_dialog_title))
@@ -105,7 +107,7 @@ class AddPlaylistFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(callback)
 
         addButton.setOnClickListener {
-            viewModel.addPlaylist()
+            viewModel.addPlaylist(track)
         }
 
         playlistCover.setOnClickListener {
@@ -196,7 +198,12 @@ class AddPlaylistFragment : Fragment() {
             }
 
             EXIT -> {
-                if (editedName.isNotBlank()) showMessage(editedName)
+                showMessagePlaylistAdded()
+                closeScreen()
+            }
+
+            EXIT_TRACK_ADDED -> {
+                showMessageTrackAddedInPlaylist()
                 closeScreen()
             }
         }
@@ -222,9 +229,9 @@ class AddPlaylistFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun showMessage(string: String) {
+    private fun showMessagePlaylistAdded() {
         val text =
-            context?.getString(R.string.toast_playlist_created_message_part1) + " " + string + " " + context?.getString(
+            context?.getString(R.string.toast_playlist_created_message_part1) + " " + editedName + " " + context?.getString(
                 R.string.toast_playlist_created_message_part2
             )
         val snackbar = Snackbar.make(
@@ -242,13 +249,22 @@ class AddPlaylistFragment : Fragment() {
         snackbar.show()
     }
 
-//    companion object {
-//        private const val TRACK_ID_KEY = "TRACK_ID_KEY"
-//
-//        fun newInstance(trackID: Int = 0): AddPlaylistFragment = AddPlaylistFragment().apply {
-//            arguments = bundleOf(TRACK_ID_KEY to trackID)
-//        }
-//
-//    }
+    private fun showMessageTrackAddedInPlaylist() {
+        val text =
+            context?.getString(R.string.add_to_created_playlist_message) + " " + editedName
+        val snackbar = Snackbar.make(
+            binding.root, text,
+            Snackbar.LENGTH_LONG
+        )
+        val snackbarView = snackbar.view
+        context?.getColor(R.color.text_primary)?.let { snackbarView.setBackgroundColor(it) }
+        val textView: TextView =
+            snackbarView.findViewById(com.google.android.material.R.id.snackbar_text)
+        context?.getColor(R.color.primary)?.let { textView.setTextColor(it) }
+        textView.setTextAppearance(R.style.snake_text_style)
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
+        textView.setGravity(Gravity.CENTER)
+        snackbar.show()
+    }
 }
 

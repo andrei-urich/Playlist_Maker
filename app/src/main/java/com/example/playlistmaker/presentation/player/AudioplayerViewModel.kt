@@ -28,12 +28,12 @@ class AudioplayerViewModel(
     private val playStatusLiveData = MutableLiveData<AudioplayerPlayState>()
     private var favoriteStateLiveData = MutableLiveData<Boolean>()
     private var playlistLiveData = MutableLiveData<List<Playlist>>()
-    private var trackToPlaylistLiveData = MutableLiveData<Boolean>()
+    private var trackToPlaylistLiveData = MutableLiveData<Pair<Boolean, String>>()
 
     fun getPlayStatusLiveData(): LiveData<AudioplayerPlayState> = playStatusLiveData
     fun getFavoriteStateLiveData(): LiveData<Boolean> = favoriteStateLiveData
     fun getPlaylistLiveData(): LiveData<List<Playlist>> = playlistLiveData
-    fun getTrackToPlaylistLiveData(): LiveData<Boolean> = trackToPlaylistLiveData
+    fun getTrackToPlaylistLiveData(): LiveData<Pair<Boolean, String>> = trackToPlaylistLiveData
 
     init {
         preparePlayer()
@@ -115,7 +115,7 @@ class AudioplayerViewModel(
     fun addTrackToPlaylist(playlist: Playlist, track: Track) {
         val trackIdList = playlistInteractor.getTrackIdListAsInt(playlist)
         if (track.trackId in trackIdList) {
-            trackToPlaylistLiveData.postValue(false)
+            trackToPlaylistLiveData.postValue(Pair(false, playlist.name))
         } else {
             trackIdList.add(track.trackId)
             playlist.trackIds = playlistInteractor.getTrackIdListAsString(trackIdList)
@@ -124,7 +124,7 @@ class AudioplayerViewModel(
                 playlistInteractor.updatePlaylist(playlist)
                 playlistInteractor.addTrackToPlaylist(track, playlist)
             }
-            trackToPlaylistLiveData.postValue(true)
+            trackToPlaylistLiveData.postValue(Pair(true, playlist.name))
         }
     }
 
