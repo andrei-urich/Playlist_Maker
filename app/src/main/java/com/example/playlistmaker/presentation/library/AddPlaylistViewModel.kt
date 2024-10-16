@@ -48,25 +48,27 @@ class AddPlaylistViewModel(
     }
 
     fun addPlaylist(track: Track?) {
-        var trackId = EMPTY_STRING
-        var trackCount = 0
-        var isTrackAdded = false
-        if (track != null) {
-            isTrackAdded = true
-            trackId = track.trackId.toString()
-            trackCount = 1
-        }
-        playlist = Playlist(0,name, description, cover, trackId, trackCount)
-        viewModelScope.launch {
-            interactor.addPlaylist(playlist)
-            if (cover.isNotBlank()) {
-                tryToSaveCover(playlist)
-            }
+        if (name.isNotBlank()) {
+            var trackId = EMPTY_STRING
+            var trackCount = 0
+            var isTrackAdded = false
             if (track != null) {
-                interactor.addTrackToPlaylist(track, playlist)
+                isTrackAdded = true
+                trackId = track.trackId.toString()
+                trackCount = 1
             }
+            playlist = Playlist(0, name, description, cover, trackId, trackCount)
+            viewModelScope.launch {
+                interactor.addPlaylist(playlist)
+                if (cover.isNotBlank()) {
+                    tryToSaveCover(playlist)
+                }
+                if (track != null) {
+                    interactor.addTrackToPlaylist(track, playlist)
+                }
+            }
+            exit(isTrackAdded)
         }
-        exit(isTrackAdded)
     }
 
     fun tryToSaveCover(playlist: Playlist) {

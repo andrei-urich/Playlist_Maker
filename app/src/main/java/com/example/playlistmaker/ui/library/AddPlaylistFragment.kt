@@ -203,7 +203,7 @@ class AddPlaylistFragment : Fragment() {
             }
 
             EXIT -> {
-                showMessagePlaylistAdded()
+                if (editedName.isNotBlank()) showMessagePlaylistAdded()
                 closeScreen()
             }
 
