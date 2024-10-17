@@ -138,7 +138,7 @@ class AudioplayerFragment() : Fragment() {
         }
 
         btnAddToPlaylist.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             viewModel.getPlaylistsList()
         }
 

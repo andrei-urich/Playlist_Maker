@@ -49,12 +49,14 @@ class AddPlaylistViewModel(
 
     fun addPlaylist(track: Track?) {
         if (name.isNotBlank()) {
+            val trackIdList = mutableListOf<Int>()
             var trackId = EMPTY_STRING
             var trackCount = 0
             var isTrackAdded = false
             if (track != null) {
                 isTrackAdded = true
-                trackId = track.trackId.toString()
+                trackIdList.add(track.trackId)
+                trackId = interactor.getTrackIdListAsString(trackIdList)
                 trackCount = 1
             }
             playlist = Playlist(0, name, description, cover, trackId, trackCount)

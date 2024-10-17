@@ -85,7 +85,6 @@ class FavoriteTracksFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.progressBar.visibility = View.VISIBLE
         viewModel.getFavoriteList()
     }
 

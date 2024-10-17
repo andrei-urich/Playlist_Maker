@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.utils
 
+import android.util.Log
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.repository.TrackTransferRepository
@@ -13,6 +14,7 @@ class TrackTransferRepositoryImpl : TrackTransferRepository {
     }
 
     override fun getTrackIdList(playlist: Playlist): MutableList<Int> {
+        Log.d("MY", playlist.trackIds.toString())
         val typeToken = object : TypeToken<MutableList<Int>>() {}.type
         if (playlist.trackIds.isNullOrBlank()) return mutableListOf<Int>() else return Gson().fromJson<MutableList<Int>>(
             playlist.trackIds,
