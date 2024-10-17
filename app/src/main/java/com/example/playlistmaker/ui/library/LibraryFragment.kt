@@ -35,7 +35,8 @@ class LibraryFragment : Fragment() {
         fragmentListTitles = getTabsTitle()
         fragmentList = getFragmentList()
 
-        val adapter = PagerAdapter(requireActivity(), fragmentList)
+        val adapter =
+            PagerAdapter(childFragmentManager, lifecycle, fragmentList)
         binding.pager.adapter = adapter
         TabLayoutMediator(binding.tlTab, binding.pager) { tab, pos ->
             tab.setText(fragmentListTitles[pos])
@@ -45,7 +46,7 @@ class LibraryFragment : Fragment() {
     }
 
     override fun onResume() {
-        requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility=View.VISIBLE
+        requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility = View.VISIBLE
         super.onResume()
     }
 

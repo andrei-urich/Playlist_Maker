@@ -17,10 +17,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = FavoriteTracksFragment()
-    }
-
     private var tracks = mutableListOf<Track>()
     private lateinit var recyclerView: RecyclerView
     lateinit var adapter: SearchAdapter
@@ -55,7 +51,7 @@ class FavoriteTracksFragment : Fragment() {
 
     private fun playTrack(track: Track) {
         action =
-            LibraryFragmentDirections.actionLibraryFragmentToAudioplayerActivity(track)
+            LibraryFragmentDirections.actionLibraryFragmentToAudioplayerFragment(track)
         findNavController().navigate(
             action
         )
@@ -89,12 +85,16 @@ class FavoriteTracksFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.progressBar.visibility = View.VISIBLE
         viewModel.getFavoriteList()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    companion object {
+        fun newInstance() = FavoriteTracksFragment()
     }
 }

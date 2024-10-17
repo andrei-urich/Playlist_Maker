@@ -5,11 +5,14 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.library.addPlaylistViewModelModule
 import com.example.playlistmaker.di.library.dataModule
 import com.example.playlistmaker.di.library.favoriteTracksInteractorModule
 import com.example.playlistmaker.di.library.favoriteTracksViewModelModule
 import com.example.playlistmaker.di.library.libraryRepositoryModule
 import com.example.playlistmaker.di.library.libraryViewModelModule
+import com.example.playlistmaker.di.library.playlistInteractorModule
+import com.example.playlistmaker.di.library.playlistRepositoryModule
 import com.example.playlistmaker.di.library.playlistsViewModelModule
 import com.example.playlistmaker.di.player.audioplayerViewModelModule
 import com.example.playlistmaker.di.player.playerModule
@@ -17,6 +20,8 @@ import com.example.playlistmaker.di.search.searchModule
 import com.example.playlistmaker.di.search.searchViewModelModule
 import com.example.playlistmaker.di.settings.settingsModule
 import com.example.playlistmaker.di.settings.settingsViewModelModule
+import com.example.playlistmaker.di.trackTransferRepositoryModule
+import com.markodevcic.peko.PermissionRequester
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -42,9 +47,15 @@ class MyApp : Application() {
                 playlistsViewModelModule,
                 dataModule,
                 libraryRepositoryModule,
-                favoriteTracksInteractorModule
+                favoriteTracksInteractorModule,
+                playlistRepositoryModule,
+                playlistInteractorModule,
+                addPlaylistViewModelModule,
+                trackTransferRepositoryModule
             )
         }
+
+        PermissionRequester.initialize(applicationContext)
 
         val sharedPrefs: SharedPreferences by inject() {
             parametersOf(PLAYLIST_MAKER_PREFERENCES)

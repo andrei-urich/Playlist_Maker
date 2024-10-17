@@ -29,4 +29,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), BottomNavigation
             bottomNavView.visibility = View.GONE
         }
     }
+
+    override fun onStop() {
+        super.onStop()
+        if (isChangingConfigurations) {
+            onRetainNonConfigurationInstance()
+        }
+    }
 }
