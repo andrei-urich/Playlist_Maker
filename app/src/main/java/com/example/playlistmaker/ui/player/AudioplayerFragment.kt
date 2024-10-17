@@ -71,8 +71,7 @@ class AudioplayerFragment() : Fragment() {
     private lateinit var bottomSheetAdapter: BottomSheetAdapter
     private lateinit var bottomSheetRecyclerView: RecyclerView
     private lateinit var btnNewPlaylist: Button
-//    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private val args: AudioplayerFragmentArgs by navArgs()
 

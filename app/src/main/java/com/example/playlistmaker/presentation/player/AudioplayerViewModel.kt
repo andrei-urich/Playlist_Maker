@@ -15,6 +15,7 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_PLAYING
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerInteractor
+import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 import kotlinx.coroutines.launch
 
 
@@ -28,7 +29,7 @@ class AudioplayerViewModel(
     private val playStatusLiveData = MutableLiveData<AudioplayerPlayState>()
     private var favoriteStateLiveData = MutableLiveData<Boolean>()
     private var playlistLiveData = MutableLiveData<List<Playlist>>()
-    private var trackToPlaylistLiveData = MutableLiveData<Pair<Boolean, String>>()
+    private var trackToPlaylistLiveData = SingleEventLiveData<Pair<Boolean, String>>()
 
     fun getPlayStatusLiveData(): LiveData<AudioplayerPlayState> = playStatusLiveData
     fun getFavoriteStateLiveData(): LiveData<Boolean> = favoriteStateLiveData
@@ -126,6 +127,7 @@ class AudioplayerViewModel(
             }
             trackToPlaylistLiveData.postValue(Pair(true, playlist.name))
         }
+
     }
 
     override fun onCleared() {
