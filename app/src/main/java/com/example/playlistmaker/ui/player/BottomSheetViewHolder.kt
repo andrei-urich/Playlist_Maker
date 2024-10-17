@@ -31,7 +31,7 @@ class BottomSheetViewHolder(
         Glide.with(binding.playlistCover)
             .load(coverUri)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(8)
+            .transform(RoundedCorners(2)
             )
             .dontAnimate().into(binding.playlistCover)
     }

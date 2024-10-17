@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -39,6 +38,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import android.view.Gravity
+import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
 
 class AudioplayerFragment() : Fragment() {
@@ -71,7 +71,8 @@ class AudioplayerFragment() : Fragment() {
     private lateinit var bottomSheetAdapter: BottomSheetAdapter
     private lateinit var bottomSheetRecyclerView: RecyclerView
     private lateinit var btnNewPlaylist: Button
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+//    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private val args: AudioplayerFragmentArgs by navArgs()
 
@@ -138,7 +139,7 @@ class AudioplayerFragment() : Fragment() {
         }
 
         btnAddToPlaylist.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             viewModel.getPlaylistsList()
         }
 
