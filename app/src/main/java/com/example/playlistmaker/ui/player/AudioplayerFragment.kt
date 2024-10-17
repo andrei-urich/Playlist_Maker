@@ -148,7 +148,6 @@ class AudioplayerFragment() : Fragment() {
             findNavController().navigate(action)
         }
 
-
         viewModel.getFavoriteStateLiveData().observe(viewLifecycleOwner) {
             btnLikeSwitcher(it)
         }
@@ -219,6 +218,12 @@ class AudioplayerFragment() : Fragment() {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         overlay.visibility = View.GONE
+                    }
+
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        overlay.visibility = View.VISIBLE
+                        bottomSheetRecyclerView.getLayoutParams().height = bottomSheetRecyclerView.getHeight() - bottomSheet.getHeight()
+                        bottomSheetRecyclerView.requestLayout()
                     }
 
                     else -> {

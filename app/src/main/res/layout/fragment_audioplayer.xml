@@ -10,14 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/primary"
-        android:orientation="vertical"
         tools:context=".ui.player.AudioplayerFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary"
-            android:orientation="vertical">
+            android:background="@color/primary">
 
 
             <androidx.appcompat.widget.Toolbar
@@ -310,11 +308,11 @@
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:id="@+id/playlists_bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_drawable"
+        android:orientation="vertical"
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/bottom_sheet_max_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -325,8 +323,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/bottom_sheet_divider_margin_top"
-            android:src="@drawable/divider_bottom_sheet"
-           />
+            android:src="@drawable/divider_bottom_sheet" />
 
         <TextView
             android:id="@+id/bottomSheetTitle"
@@ -335,22 +332,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/bottom_sheet_title_margin_top"
             android:text="@string/bottom_sheet_title_add_to_playlist"
-            android:textAlignment="center"
-            />
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/bnNewPlaylist"
             style="@style/refresh_btn_style"
             android:layout_marginTop="@dimen/bottom_sheet_add_button_margin_top"
-            android:text="@string/playlists_button_addPlaylist"
-         />
+            android:text="@string/playlists_button_addPlaylist" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/bottomSheetRv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/bottom_sheet_recicler_margin_top"
-            />
+            android:layout_weight="1" />
 
     </LinearLayout>
 
