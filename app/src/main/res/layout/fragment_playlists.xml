@@ -28,10 +28,6 @@
 
             />
 
-        <Button
-            android:id="@+id/bnDellaylist"
-            style="@style/refresh_btn_style"
-            android:text="Удалить" />
     </LinearLayout>
 
     <LinearLayout
