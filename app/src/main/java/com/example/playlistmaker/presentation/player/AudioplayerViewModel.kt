@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.library.FavoriteTracksInteractor
+import com.example.playlistmaker.domain.library.PlaylistInteractor
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.player.OnPlayerStateChangeListener
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
@@ -13,19 +15,26 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_PLAYING
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PREPARED
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerInteractor
+import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 import kotlinx.coroutines.launch
 
 
 class AudioplayerViewModel(
     private val track: Track,
     private val playerInteractor: PlayerInteractor,
-    private val favoriteTracksInteractor: FavoriteTracksInteractor
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
+
     private val playStatusLiveData = MutableLiveData<AudioplayerPlayState>()
     private var favoriteStateLiveData = MutableLiveData<Boolean>()
+    private var playlistLiveData = MutableLiveData<List<Playlist>>()
+    private var trackToPlaylistLiveData = SingleEventLiveData<Pair<Boolean, String>>()
 
     fun getPlayStatusLiveData(): LiveData<AudioplayerPlayState> = playStatusLiveData
     fun getFavoriteStateLiveData(): LiveData<Boolean> = favoriteStateLiveData
+    fun getPlaylistLiveData(): LiveData<List<Playlist>> = playlistLiveData
+    fun getTrackToPlaylistLiveData(): LiveData<Pair<Boolean, String>> = trackToPlaylistLiveData
 
     init {
         preparePlayer()
@@ -94,6 +103,31 @@ class AudioplayerViewModel(
                 favoriteTracksInteractor.addTrackToFavorite(track)
             }
         }
+    }
+
+    fun getPlaylistsList() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists().collect {
+                playlistLiveData.postValue(it)
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        val trackIdList = playlistInteractor.getTrackIdListAsInt(playlist)
+        if (track.trackId in trackIdList) {
+            trackToPlaylistLiveData.postValue(Pair(false, playlist.name))
+        } else {
+            trackIdList.add(track.trackId)
+            playlist.trackIds = playlistInteractor.getTrackIdListAsString(trackIdList)
+            playlist.tracksCount = trackIdList.size
+            viewModelScope.launch {
+                playlistInteractor.updatePlaylist(playlist)
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+            }
+            trackToPlaylistLiveData.postValue(Pair(true, playlist.name))
+        }
+
     }
 
     override fun onCleared() {

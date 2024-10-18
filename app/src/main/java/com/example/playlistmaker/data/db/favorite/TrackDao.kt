@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.db
+package com.example.playlistmaker.data.db.favorite
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -12,7 +12,7 @@ interface TracksDao {
     suspend fun insertTrack(trackEntity: TrackEntity)
 
     @Delete
-    suspend fun deleteTrack(trackId: TrackEntity)
+    suspend fun deleteTrack(trackEntity: TrackEntity)
 
     @Query("SELECT * FROM favorite_tracks")
     suspend fun getTracks(): List<TrackEntity>

@@ -1,19 +1,25 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.navArgs
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.utils.PLAY_DEBOUNCE_DELAY
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
+import com.example.playlistmaker.databinding.FragmentAudioplayerBinding
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.player.AudioplayerPlayState
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PAUSED
 import com.example.playlistmaker.domain.player.PlayerState.STATE_PLAYING
@@ -23,20 +29,28 @@ import com.example.playlistmaker.domain.player.PlayerState.STATE_COMPLETE
 import com.example.playlistmaker.presentation.player.AudioplayerViewModel
 import com.example.playlistmaker.ui.mapper.ImageLinkFormatter
 import com.example.playlistmaker.ui.mapper.TrackTimeFormatter
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import android.view.Gravity
+import android.widget.LinearLayout
+import androidx.navigation.fragment.findNavController
 
-class AudioplayerActivity() : AppCompatActivity() {
+class AudioplayerFragment() : Fragment() {
 
     private var playerState = "STATE_DEFAULT"
     private lateinit var track: Track
     private val viewModel: AudioplayerViewModel by viewModel() {
         parametersOf(track)
     }
-    private lateinit var viewBinding: ActivityAudioplayerBinding
+
+    private var _binding: FragmentAudioplayerBinding? = null
+    private val binding get() = _binding!!
     private lateinit var trackImage: ImageView
     private lateinit var trackName: TextView
     private lateinit var artistName: TextView
@@ -54,34 +68,62 @@ class AudioplayerActivity() : AppCompatActivity() {
     private lateinit var primaryGenreNameGroup: Group
     private lateinit var countryGroup: Group
     private var timerJob: Job? = null
+    private lateinit var bottomSheetAdapter: BottomSheetAdapter
+    private lateinit var bottomSheetRecyclerView: RecyclerView
+    private lateinit var btnNewPlaylist: Button
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
-    private val args: AudioplayerActivityArgs by navArgs()
+    private val args: AudioplayerFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewBinding = ActivityAudioplayerBinding.inflate(this.layoutInflater)
-        setContentView(viewBinding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-        val toolbar = viewBinding.tbPlayer
-        trackImage = viewBinding.trackImage
-        trackName = viewBinding.trackName
-        artistName = viewBinding.artistName
-        btnAddToPlaylist = viewBinding.btnAddToPlaylist
-        btnPlay = viewBinding.btnPlay
-        btnLike = viewBinding.btnLike
-        trackProgress = viewBinding.trackProgress
-        trackTimeValue = viewBinding.trackTimeValue
-        collectionNameValue = viewBinding.collectionNameValue
-        releaseDateValue = viewBinding.releaseDateValue
-        primaryGenreNameValue = viewBinding.primaryGenreNameValue
-        countryValue = viewBinding.countryValue
-        collectionGroup = viewBinding.collectionGroup
-        releaseDateGroup = viewBinding.releaseDateGroup
-        primaryGenreNameGroup = viewBinding.primaryGenreNameGroup
-        countryGroup = viewBinding.countryGroup
+        _binding = FragmentAudioplayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val toolbar = binding.tbPlayer
+        trackImage = binding.trackImage
+        trackName = binding.trackName
+        artistName = binding.artistName
+        btnAddToPlaylist = binding.btnAddToPlaylist
+        btnPlay = binding.btnPlay
+        btnLike = binding.btnLike
+        trackProgress = binding.trackProgress
+        trackTimeValue = binding.trackTimeValue
+        collectionNameValue = binding.collectionNameValue
+        releaseDateValue = binding.releaseDateValue
+        primaryGenreNameValue = binding.primaryGenreNameValue
+        countryValue = binding.countryValue
+        collectionGroup = binding.collectionGroup
+        releaseDateGroup = binding.releaseDateGroup
+        primaryGenreNameGroup = binding.primaryGenreNameGroup
+        countryGroup = binding.countryGroup
+
+        if (requireActivity().findViewById<BottomNavigationView>(R.id.bnView) != null) {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bnView).visibility = View.GONE
+        }
+
+        bottomSheetRecyclerView = binding.bottomSheetRv
+        bottomSheetRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        btnNewPlaylist = binding.bnNewPlaylist
+
+        val bottomSheetContainer = binding.playlistsBottomSheet
+        val overlay = binding.overlay
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
 
         toolbar.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         track = args.track
@@ -91,20 +133,41 @@ class AudioplayerActivity() : AppCompatActivity() {
             viewModel.getAction()
         }
 
-        viewBinding.btnLike.setOnClickListener {
+        binding.btnLike.setOnClickListener {
             viewModel.onFavoriteClicked(track)
         }
 
-        viewModel.getFavoriteStateLiveData().observe(this) {
+        btnAddToPlaylist.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            viewModel.getPlaylistsList()
+        }
+
+        btnNewPlaylist.setOnClickListener {
+            val action =
+                AudioplayerFragmentDirections.actionAudioplayerFragmentToAddPlaylistFragment(track)
+            findNavController().navigate(action)
+        }
+
+        viewModel.getFavoriteStateLiveData().observe(viewLifecycleOwner) {
             btnLikeSwitcher(it)
         }
 
-        viewModel.getPlayStatusLiveData().observe(this) { state ->
+        viewModel.getPlaylistLiveData().observe(viewLifecycleOwner) {
+            renderPlaylistState(it)
+        }
+
+        viewModel.getTrackToPlaylistLiveData().observe(viewLifecycleOwner) { it ->
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            overlay.visibility = View.GONE
+            showMessage(it)
+        }
+
+        viewModel.getPlayStatusLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AudioplayerPlayState.Prepared -> {
                     btnPlay.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this,
+                            requireActivity(),
                             R.drawable.btn_play
                         )
                     )
@@ -115,7 +178,7 @@ class AudioplayerActivity() : AppCompatActivity() {
                 is AudioplayerPlayState.Playing -> {
                     btnPlay.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this,
+                            requireActivity(),
                             R.drawable.btn_pause
                         )
                     )
@@ -126,7 +189,7 @@ class AudioplayerActivity() : AppCompatActivity() {
                 is AudioplayerPlayState.Paused -> {
                     btnPlay.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this,
+                            requireActivity(),
                             R.drawable.btn_play
                         )
                     )
@@ -137,7 +200,7 @@ class AudioplayerActivity() : AppCompatActivity() {
                 is AudioplayerPlayState.Complete -> {
                     btnPlay.setImageDrawable(
                         AppCompatResources.getDrawable(
-                            this,
+                            requireActivity(),
                             R.drawable.btn_play
                         )
                     )
@@ -146,6 +209,47 @@ class AudioplayerActivity() : AppCompatActivity() {
                 }
             }
         }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        overlay.visibility = View.GONE
+                    }
+
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        overlay.visibility = View.VISIBLE
+                        bottomSheetRecyclerView.getLayoutParams().height = bottomSheetRecyclerView.getHeight() - bottomSheet.getHeight()
+                        bottomSheetRecyclerView.requestLayout()
+                    }
+
+                    else -> {
+                        overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+
+    }
+
+
+    private fun renderPlaylistState(list: List<Playlist>?) {
+        if (!list.isNullOrEmpty()) {
+            bottomSheetRecyclerView.visibility = View.VISIBLE
+            bottomSheetAdapter = BottomSheetAdapter(list, this::addTrackToPlaylist)
+            bottomSheetRecyclerView.adapter = bottomSheetAdapter
+            bottomSheetAdapter.notifyDataSetChanged()
+        }
+    }
+
+
+    private fun addTrackToPlaylist(playlist: Playlist) {
+        viewModel.addTrackToPlaylist(playlist, track)
     }
 
     private fun showTrackPlayedTime() {
@@ -229,18 +333,18 @@ class AudioplayerActivity() : AppCompatActivity() {
     private fun btnLikeSwitcher(isFavorite: Boolean) {
         when (isFavorite) {
             true -> {
-                viewBinding.btnLike.setImageDrawable(
+                binding.btnLike.setImageDrawable(
                     AppCompatResources.getDrawable(
-                        this,
+                        requireActivity(),
                         R.drawable.btn_like_on
                     )
                 )
             }
 
             else -> {
-                viewBinding.btnLike.setImageDrawable(
+                binding.btnLike.setImageDrawable(
                     AppCompatResources.getDrawable(
-                        this,
+                        requireActivity(),
                         R.drawable.btn_like_off
                     )
                 )
@@ -248,15 +352,40 @@ class AudioplayerActivity() : AppCompatActivity() {
         }
     }
 
+    private fun showMessage(it: Pair<Boolean, String>) {
+        var messageText = ""
+        if (it.first) {
+            messageText =
+                context?.getString(R.string.audioplayer_add_to_playlist_message_true) + " " + it.second
+        } else {
+            messageText =
+                context?.getString(R.string.audioplayer_add_to_playlist_message_false) + " " + it.second
+        }
+
+        val snackbar = Snackbar.make(
+            binding.root, messageText,
+            Snackbar.LENGTH_LONG
+        )
+        val snackbarView = snackbar.view
+        context?.getColor(R.color.text_primary)?.let { snackbarView.setBackgroundColor(it) }
+        val textView: TextView =
+            snackbarView.findViewById(com.google.android.material.R.id.snackbar_text)
+        context?.getColor(R.color.primary)?.let { textView.setTextColor(it) }
+        textView.setTextAppearance(R.style.snake_text_style)
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
+        textView.setGravity(Gravity.CENTER)
+        snackbar.show()
+    }
+
+
     override fun onPause() {
         super.onPause()
         viewModel.pause()
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (isChangingConfigurations) {
-            onRetainNonConfigurationInstance()
-        }
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
+
 }

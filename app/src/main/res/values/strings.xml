@@ -43,4 +43,19 @@
     <string name="bottom_nav_menu_item_1_title">Поиск</string>
     <string name="bottom_nav_menu_item_2_title">Медиатека</string>
     <string name="bottom_nav_menu_item_3_title">Настройки</string>
+    <string name="createPlaylistFragmentHeader">Новый плейлист</string>
+    <string name="new_playlist_name">Название*</string>
+    <string name="new_playlist_description">Описание</string>
+    <string name="create_playlist_button">Создать</string>
+    <string name="permission_WRITE_EXTRNAL_STORAGE_rationale">Разрешение на доступ к внутренней памяти телефона необходимо для хранения обложек ваших плейлистов</string>
+    <string name="on_exit_add_playlist_screen_dialog_title">Завершить создание плейлиста?</string>
+    <string name="on_exit_add_playlist_screen_dialog_neutralButton">Отмена</string>
+    <string name="on_exit_add_playlist_screen_dialog_positiveButton">Завершить</string>
+    <string name="on_exit_add_playlist_screen_dialog_message">Все несохраненные данные будут потеряны</string>
+    <string name="toast_playlist_created_message_part1">Плейлист </string>
+    <string name="toast_playlist_created_message_part2"> создан</string>
+    <string name="bottom_sheet_title_add_to_playlist">Добавить в плейлист</string>
+    <string name="audioplayer_add_to_playlist_message_false">Трек уже добавлен в плейлист</string>
+    <string name="audioplayer_add_to_playlist_message_true">Добавлено в плейлист</string>
+    <string name="add_to_created_playlist_message">Добавлено в плейлист</string>
 </resources>

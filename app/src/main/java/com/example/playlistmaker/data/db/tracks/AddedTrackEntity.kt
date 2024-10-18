@@ -1,15 +1,16 @@
-package com.example.playlistmaker.data.db
+package com.example.playlistmaker.data.db.tracks
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+
 @Entity(
-    tableName = "favorite_tracks",
+    tableName = "added_tracks",
     indices = [Index("base_id")]
 )
-data class TrackEntity(
+data class AddedTrackEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "base_id")
     val base_id: Int,
     @ColumnInfo(name = "track_id")
@@ -25,3 +26,4 @@ data class TrackEntity(
     val previewUrl: String,
     var isFavorite: Boolean
 )
+

@@ -4,8 +4,10 @@
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="snackbarStyle">@style/MySnackbar</item>
     </style>
 
 
     <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" />
+
 </resources>

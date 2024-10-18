@@ -61,4 +61,24 @@
     <dimen name="progress_bar_margin_top">148dp</dimen>
     <dimen name="addPlaylist_button_margin_top">24dp</dimen>
     <dimen name="screen_height">56dp</dimen>
+    <dimen name="new_playlist_edittext_height">72dp</dimen>
+    <dimen name="new_playlist_edittext_horizontal_margin">16dp</dimen>
+    <dimen name="new_playlist_edittext_margin_top">32dp</dimen>
+    <dimen name="new_playlist_edittext_margin_between">6dp</dimen>
+    <dimen name="new_playlist_button_height">44dp</dimen>
+    <dimen name="new_playlist_button_horizontal_margin">17dp</dimen>
+    <dimen name="new_playlist_margin_bottom">32dp</dimen>
+    <dimen name="create_playlist_padding_bottom">16dp</dimen>
+    <dimen name="my_toast_height">48dp</dimen>
+    <dimen name="radius_corner_bottom_sheet">12dp</dimen>
+    <dimen name="bottom_sheet_max_height">505dp</dimen>
+    <dimen name="bottom_sheet_divider_margin_top">8dp</dimen>
+    <dimen name="bottom_sheet_title_margin_top">42dp</dimen>
+    <dimen name="bottom_sheet_add_button_margin_top">28dp</dimen>
+    <dimen name="bottom_sheet_recicler_margin_top">24dp</dimen>
+    <dimen name="bottom_sheet_item_text_margin_end">44dp</dimen>
+    <dimen name="bottom_sheet_margin_top">295dp</dimen>
+    <dimen name="card_view_layout_margin">8dp</dimen>
+    <dimen name="card_view_media_height">160dp</dimen>
+    <dimen name="card_view_title_margin_top">4dp</dimen>
 </resources>
