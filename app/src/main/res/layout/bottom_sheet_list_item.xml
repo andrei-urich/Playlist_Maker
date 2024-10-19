@@ -36,7 +36,7 @@
         tools:text="Название плейлиста" />
 
     <TextView
-        android:id="@+id/playlistDescription"
+        android:id="@+id/tvDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/search_result_track_name_margin_left"

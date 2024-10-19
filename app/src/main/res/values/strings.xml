@@ -58,4 +58,7 @@
     <string name="audioplayer_add_to_playlist_message_false">Трек уже добавлен в плейлист</string>
     <string name="audioplayer_add_to_playlist_message_true">Добавлено в плейлист</string>
     <string name="add_to_created_playlist_message">Добавлено в плейлист</string>
+    <string name="menu_playlist_option1">Поделиться</string>
+    <string name="menu_playlist_option2">Редактировать информацию</string>
+    <string name="menu_playlist_option3">Удалить</string>
 </resources>
