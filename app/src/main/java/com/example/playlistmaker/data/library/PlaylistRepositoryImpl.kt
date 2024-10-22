@@ -83,6 +83,22 @@ class PlaylistRepositoryImpl(
         database.getPlaylistDao().clear()
     }
 
+    override suspend fun getTrackById(trackId: Int): Track? {
+        val _track = addedTrackDatabase.getAddedTrackDao().getTrackById(trackId)
+        if (_track != null) {
+            return addedTrackDbConverter.map(_track)
+        }
+        return null
+    }
+
+    override suspend fun getPlaylistById(playlistId: Int): Playlist? {
+        val playlist = database.getPlaylistDao().getPlaylistById(playlistId)
+        if (playlist != null) {
+            return converter.map(playlist)
+        }
+        return null
+    }
+
 
     private fun convertToPlaylist(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { entity -> converter.map(entity) }

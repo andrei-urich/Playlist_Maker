@@ -28,7 +28,6 @@
             android:id="@+id/playlistImage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:clickable="true"
             android:src="@drawable/placeholder_big"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +41,7 @@
             android:layout_marginStart="@dimen/margin_16"
             android:layout_marginTop="@dimen/margin_24"
             android:fontFamily="@font/ys_display_bold"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_always_black"
             android:textSize="@dimen/h0"
             app:layout_constraintTop_toBottomOf="@id/playlistImage"
             tools:text="Title" />
@@ -54,7 +53,7 @@
             android:layout_marginStart="@dimen/margin_16"
             android:layout_marginTop="@dimen/margin_8"
             android:fontFamily="@font/ys_display_regular"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_always_black"
             android:textSize="@dimen/h18"
             app:layout_constraintTop_toBottomOf="@id/tvTitle"
             tools:text="Description" />
@@ -66,7 +65,7 @@
             android:layout_marginStart="@dimen/margin_16"
             android:layout_marginTop="@dimen/margin_8"
             android:fontFamily="@font/ys_display_regular"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_always_black"
             android:textSize="@dimen/h18"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvDescription"
@@ -87,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_8"
             android:fontFamily="@font/ys_display_regular"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_always_black"
             android:textSize="@dimen/h18"
             app:layout_constraintStart_toEndOf="@id/ivDivider"
             app:layout_constraintTop_toBottomOf="@id/tvDescription"
@@ -157,6 +156,7 @@
         android:background="@drawable/bottom_sheet_drawable"
         android:orientation="vertical"
         app:behavior_hideable="true"
+        android:visibility="gone"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView

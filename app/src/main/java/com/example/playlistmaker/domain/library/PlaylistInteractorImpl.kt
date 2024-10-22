@@ -42,4 +42,12 @@ class PlaylistInteractorImpl(
     override suspend fun clear() {
         repository.clear()
     }
+
+    override suspend fun getTrackById(trackId: Int): Track? {
+        return repository.getTrackById(trackId)
+    }
+
+    override suspend fun getPlaylistById(playlistId: Int): Playlist? {
+        return repository.getPlaylistById(playlistId)
+    }
 }

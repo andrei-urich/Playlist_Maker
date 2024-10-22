@@ -19,10 +19,12 @@ class PlaylistsViewModel(
 
     private val stateLiveData = MutableLiveData<List<Playlist>>()
     private val createPlaylistsTrigger = SingleEventLiveData<Boolean>()
+    private val openPlaylistsTrigger = SingleEventLiveData<Playlist>()
+
 
     fun getLiveData(): LiveData<List<Playlist>> = stateLiveData
-
     fun getCreatePlaylistTrigger(): LiveData<Boolean> = createPlaylistsTrigger
+    fun getOpenPlaylistsTrigger(): LiveData<Playlist> = openPlaylistsTrigger
 
     fun createPlaylist() {
         createPlaylistsTrigger.postValue(true)
@@ -35,6 +37,11 @@ class PlaylistsViewModel(
             }
         }
     }
+
+    fun openPlaylists(playlist: Playlist) {
+        openPlaylistsTrigger.postValue(playlist)
+    }
+
 
     fun clearPlaylists() {
         viewModelScope.launch {

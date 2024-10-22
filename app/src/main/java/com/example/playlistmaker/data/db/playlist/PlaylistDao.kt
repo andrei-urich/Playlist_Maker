@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.playlistmaker.data.db.tracks.AddedTrackEntity
 
 @Dao
 interface PlaylistDao {
@@ -23,5 +24,8 @@ interface PlaylistDao {
 
     @Query("DELETE FROM playlists")
     suspend fun clear()
+
+    @Query("SELECT * FROM playlists WHERE base_id = :playlistId")
+    suspend fun getPlaylistById(playlistId: Int): PlaylistEntity?
 
 }

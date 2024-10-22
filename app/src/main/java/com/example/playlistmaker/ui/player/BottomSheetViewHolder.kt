@@ -23,15 +23,16 @@ class BottomSheetViewHolder(
     fun bind(playlist: Playlist) {
         binding.playlistName.text = playlist.name
         val descriptionText =
-            playlist.tracksCount.toString() + " " + Formatter.formatRu(playlist.tracksCount)
-        binding.playlistDescription.text = descriptionText
+            playlist.tracksCount.toString() + " " + Formatter.formatTracks(playlist.tracksCount)
+        binding.tvDescription.text = descriptionText
 
         val coverUri = playlist.cover?.toUri()
 
         Glide.with(binding.playlistCover)
             .load(coverUri)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(2)
+            .transform(
+                RoundedCorners(2)
             )
             .dontAnimate().into(binding.playlistCover)
     }

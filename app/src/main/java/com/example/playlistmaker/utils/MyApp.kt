@@ -11,6 +11,7 @@ import com.example.playlistmaker.di.library.favoriteTracksInteractorModule
 import com.example.playlistmaker.di.library.favoriteTracksViewModelModule
 import com.example.playlistmaker.di.library.libraryRepositoryModule
 import com.example.playlistmaker.di.library.libraryViewModelModule
+import com.example.playlistmaker.di.library.openPlaylistViewModelModule
 import com.example.playlistmaker.di.library.playlistInteractorModule
 import com.example.playlistmaker.di.library.playlistRepositoryModule
 import com.example.playlistmaker.di.library.playlistsViewModelModule
@@ -51,7 +52,8 @@ class MyApp : Application() {
                 playlistRepositoryModule,
                 playlistInteractorModule,
                 addPlaylistViewModelModule,
-                trackTransferRepositoryModule
+                trackTransferRepositoryModule,
+                openPlaylistViewModelModule
             )
         }
 

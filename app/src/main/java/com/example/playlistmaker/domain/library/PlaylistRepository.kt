@@ -14,4 +14,6 @@ interface PlaylistRepository {
     fun getTrackIdListAsString(trackIdList: MutableList<Int>): String
     suspend fun updatePlaylist(playlist: Playlist)
     suspend fun clear()
+    suspend fun getTrackById(trackId: Int): Track?
+    suspend fun getPlaylistById(playlistId: Int): Playlist?
 }

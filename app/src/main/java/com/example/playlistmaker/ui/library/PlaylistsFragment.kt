@@ -18,10 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = PlaylistsFragment()
-    }
-
     private val viewModel: PlaylistsViewModel by viewModel()
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
@@ -49,7 +45,7 @@ class PlaylistsFragment : Fragment() {
         placeholder = binding.placeholderEmptyPlaylists
         recyclerView = binding.rvPlaylist
 
-        adapter = PlaylistAdapter(listOfPlaylists)
+        adapter = PlaylistAdapter(listOfPlaylists, viewModel::openPlaylists)
         recyclerView.layoutManager = GridLayoutManager(requireActivity(), 2)
         recyclerView.adapter = adapter
 
@@ -69,6 +65,16 @@ class PlaylistsFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+
+        viewModel.getOpenPlaylistsTrigger().observe(viewLifecycleOwner) {
+            openPlaylist(it)
+        }
+    }
+
+    private fun openPlaylist(it: Playlist) {
+        action = LibraryFragmentDirections.actionLibraryFragmentToOpenPlaylistFragment(it)
+        findNavController().navigate(action)
+
     }
 
     private fun showPlaylists(list: List<Playlist>?) {
@@ -96,4 +102,9 @@ class PlaylistsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object {
+        fun newInstance() = PlaylistsFragment()
+    }
+
 }
