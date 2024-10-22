@@ -1,6 +1,7 @@
 package com.example.playlistmaker.presentation.library
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.library.PlaylistInteractor
@@ -11,12 +12,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class OpenPlaylistViewModel(
-    private val playlistInteractor: PlaylistInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private var isClickAllowed = true
+
     private var playTrackTrigger = SingleEventLiveData<Track>()
     fun getPlayTrackTrigger(): LiveData<Track> = playTrackTrigger
+    private val trackListLiveData = MutableLiveData<List<Track>>()
+    fun getTrackListLiveData(): LiveData<List<Track>> = trackListLiveData
+
 
     fun playTrack(track: Track) {
         if (clickDebounce()) {
@@ -36,17 +41,15 @@ class OpenPlaylistViewModel(
         return current
     }
 
-    fun getTrackList(playlist: Playlist): MutableList<Track> {
-        val tracks = mutableListOf<Track>()
+    fun getTrackList(playlist: Playlist) {
         val listIds = playlistInteractor.getTrackIdListAsInt(playlist)
-        for (item in listIds) {
-            viewModelScope.launch {
-                val track = playlistInteractor.getTrackById(item)
-                if (track != null) tracks.add(track)
+        viewModelScope.launch {
+            playlistInteractor.getTrackById(listIds).collect { it ->
+                trackListLiveData.postValue(it)
             }
         }
-        return tracks
     }
+
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L

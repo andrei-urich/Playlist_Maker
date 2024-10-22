@@ -14,6 +14,6 @@ interface PlaylistRepository {
     fun getTrackIdListAsString(trackIdList: MutableList<Int>): String
     suspend fun updatePlaylist(playlist: Playlist)
     suspend fun clear()
-    suspend fun getTrackById(trackId: Int): Track?
-    suspend fun getPlaylistById(playlistId: Int): Playlist?
+    fun getTrackById(trackIds: List<Int>): Flow<List<Track>>
+    fun getPlaylistById(playlistId: Int): Flow<Playlist>
 }

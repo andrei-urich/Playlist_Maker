@@ -43,11 +43,11 @@ class PlaylistInteractorImpl(
         repository.clear()
     }
 
-    override suspend fun getTrackById(trackId: Int): Track? {
-        return repository.getTrackById(trackId)
+    override fun getTrackById(trackIds: List<Int>): Flow<List<Track>> {
+        return repository.getTrackById(trackIds)
     }
 
-    override suspend fun getPlaylistById(playlistId: Int): Playlist? {
+    override fun getPlaylistById(playlistId: Int): Flow<Playlist> {
         return repository.getPlaylistById(playlistId)
     }
 }

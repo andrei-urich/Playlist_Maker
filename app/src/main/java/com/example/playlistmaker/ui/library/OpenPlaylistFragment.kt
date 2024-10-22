@@ -51,9 +51,7 @@ class OpenPlaylistFragment : Fragment() {
     private lateinit var bottomSheetTrackContainer: LinearLayout
     private val args: OpenPlaylistFragmentArgs by navArgs()
     private lateinit var playlist: Playlist
-    private val viewModel: OpenPlaylistViewModel by viewModel() {
-        parametersOf(playlist)
-    }
+    private val viewModel: OpenPlaylistViewModel by viewModel()
     private var trackList = mutableListOf<Track>()
 
     override fun onCreateView(
@@ -93,6 +91,10 @@ class OpenPlaylistFragment : Fragment() {
         }
         bottomSheetMenuBehavior = BottomSheetBehavior.from(bottomSheetMenuContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        viewModel.getTrackListLiveData().observe(viewLifecycleOwner) {
+            renderTrackList(it)
         }
 
         playlist = args.playlist
@@ -154,34 +156,40 @@ class OpenPlaylistFragment : Fragment() {
         })
     }
 
+    private fun renderTrackList(it: List<Track>) {
+        trackList.clear()
+        trackList = it.toMutableList()
+        bottomSheetAdapter = SearchAdapter(trackList, viewModel::playTrack)
+        bottomSheetRecyclerView.adapter = bottomSheetAdapter
+        bottomSheetAdapter.notifyDataSetChanged()
+
+        val durationString = calculateDuration(trackList)
+        duration.text = durationString
+        duration.text = trackList.size.toString()
+        val tracksCountString =
+            playlist.tracksCount.toString() + " " + Formatter.formatTracks(playlist.tracksCount)
+        trackCount.text = tracksCountString
+
+    }
+
     private fun setPlaylist(playlist: Playlist) {
         title.text = (playlist.name)
         description.text = (playlist.description)
         if (playlist.tracksCount == 0) {
             TODO()
         } else {
-            trackList.clear()
-            trackList = viewModel.getTrackList(playlist)
-            bottomSheetAdapter = SearchAdapter(trackList, viewModel::playTrack)
-            bottomSheetRecyclerView.adapter = bottomSheetAdapter
-            bottomSheetAdapter.notifyDataSetChanged()
-
-            val durationString = calculateDuration(trackList)
-            duration.text = durationString
-            val tracksCountString =
-                playlist.tracksCount.toString() + " " + Formatter.formatTracks(playlist.tracksCount)
-            trackCount.text = tracksCountString
+            viewModel.getTrackList(playlist)
             bottomSheetTrackListBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
-        val cover = playlist.cover?.toUri()
-        Glide.with(playlistCover)
-            .load(cover)
-            .placeholder(R.drawable.placeholder_big)
-            .centerCrop()
-            .transform(RoundedCorners(8))
-            .dontAnimate()
-            .into(playlistCover)
+//        val cover = playlist.cover?.toUri()
+//        Glide.with(playlistCover)
+//            .load(cover)
+//            .placeholder(R.drawable.placeholder_big)
+//            .centerCrop()
+//            .transform(RoundedCorners(8))
+//            .dontAnimate()
+//            .into(playlistCover)
     }
 
     override fun onDestroy() {

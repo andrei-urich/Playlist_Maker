@@ -4,10 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Environment
+import android.util.Log
 import androidx.core.net.toUri
 import com.example.playlistmaker.data.db.playlist.PlaylistEntity
 import com.example.playlistmaker.data.db.playlist.PlaylistsDatabase
 import com.example.playlistmaker.data.db.tracks.AddedTrackDatabase
+import com.example.playlistmaker.data.db.tracks.AddedTrackEntity
 import com.example.playlistmaker.data.utils.AddedTrackDbConverter
 import com.example.playlistmaker.data.utils.PlaylistDbConvertor
 import com.example.playlistmaker.domain.library.PlaylistRepository
@@ -83,24 +85,24 @@ class PlaylistRepositoryImpl(
         database.getPlaylistDao().clear()
     }
 
-    override suspend fun getTrackById(trackId: Int): Track? {
-        val _track = addedTrackDatabase.getAddedTrackDao().getTrackById(trackId)
-        if (_track != null) {
-            return addedTrackDbConverter.map(_track)
-        }
-        return null
+    override fun getTrackById(trackIds: List<Int>): Flow<List<Track>> = flow {
+        val tracks = addedTrackDatabase.getAddedTrackDao().getTrackById(trackIds)
+        emit(convertToTrackList(tracks))
     }
 
-    override suspend fun getPlaylistById(playlistId: Int): Playlist? {
+
+    override fun getPlaylistById(playlistId: Int): Flow<Playlist> = flow {
         val playlist = database.getPlaylistDao().getPlaylistById(playlistId)
         if (playlist != null) {
-            return converter.map(playlist)
+            emit(converter.map(playlist))
         }
-        return null
     }
-
 
     private fun convertToPlaylist(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { entity -> converter.map(entity) }
+    }
+
+    private fun convertToTrackList(list: List<AddedTrackEntity>): List<Track> {
+        return list.map { entity -> addedTrackDbConverter.map(entity) }
     }
 }

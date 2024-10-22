@@ -20,7 +20,7 @@ interface AddedTrackDao {
     @Query("DELETE FROM added_tracks WHERE track_id = :trackId")
     suspend fun deleteById(trackId: Int)
 
-    @Query("SELECT * FROM added_tracks WHERE track_id = :trackId")
-    suspend fun getTrackById(trackId: Int): AddedTrackEntity?
+    @Query("SELECT * FROM added_tracks WHERE track_id IN (:trackIds)")
+    suspend fun getTrackById(trackIds: List<Int>): List<AddedTrackEntity>
 
 }
