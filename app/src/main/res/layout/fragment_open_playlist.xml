@@ -14,16 +14,6 @@
         android:layout_height="match_parent"
         android:background="@color/search_view_bg">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tbOpenPlaylist"
-            style="@style/player_toolbar"
-            android:background="@color/search_view_bg"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:titleTextAppearance="@style/my_toolbar"
-            tools:ignore="MissingConstraints">
-
-        </androidx.appcompat.widget.Toolbar>
-
         <ImageView
             android:id="@+id/playlistImage"
             android:layout_width="match_parent"
@@ -33,6 +23,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbOpenPlaylist"
+            style="@style/player_toolbar_always_black"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:titleTextAppearance="@style/player_toolbar_always_black"
+            tools:ignore="MissingConstraints">
+
+        </androidx.appcompat.widget.Toolbar>
+
 
         <TextView
             android:id="@+id/tvTitle"
@@ -155,8 +155,8 @@
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_drawable"
         android:orientation="vertical"
-        app:behavior_hideable="true"
         android:visibility="gone"
+        app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView

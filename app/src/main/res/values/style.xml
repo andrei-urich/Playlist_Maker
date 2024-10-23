@@ -136,8 +136,22 @@
         <item name="layout_constraintEnd_toEndOf">parent</item>
         <item name="layout_constraintTop_toTopOf">parent</item>
         <item name="android:background">@color/primary</item>
-        <item name="android:textColor">@color/text_always_black</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/h1</item>
+    </style>
+
+    <style name="player_toolbar_always_black">
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/text_always_black</item>
+        <item name="navigationIcon">@drawable/ic_arrow_back_black</item>
 
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/h1</item>
