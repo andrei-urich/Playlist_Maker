@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "added_tracks",
-    indices = [Index("base_id")]
+    indices = [Index("track_id", unique = true)]
 )
 data class AddedTrackEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "base_id")
