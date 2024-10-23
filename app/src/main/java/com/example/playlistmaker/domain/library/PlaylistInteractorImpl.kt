@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.library
 
+import android.net.Uri
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
@@ -23,8 +24,8 @@ class PlaylistInteractorImpl(
         return repository.getPlaylists()
     }
 
-    override suspend fun saveImageToExternalStorage(playlist: Playlist) {
-        repository.saveImageToExternalStorage(playlist)
+    override suspend fun saveImageToExternalStorage(playlist: Playlist) : Uri {
+    return repository.saveImageToExternalStorage(playlist)
     }
 
     override fun getTrackIdListAsInt(playlist: Playlist): MutableList<Int> {

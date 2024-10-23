@@ -3,6 +3,7 @@ package com.example.playlistmaker.data.library
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import androidx.core.net.toUri
@@ -44,7 +45,7 @@ class PlaylistRepositoryImpl(
         emit(convertToPlaylist(playlists))
     }
 
-    override suspend fun saveImageToExternalStorage(playlist: Playlist) {
+    override suspend fun saveImageToExternalStorage(playlist: Playlist) : Uri {
         val uri = playlist.cover!!.toUri()
         val filePath =
             File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), playlist.name)
@@ -59,10 +60,10 @@ class PlaylistRepositoryImpl(
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-        withContext(Dispatchers.IO) {
-            outputStream.close()
-        }
+        return file.toUri()
     }
+
+
 
     override fun getTrackIdListAsInt(playlist: Playlist): MutableList<Int> {
         return trackTransfer.getTrackIdList(playlist)

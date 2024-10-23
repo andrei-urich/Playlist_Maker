@@ -1,5 +1,7 @@
 package com.example.playlistmaker.presentation.library
 
+import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -61,10 +63,10 @@ class AddPlaylistViewModel(
             }
             playlist = Playlist(0, name, description, cover, trackId, trackCount)
             viewModelScope.launch {
-                interactor.addPlaylist(playlist)
                 if (cover.isNotBlank()) {
-                    tryToSaveCover(playlist)
+                    cover =tryToSaveCover(playlist).toString()
                 }
+                interactor.addPlaylist(playlist)
                 if (track != null) {
                     interactor.addTrackToPlaylist(track, playlist)
                 }
@@ -73,13 +75,14 @@ class AddPlaylistViewModel(
         }
     }
 
-    fun tryToSaveCover(playlist: Playlist) {
+    private fun tryToSaveCover(playlist: Playlist): Uri {
+        var uri: Uri = EMPTY_STRING.toUri()
         viewModelScope.launch {
             requester.request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .collect { result ->
                     when (result) {
                         is PermissionResult.Granted -> {
-                            interactor.saveImageToExternalStorage(playlist)
+                            uri = interactor.saveImageToExternalStorage(playlist)
                         }
 
                         else -> {
@@ -88,6 +91,7 @@ class AddPlaylistViewModel(
                     }
                 }
         }
+        return uri
     }
 
     fun exitOrStay() {

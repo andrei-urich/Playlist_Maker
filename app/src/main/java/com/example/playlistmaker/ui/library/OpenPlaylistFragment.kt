@@ -181,15 +181,20 @@ class OpenPlaylistFragment : Fragment() {
             viewModel.getTrackList(playlist)
             bottomSheetTrackListBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+        if(playlist.cover?.isNotBlank() == true)
 
-//        val cover = playlist.cover?.toUri()
-//        Glide.with(playlistCover)
-//            .load(cover)
-//            .placeholder(R.drawable.placeholder_big)
-//            .centerCrop()
-//            .transform(RoundedCorners(8))
-//            .dontAnimate()
-//            .into(playlistCover)
+         if(playlist.cover?.isNotBlank() == true) {
+             val cover = playlist.cover.toUri()
+
+             Glide.with(playlistCover)
+                 .load(cover)
+                 .placeholder(R.drawable.placeholder_big)
+                 .centerCrop()
+                 .transform(RoundedCorners(8))
+                 .dontAnimate()
+                 .into(playlistCover)
+         }
+
     }
 
     override fun onDestroy() {
