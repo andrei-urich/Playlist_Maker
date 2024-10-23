@@ -63,10 +63,11 @@ class AddPlaylistViewModel(
             }
             playlist = Playlist(0, name, description, cover, trackId, trackCount)
             viewModelScope.launch {
-                if (cover.isNotBlank()) {
-                    cover =tryToSaveCover(playlist).toString()
-                }
                 interactor.addPlaylist(playlist)
+                if (cover.isNotBlank()) {
+                    cover = tryToSaveCover(playlist).toString()
+                }
+                interactor.updatePlaylist(playlist)
                 if (track != null) {
                     interactor.addTrackToPlaylist(track, playlist)
                 }
