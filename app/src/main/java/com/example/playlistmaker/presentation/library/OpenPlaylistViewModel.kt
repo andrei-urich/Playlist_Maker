@@ -67,12 +67,11 @@ class OpenPlaylistViewModel(
             val stringBuilder = StringBuilder()
             stringBuilder.append(title, description, tracksCount)
             for (track in trackList) {
-
                 val string =
                     (trackList.indexOf(track) + 1).toString() + "." + " " + track.artistName + " " + "-" + " " + track.trackName + " " + "(" + track.trackTime + ")" + "\n"
                 stringBuilder.append(string)
             }
-         val message = stringBuilder.toString()
+            val message = stringBuilder.toString()
             Log.d("MY", message)
             sharingInteractor.sharePlaylist(message)
         }

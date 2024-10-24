@@ -129,14 +129,17 @@ class OpenPlaylistFragment : Fragment() {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.visibility = View.GONE
+                        bottomSheetTrackContainer.visibility = View.VISIBLE
                     }
 
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.overlay.visibility = View.VISIBLE
+                        bottomSheetTrackContainer.visibility = View.GONE
                     }
 
                     else -> {
                         binding.overlay.visibility = View.VISIBLE
+                        bottomSheetTrackContainer.visibility = View.GONE
                     }
                 }
             }

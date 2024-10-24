@@ -27,8 +27,8 @@ class BottomSheetViewHolder(
         binding.tvDescription.text = descriptionText
 
         val coverUri = playlist.cover?.toUri()
-
-        Glide.with(binding.playlistCover)
+        binding.playlistCover.setImageURI(null)
+        Glide.with(binding.playlistCover.context)
             .load(coverUri)
             .placeholder(R.drawable.placeholder)
             .transform(
