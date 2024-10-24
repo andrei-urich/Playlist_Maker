@@ -29,9 +29,10 @@ class PlaylistViewHolder(
             playlist.tracksCount.toString() + " " + Formatter.formatTracks(playlist.tracksCount)
         description.text = descriptionText
 
+
         val coverUri = playlist.cover?.toUri()
 
-        Glide.with(binding.cover)
+        Glide.with(binding.cover.context)
             .load(coverUri)
             .placeholder(R.drawable.placeholder)
             .dontAnimate()

@@ -16,8 +16,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentOpenPlaylistBinding
 import com.example.playlistmaker.domain.model.Playlist
@@ -130,6 +128,9 @@ class OpenPlaylistFragment : Fragment() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
+        bottomSheetTrackListBehavior.peekHeight =
+            binding.openPlRootLayout.getHeight() - binding.openPlConstrLayout.getHeight()
+
         bottomSheetTrackListBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
 
@@ -137,18 +138,16 @@ class OpenPlaylistFragment : Fragment() {
 
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        //                   overlay.visibility = View.GONE
+
                     }
 
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        //                   overlay.visibility = View.VISIBLE
-//                        bottomSheetRecyclerView.getLayoutParams().height =
-//                            bottomSheetRecyclerView.getHeight() - bottomSheet.getHeight()
-//                        bottomSheetRecyclerView.requestLayout()
+                        bottomSheet.layoutParams.height =
+                            binding.openPlRootLayout.getHeight() - binding.openPlConstrLayout.getHeight()
+                        bottomSheetRecyclerView.requestLayout()
                     }
 
                     else -> {
-                        //                   overlay.visibility = View.VISIBLE
                     }
                 }
             }
@@ -164,9 +163,8 @@ class OpenPlaylistFragment : Fragment() {
         bottomSheetRecyclerView.adapter = bottomSheetAdapter
         bottomSheetAdapter.notifyDataSetChanged()
 
-        val durationString = calculateDuration(trackList)
-        duration.text = durationString
-        duration.text = trackList.size.toString()
+        duration.text = calculateDuration(trackList)
+
         val tracksCountString =
             playlist.tracksCount.toString() + " " + Formatter.formatTracks(playlist.tracksCount)
         trackCount.text = tracksCountString
@@ -177,23 +175,22 @@ class OpenPlaylistFragment : Fragment() {
         title.text = (playlist.name)
         description.text = (playlist.description)
         if (playlist.tracksCount == 0) {
-            TODO()
+            binding.tvEmpty.visibility = View.VISIBLE
+            duration.text = requireActivity().getString(R.string.empty_playlist_duration)
         } else {
+            binding.tvEmpty.visibility = View.GONE
             viewModel.getTrackList(playlist)
-            bottomSheetTrackListBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
-        if(playlist.cover?.isNotBlank() == true)
+        bottomSheetTrackListBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-         if(playlist.cover.isNotBlank() == true) {
-             val cover = playlist.cover.toUri()
-
-             playlistCover.setImageURI(null)
-             Glide.with(playlistCover.context)
-                 .load(cover)
-                 .centerCrop()
-                 .dontAnimate().into(playlistCover)
-         }
-
+        if (playlist.cover?.isNotBlank() == true) {
+            val cover = playlist.cover.toUri()
+            playlistCover.setImageURI(null)
+            Glide.with(playlistCover.context)
+                .load(cover)
+                .centerCrop()
+                .dontAnimate().into(playlistCover)
+        }
     }
 
     override fun onDestroy() {
@@ -209,7 +206,7 @@ class OpenPlaylistFragment : Fragment() {
                 durationInMills += track.trackTimeMillis
             }
         }
-        val durationInt = durationInMills.toInt()
+        val durationInt = (durationInMills / 60000).toInt()
         val pluralsString = Formatter.formatMinutes(durationInt)
         val string = durationInt.toString() + " " + pluralsString
         return string

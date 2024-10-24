@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/openPlConstrLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/search_view_bg">
 
         <ImageView
@@ -139,6 +139,16 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/bottom_sheet_divider_margin_top"
             android:src="@drawable/divider_bottom_sheet" />
+
+        <TextView
+            android:id="@+id/tvEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/player_toolbar"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="@string/empty_playlist_textview"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tracksBottomSheetRv"
