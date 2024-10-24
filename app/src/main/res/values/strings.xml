@@ -64,5 +64,5 @@
     <string name="empty_playlist_textview">В этом плейлисте нет треков</string>
     <string name="empty_playlist_duration">0 минут</string>
     <string name="empty_playlist_tracks_count">0 треков</string>
-    <string name="empty_playlist_share_warning">0 треков</string>
+    <string name="empty_playlist_share_warning">В этом плейлисте нет списка треков, которым можно поделиться</string>
 </resources>

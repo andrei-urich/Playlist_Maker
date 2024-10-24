@@ -172,25 +172,6 @@ class OpenPlaylistFragment : Fragment() {
         })
     }
 
-    private fun showSnake(it: Boolean) {
-        if (!it) {
-            val text = requireActivity().getString(R.string.empty_playlist_share_warning)
-            val snackbar = Snackbar.make(
-                binding.root, text,
-                Snackbar.LENGTH_SHORT
-            )
-            val snackbarView = snackbar.view
-            context?.getColor(R.color.text_primary)?.let { snackbarView.setBackgroundColor(it) }
-            val textView: TextView =
-                snackbarView.findViewById(com.google.android.material.R.id.snackbar_text)
-            context?.getColor(R.color.primary)?.let { textView.setTextColor(it) }
-            textView.setTextAppearance(R.style.snake_text_style)
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
-            textView.setGravity(Gravity.CENTER)
-            snackbar.show()
-        }
-    }
-
     private fun playTrack(it: Track) {
         val action =
             OpenPlaylistFragmentDirections.actionOpenPlaylistFragmentToAudioplayerFragment(it)
@@ -234,6 +215,24 @@ class OpenPlaylistFragment : Fragment() {
                 .load(cover)
                 .centerCrop()
                 .dontAnimate().into(playlistCover)
+        }
+    }
+    private fun showSnake(it: Boolean) {
+        if (!it) {
+            val text = requireActivity().getString(R.string.empty_playlist_share_warning)
+            val snackbar = Snackbar.make(
+                binding.root, text,
+                Snackbar.LENGTH_SHORT
+            )
+            val snackbarView = snackbar.view
+            context?.getColor(R.color.text_primary)?.let { snackbarView.setBackgroundColor(it) }
+            val textView: TextView =
+                snackbarView.findViewById(com.google.android.material.R.id.snackbar_text)
+            context?.getColor(R.color.primary)?.let { textView.setTextColor(it) }
+            textView.setTextAppearance(R.style.snake_text_style)
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
+            textView.setGravity(Gravity.CENTER)
+            snackbar.show()
         }
     }
 

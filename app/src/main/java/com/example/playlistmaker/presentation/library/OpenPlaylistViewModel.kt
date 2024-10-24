@@ -57,9 +57,7 @@ class OpenPlaylistViewModel(
     }
 
     fun sharePlaylist(playlist: Playlist, trackList: List<Track>) {
-        var message = EMPTY_STRING
         if (playlist.tracksCount == 0 || trackList.isNullOrEmpty()) {
-            message = "В этом плейлисте нет списка треков, которым можно поделиться"
             shareIntentLiveData.postValue(false)
         } else {
             val title = playlist.name + "\n"
@@ -74,10 +72,10 @@ class OpenPlaylistViewModel(
                     (trackList.indexOf(track) + 1).toString() + "." + " " + track.artistName + " " + "-" + " " + track.trackName + " " + "(" + track.trackTime + ")" + "\n"
                 stringBuilder.append(string)
             }
-            message = stringBuilder.toString()
+         val message = stringBuilder.toString()
             Log.d("MY", message)
+            sharingInteractor.sharePlaylist(message)
         }
-        sharingInteractor.sharePlaylist(message)
     }
 
 
