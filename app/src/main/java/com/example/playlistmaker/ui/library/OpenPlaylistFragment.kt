@@ -126,10 +126,15 @@ class OpenPlaylistFragment : Fragment() {
             viewModel.sharePlaylist(playlist, trackList)
         }
         menuOptionEdit.setOnClickListener {
-            val action = OpenPlaylistFragmentDirections.actionOpenPlaylistFragmentToAddPlaylistFragment(null,playlist)
-        findNavController().navigate(action)
+            val action =
+                OpenPlaylistFragmentDirections.actionOpenPlaylistFragmentToAddPlaylistFragment(
+                    null,
+                    playlist
+                )
+            findNavController().navigate(action)
         }
         menuOptionDelete.setOnClickListener {
+            bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             onDeleteDialog.show()
         }
 
