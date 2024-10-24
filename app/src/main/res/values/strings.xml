@@ -63,4 +63,5 @@
     <string name="menu_playlist_option3">Удалить</string>
     <string name="empty_playlist_textview">В этом плейлисте нет треков</string>
     <string name="empty_playlist_duration">0 минут</string>
+    <string name="empty_playlist_tracks_count">0 треков</string>
 </resources>

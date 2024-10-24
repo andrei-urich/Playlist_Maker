@@ -25,7 +25,6 @@ import com.example.playlistmaker.ui.Formatter
 import com.example.playlistmaker.ui.search.SearchAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import org.koin.core.parameter.parametersOf
 
 class OpenPlaylistFragment : Fragment() {
 
@@ -177,10 +176,13 @@ class OpenPlaylistFragment : Fragment() {
         if (playlist.tracksCount == 0) {
             binding.tvEmpty.visibility = View.VISIBLE
             duration.text = requireActivity().getString(R.string.empty_playlist_duration)
+            trackCount.text = requireActivity().getString(R.string.empty_playlist_tracks_count)
         } else {
             binding.tvEmpty.visibility = View.GONE
             viewModel.getTrackList(playlist)
         }
+        bottomSheetTrackContainer.visibility = View.VISIBLE
+        bottomSheetMenuContainer.visibility = View.VISIBLE
         bottomSheetTrackListBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
         if (playlist.cover?.isNotBlank() == true) {

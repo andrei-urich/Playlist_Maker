@@ -130,6 +130,7 @@
         android:background="@drawable/bottom_sheet_drawable"
         android:orientation="vertical"
         app:behavior_hideable="false"
+        android:visibility="gone"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView
@@ -145,8 +146,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/player_toolbar"
-            android:layout_gravity="center"
+            android:gravity="center"
             android:visibility="gone"
+            android:layout_marginTop="@dimen/bottom_sheet_add_button_margin_top"
             android:text="@string/empty_playlist_textview"
             />
 

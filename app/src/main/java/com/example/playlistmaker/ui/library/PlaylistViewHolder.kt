@@ -31,7 +31,7 @@ class PlaylistViewHolder(
 
 
         val coverUri = playlist.cover?.toUri()
-
+        binding.cover.setImageURI(null)
         Glide.with(binding.cover.context)
             .load(coverUri)
             .placeholder(R.drawable.placeholder)
