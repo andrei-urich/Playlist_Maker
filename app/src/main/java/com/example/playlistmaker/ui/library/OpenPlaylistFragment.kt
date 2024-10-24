@@ -27,6 +27,7 @@ import com.example.playlistmaker.utils.Formatter
 import com.example.playlistmaker.ui.search.SearchAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 class OpenPlaylistFragment : Fragment() {
@@ -54,6 +55,8 @@ class OpenPlaylistFragment : Fragment() {
     private lateinit var playlist: Playlist
     private val viewModel: OpenPlaylistViewModel by viewModel()
     private var trackList = mutableListOf<Track>()
+    private lateinit var onDeleteDialog: MaterialAlertDialogBuilder
+    private lateinit var onDeleteDialogMessage: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -119,6 +122,16 @@ class OpenPlaylistFragment : Fragment() {
             bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             binding.overlay.visibility = View.VISIBLE
         }
+        menuOptionShare.setOnClickListener {
+            viewModel.sharePlaylist(playlist, trackList)
+        }
+        menuOptionEdit.setOnClickListener {
+            val action = OpenPlaylistFragmentDirections.actionOpenPlaylistFragmentToAddPlaylistFragment(null,playlist)
+        findNavController().navigate(action)
+        }
+        menuOptionDelete.setOnClickListener {
+            onDeleteDialog.show()
+        }
 
 
         bottomSheetMenuBehavior.addBottomSheetCallback(object :
@@ -173,6 +186,19 @@ class OpenPlaylistFragment : Fragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
+
+        onDeleteDialogMessage =
+            context?.getString(R.string.delete_playlist_dialog) + " \"" + playlist.name + "\""
+        onDeleteDialog =
+            MaterialAlertDialogBuilder(requireActivity()).setTitle(onDeleteDialogMessage)
+                .setNeutralButton(context?.getString(R.string.delete_playlist_dialog_negative)) { dialog, which ->
+
+                }
+                .setPositiveButton(context?.getString(R.string.delete_playlist_dialog_positive)) { dialog, which ->
+                    viewModel.delete(playlist)
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+
     }
 
     private fun playTrack(it: Track) {
@@ -218,8 +244,20 @@ class OpenPlaylistFragment : Fragment() {
                 .load(cover)
                 .centerCrop()
                 .dontAnimate().into(playlistCover)
+
+            binding.menuPlaylistCover.setImageURI(null)
+            Glide.with(binding.menuPlaylistCover.context)
+                .load(cover)
+                .centerCrop()
+                .dontAnimate().into(binding.menuPlaylistCover)
         }
+
+        binding.menuPlaylistName.text = playlist.name
+        val menuDescription =
+            playlist.tracksCount.toString() + " " + Formatter.formatTracks(playlist.tracksCount)
+        binding.menuDescription.text = menuDescription
     }
+
     private fun showSnake(it: Boolean) {
         if (!it) {
             val text = requireActivity().getString(R.string.empty_playlist_share_warning)
@@ -246,7 +284,8 @@ class OpenPlaylistFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getTrackList(playlist)
+        playlist = args.playlist
+        setPlaylist(playlist)
     }
 
     private fun calculateDuration(trackList: List<Track>): String {

@@ -129,8 +129,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_drawable"
         android:orientation="vertical"
-        app:behavior_hideable="false"
         android:visibility="gone"
+        app:behavior_hideable="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView
@@ -143,14 +143,13 @@
 
         <TextView
             android:id="@+id/tvEmpty"
+            style="@style/player_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/player_toolbar"
-            android:gravity="center"
-            android:visibility="gone"
             android:layout_marginTop="@dimen/bottom_sheet_add_button_margin_top"
+            android:gravity="center"
             android:text="@string/empty_playlist_textview"
-            />
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tracksBottomSheetRv"
@@ -169,7 +168,7 @@
         android:orientation="vertical"
         android:visibility="gone"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="383dp"
+        app:behavior_peekHeight="@dimen/open_playlist_menu_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView
@@ -184,7 +183,7 @@
 
 
         <ImageView
-            android:id="@+id/playlistCover"
+            android:id="@+id/menuPlaylistCover"
             android:layout_width="@dimen/search_result_track_image_width"
             android:layout_height="@dimen/search_result_track_image_height"
             android:layout_marginHorizontal="@dimen/search_result_track_image_margin_left"
@@ -195,7 +194,7 @@
             app:layout_constraintTop_toBottomOf="@id/menuDiv" />
 
         <TextView
-            android:id="@+id/playlistName"
+            android:id="@+id/menuPlaylistName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/search_result_track_name_margin_left"
@@ -208,12 +207,12 @@
             android:textSize="@dimen/h2"
 
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/playlistCover"
+            app:layout_constraintStart_toEndOf="@+id/menuPlaylistCover"
             app:layout_constraintTop_toBottomOf="@id/menuDiv"
             tools:text="Название плейлиста" />
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/menuDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/search_result_track_name_margin_left"
@@ -225,21 +224,23 @@
             android:textColor="@color/track_information"
             android:textSize="@dimen/h4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/playlistCover"
-            app:layout_constraintTop_toBottomOf="@id/playlistName"
+            app:layout_constraintStart_toEndOf="@id/menuPlaylistCover"
+            app:layout_constraintTop_toBottomOf="@id/menuPlaylistName"
             tools:text="Исполнитель" />
 
 
         <TextView
             android:id="@+id/menuOption1"
             style="@style/settings_option_text_style"
+            android:clickable="true"
             android:text="@string/menu_playlist_option1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/playlistCover" />
+            app:layout_constraintTop_toBottomOf="@id/menuPlaylistCover" />
 
         <TextView
             android:id="@+id/menuOption2"
             style="@style/settings_option_text_style"
+            android:clickable="true"
             android:text="@string/menu_playlist_option2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/menuOption1" />
@@ -247,6 +248,7 @@
         <TextView
             android:id="@+id/menuOption3"
             style="@style/settings_option_text_style"
+            android:clickable="true"
             android:text="@string/menu_playlist_option3"
 
             app:layout_constraintStart_toStartOf="parent"

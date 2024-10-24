@@ -65,4 +65,7 @@
     <string name="empty_playlist_duration">0 минут</string>
     <string name="empty_playlist_tracks_count">0 треков</string>
     <string name="empty_playlist_share_warning">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="delete_playlist_dialog">Хотите удалить плейлист</string>
+    <string name="delete_playlist_dialog_positive">Да</string>
+    <string name="delete_playlist_dialog_negative">Нет</string>
 </resources>

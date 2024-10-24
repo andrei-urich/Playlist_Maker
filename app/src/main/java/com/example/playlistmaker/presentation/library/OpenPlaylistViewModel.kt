@@ -11,7 +11,6 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.settings.SharingInteractor
 import com.example.playlistmaker.presentation.utils.SingleEventLiveData
 import com.example.playlistmaker.utils.Formatter
-import com.example.playlistmaker.utils.EMPTY_STRING
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -74,6 +73,12 @@ class OpenPlaylistViewModel(
             val message = stringBuilder.toString()
             Log.d("MY", message)
             sharingInteractor.sharePlaylist(message)
+        }
+    }
+
+    fun delete(playlist: Playlist) {
+        viewModelScope.launch {
+            playlistInteractor.deletePlaylist(playlist)
         }
     }
 

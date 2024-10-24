@@ -56,6 +56,10 @@
             android:name="track"
             app:argType="com.example.playlistmaker.domain.model.Track"
             app:nullable="true" />
+        <argument
+            android:name="playlist"
+            app:argType="com.example.playlistmaker.domain.model.Playlist"
+            android:defaultValue="null" />
     </fragment>
     <fragment
         android:id="@+id/openPlaylistFragment"
@@ -69,5 +73,8 @@
         <action
             android:id="@+id/action_openPlaylistFragment_to_audioplayerFragment"
             app:destination="@id/audioplayerFragment" />
+        <action
+            android:id="@+id/action_openPlaylistFragment_to_addPlaylistFragment"
+            app:destination="@id/addPlaylistFragment" />
     </fragment>
 </navigation>
