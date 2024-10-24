@@ -7,7 +7,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.BottomSheetListItemBinding
 import com.example.playlistmaker.domain.model.Playlist
-import com.example.playlistmaker.ui.Formatter
+import com.example.playlistmaker.utils.Formatter
 
 
 class BottomSheetViewHolder(

@@ -6,7 +6,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistItemBinding
 import com.example.playlistmaker.domain.model.Playlist
-import com.example.playlistmaker.ui.Formatter
+import com.example.playlistmaker.utils.Formatter
 
 class PlaylistViewHolder(
     private val binding: PlaylistItemBinding,

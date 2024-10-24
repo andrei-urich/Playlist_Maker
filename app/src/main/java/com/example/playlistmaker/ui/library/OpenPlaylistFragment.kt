@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.library
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,10 +23,11 @@ import com.example.playlistmaker.databinding.FragmentOpenPlaylistBinding
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.library.OpenPlaylistViewModel
-import com.example.playlistmaker.ui.Formatter
+import com.example.playlistmaker.utils.Formatter
 import com.example.playlistmaker.ui.search.SearchAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 
 class OpenPlaylistFragment : Fragment() {
 
@@ -94,6 +97,13 @@ class OpenPlaylistFragment : Fragment() {
         viewModel.getTrackListLiveData().observe(viewLifecycleOwner) {
             renderTrackList(it)
         }
+        viewModel.getPlayTrackTrigger().observe(viewLifecycleOwner) {
+            playTrack(it)
+        }
+
+        viewModel.getShareIntentLiveData().observe(viewLifecycleOwner) {
+            if (!it) showSnake(it)
+        }
 
         playlist = args.playlist
         setPlaylist(playlist)
@@ -102,6 +112,13 @@ class OpenPlaylistFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
+        shareButton.setOnClickListener {
+            viewModel.sharePlaylist(playlist, trackList)
+        }
+        menuButton.setOnClickListener {
+            bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.overlay.visibility = View.VISIBLE
+        }
 
 
         bottomSheetMenuBehavior.addBottomSheetCallback(object :
@@ -111,15 +128,15 @@ class OpenPlaylistFragment : Fragment() {
 
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        //                   overlay.visibility = View.GONE
+                        binding.overlay.visibility = View.GONE
                     }
 
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        //                   overlay.visibility = View.VISIBLE
+                        binding.overlay.visibility = View.VISIBLE
                     }
 
                     else -> {
-                        //                   overlay.visibility = View.VISIBLE
+                        binding.overlay.visibility = View.VISIBLE
                     }
                 }
             }
@@ -153,6 +170,31 @@ class OpenPlaylistFragment : Fragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
+    }
+
+    private fun showSnake(it: Boolean) {
+        if (!it) {
+            val text = requireActivity().getString(R.string.empty_playlist_share_warning)
+            val snackbar = Snackbar.make(
+                binding.root, text,
+                Snackbar.LENGTH_SHORT
+            )
+            val snackbarView = snackbar.view
+            context?.getColor(R.color.text_primary)?.let { snackbarView.setBackgroundColor(it) }
+            val textView: TextView =
+                snackbarView.findViewById(com.google.android.material.R.id.snackbar_text)
+            context?.getColor(R.color.primary)?.let { textView.setTextColor(it) }
+            textView.setTextAppearance(R.style.snake_text_style)
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
+            textView.setGravity(Gravity.CENTER)
+            snackbar.show()
+        }
+    }
+
+    private fun playTrack(it: Track) {
+        val action =
+            OpenPlaylistFragmentDirections.actionOpenPlaylistFragmentToAudioplayerFragment(it)
+        findNavController().navigate(action)
     }
 
     private fun renderTrackList(it: List<Track>) {
@@ -200,6 +242,10 @@ class OpenPlaylistFragment : Fragment() {
         super.onDestroy()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getTrackList(playlist)
+    }
 
     private fun calculateDuration(trackList: List<Track>): String {
         var durationInMills: Long = 0L

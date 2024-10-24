@@ -66,5 +66,8 @@
             android:name="playlist"
             app:argType="com.example.playlistmaker.domain.model.Playlist"
             app:nullable="false" />
+        <action
+            android:id="@+id/action_openPlaylistFragment_to_audioplayerFragment"
+            app:destination="@id/audioplayerFragment" />
     </fragment>
 </navigation>

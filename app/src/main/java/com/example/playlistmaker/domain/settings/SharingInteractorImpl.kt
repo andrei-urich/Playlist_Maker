@@ -7,6 +7,10 @@ class SharingInteractorImpl(
         externalNavigator.shareApp()
     }
 
+    override fun sharePlaylist(string: String) {
+        externalNavigator.sharePlaylist(string)
+    }
+
     override fun openTerms() {
         externalNavigator.openTerms()
     }

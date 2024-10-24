@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui
+package com.example.playlistmaker.utils
 
 object Formatter {
     fun formatTracks(num: Int): String {
