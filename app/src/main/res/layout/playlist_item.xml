@@ -48,7 +48,7 @@
             tools:text="name" />
 
         <TextView
-            android:id="@+id/menuDescription"
+            android:id="@+id/description"
             style="@style/card_view_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

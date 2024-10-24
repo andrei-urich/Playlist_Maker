@@ -7,7 +7,7 @@
     android:background="@color/primary">
 
     <ImageView
-        android:id="@+id/menuPlaylistCover"
+        android:id="@+id/playlistCover"
         android:layout_width="@dimen/search_result_track_image_width"
         android:layout_height="@dimen/search_result_track_image_height"
         android:layout_marginHorizontal="@dimen/search_result_track_image_margin_left"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/menuPlaylistName"
+        android:id="@+id/playlistName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/search_result_track_name_margin_left"
@@ -31,7 +31,7 @@
         android:textSize="@dimen/h2"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/menuPlaylistCover"
+        app:layout_constraintStart_toEndOf="@+id/playlistCover"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Название плейлиста" />
 
@@ -49,8 +49,8 @@
         android:textColor="@color/track_information"
         android:textSize="@dimen/h4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/menuPlaylistCover"
-        app:layout_constraintTop_toBottomOf="@id/menuPlaylistName"
+        app:layout_constraintStart_toEndOf="@id/playlistCover"
+        app:layout_constraintTop_toBottomOf="@id/playlistName"
 
 
         tools:text="Исполнитель" />

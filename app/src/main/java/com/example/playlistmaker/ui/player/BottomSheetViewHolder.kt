@@ -11,7 +11,8 @@ import com.example.playlistmaker.utils.Formatter
 
 
 class BottomSheetViewHolder(
-    private val binding: BottomSheetListItemBinding, onItemClick: (position: Int) -> Unit
+    private val binding: BottomSheetListItemBinding,
+    onItemClick: (position: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {

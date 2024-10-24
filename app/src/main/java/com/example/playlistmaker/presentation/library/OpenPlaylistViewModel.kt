@@ -76,6 +76,10 @@ class OpenPlaylistViewModel(
         }
     }
 
+    fun removeTrack (track: Track) {
+
+    }
+
     fun delete(playlist: Playlist) {
         viewModelScope.launch {
             playlistInteractor.deletePlaylist(playlist)

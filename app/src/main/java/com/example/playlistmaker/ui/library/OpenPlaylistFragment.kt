@@ -24,7 +24,6 @@ import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.library.OpenPlaylistViewModel
 import com.example.playlistmaker.utils.Formatter
-import com.example.playlistmaker.ui.search.SearchAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,7 +41,7 @@ class OpenPlaylistFragment : Fragment() {
     private lateinit var trackCount: TextView
     private lateinit var shareButton: ImageView
     private lateinit var menuButton: ImageView
-    private lateinit var bottomSheetAdapter: SearchAdapter
+    private lateinit var bottomSheetAdapter: TracksInPlaylistAdapter
     private lateinit var bottomSheetRecyclerView: RecyclerView
     private lateinit var menuOptionShare: TextView
     private lateinit var menuOptionEdit: TextView
@@ -51,12 +50,14 @@ class OpenPlaylistFragment : Fragment() {
     private lateinit var bottomSheetMenuContainer: ConstraintLayout
     private lateinit var bottomSheetTrackListBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var bottomSheetTrackContainer: LinearLayout
+    private lateinit var track: Track
     private val args: OpenPlaylistFragmentArgs by navArgs()
     private lateinit var playlist: Playlist
     private val viewModel: OpenPlaylistViewModel by viewModel()
     private var trackList = mutableListOf<Track>()
     private lateinit var onDeleteDialog: MaterialAlertDialogBuilder
     private lateinit var onDeleteDialogMessage: String
+    private lateinit var onDeleteTrackDialog: MaterialAlertDialogBuilder
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -204,6 +205,15 @@ class OpenPlaylistFragment : Fragment() {
                     requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
 
+        onDeleteTrackDialog =
+            MaterialAlertDialogBuilder(requireActivity()).setTitle(context?.getString(R.string.delete_track_dialog))
+                .setNeutralButton(context?.getString(R.string.delete_playlist_dialog_negative)) { dialog, which ->
+
+                }
+                .setPositiveButton(context?.getString(R.string.delete_playlist_dialog_positive)) { dialog, which ->
+                   viewModel.removeTrack(track)
+                }
+
     }
 
     private fun playTrack(it: Track) {
@@ -215,7 +225,8 @@ class OpenPlaylistFragment : Fragment() {
     private fun renderTrackList(it: List<Track>) {
         trackList.clear()
         trackList = it.toMutableList()
-        bottomSheetAdapter = SearchAdapter(trackList, viewModel::playTrack)
+        bottomSheetAdapter =
+            TracksInPlaylistAdapter(trackList, viewModel::playTrack, this::removeTrack)
         bottomSheetRecyclerView.adapter = bottomSheetAdapter
         bottomSheetAdapter.notifyDataSetChanged()
 
@@ -261,6 +272,11 @@ class OpenPlaylistFragment : Fragment() {
         val menuDescription =
             playlist.tracksCount.toString() + " " + Formatter.formatTracks(playlist.tracksCount)
         binding.menuDescription.text = menuDescription
+    }
+
+    private fun removeTrack(track: Track) {
+        this.track = track
+        onDeleteTrackDialog.show()
     }
 
     private fun showSnake(it: Boolean) {

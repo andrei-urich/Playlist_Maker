@@ -11,13 +11,13 @@ import com.example.playlistmaker.utils.Formatter
 class PlaylistViewHolder(
     private val binding: PlaylistItemBinding,
     onItemClick: (position: Int) -> Unit
-
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         itemView.setOnClickListener {
             onItemClick(bindingAdapterPosition)
         }
+
     }
 
     private val name = binding.name
